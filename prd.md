@@ -1,0 +1,435 @@
+# PRD — TRANSLATOO
+## Documento de Requisitos do Produto — Aplicativo de Tradução Offline (Português · Inglês · Mandarim)
+
+| Campo | Valor |
+|---|---|
+| **Produto** | Translatoo |
+| **Versão do documento** | 1.0 |
+| **Data** | 2026-08-26 |
+| **Stack obrigatória** | Dart + Flutter (exclusivamente) |
+| **Plataformas-alvo** | Android (prioridade máxima), iOS (secundária), Desktop/Web (terciária) |
+| **Idiomas suportados** | Português (`pt`), Inglês (`en`), Chinês Mandarim (`zh`) |
+| **Documento-fonte complementar** | `share.txt` (decisões de arquitetura offline/on-device) |
+| **Público deste documento** | IA de programação (Cursor/Windsurf) e desenvolvedores Flutter |
+
+---
+
+## SUMÁRIO
+1. [Objetivo e Visão Geral](#1-objetivo-e-visão-geral)
+2. [Arquitetura de Arquivos Sugerida](#2-arquitetura-de-arquivos-sugerida)
+3. [Escopo do Produto (Requisitos Funcionais)](#3-escopo-do-produto-requisitos-funcionais)
+4. [Requisitos Não-Funcionais](#4-requisitos-não-funcionais-especificações-técnicas)
+5. [Critérios de Aceite (User Stories)](#5-critérios-de-aceite-user-stories)
+6. [Roadmap, Prioridades e Definição de Pronto](#6-roadmap-prioridades-e-definição-de-pronto)
+
+---
+
+# 1. OBJETIVO E VISÃO GERAL
+
+## 1.1 Propósito do Aplicativo
+O Translatoo é um aplicativo de tradução **offline-first** entre **Português (pt-BR)**, **Inglês (en-US)** e **Chinês Mandarim (zh-CN)**, capaz de operar a 100% sem internet após o download inicial dos pacotes de idiomas.
+
+Objetivos centrais:
+- **Traduzir texto instantaneamente no dispositivo (on-device)** usando Google ML Kit (`google_mlkit_translation`), sem enviar dados para servidores.
+- **Garantir funcionamento em celulares chineses nativos (Xiaomi, Huawei, Vivo locais) sem Google Play Services**, através de Plano B com modelo TensorFlow Lite embutido (`tflite_flutter`) na pasta `assets`.
+- **Entrada por voz offline (Speech-to-Text)** com o motor Vosk (`vosk_flutter`) e modelos acústicos embarcados no aplicativo.
+- **Saída por voz (Text-to-Speech)** via motor nativo do sistema operacional (`flutter_tts`), sem consumo de internet.
+- **Privacidade total**: nenhum texto ou áudio sai do aparelho na operação padrão.
+- **Arquitetura híbrida preparada (Fase 2)**: quando houver internet, o app poderá usar API em nuvem para maior qualidade; sem internet, faz fallback silencioso para os motores locais (`connectivity_plus`).
+
+## 1.2 Metas de Experiência do Usuário (UX/UI)
+| ID | Meta | Critério mensurável |
+|---|---|---|
+| UX-01 | Tradução percebida como instantânea | Resultado exibido em ≤ 300 ms (pós-download dos pacotes) para textos ≤ 500 caracteres |
+| UX-02 | Máximo 2 toques para qualquer ação principal | Traduzir, ouvir, copiar e favoritar exigem ≤ 2 toques a partir da tela inicial |
+| UX-03 | Zero ambiguidade de estado | Todo processo longo exibe indicador visual: baixando modelo (%), ouvindo (pulso), traduzindo (spinner) |
+| UX-04 | Uso com uma mão | Alvos de toque ≥ 48×48 dp; ações primárias no terço inferior da tela em layout compacto |
+| UX-05 | Tema remapeável sem refatoração | 100% das cores vindas de um único arquivo de tokens (`app_colors.dart`), equivalente às variáveis CSS |
+| UX-06 | Feedback de erro acionável | Todo erro mostra mensagem clara + ação sugerida (ex.: "Abrir configurações") |
+
+## 1.3 Métricas de Sucesso
+- ≥ 95% das traduções concluídas sem erro em modo avião (offline total).
+- Tempo médio de tradução ≤ 300 ms (on-device, pacote pronto).
+- 0 (zero) envio de conteúdo do usuário para servidores na operação padrão.
+- Taxa de crash < 0,1% das sessões.
+
+## 1.4 Fora do Escopo (v1)
+Tradução de imagem/câmera (OCR), modo conversa dupla em tempo real, login/contas, sincronização em nuvem, anúncios, detecção automática de idioma (Planejado P2 via ML Kit Language ID), loja de frases pré-traduzidas.
+
+---
+
+# 2. ARQUITETURA DE ARQUIVOS SUGERIDA
+
+Estrutura em camadas simples, compatível com os diretórios já existentes no projeto (`lib/core/constants`, `lib/core/services`, `lib/core/theme`).
+
+```text
+translatoo/
+├── assets/
+│   └── models/                          # Modelos embutidos (offline garantido)
+│       ├── vosk-small-pt/               # Modelo acústico Vosk Português (~50 MB)
+│       ├── vosk-small-en/               # Modelo acústico Vosk Inglês
+│       ├── vosk-small-zh/               # Modelo acústico Vosk Mandarim
+│       └── tflite/                      # (Plano B) modelo de tradução TFLite embutido
+├── lib/
+│   ├── main.dart                        # Bootstrap: MultiProvider + MaterialApp(AppTheme)
+│   ├── core/
+│   │   ├── constants/
+│   │   │   ├── app_colors.dart          # 🎨 TOKENS DE COR — FONTE ÚNICA DA PALETA
+│   │   │   ├── app_typography.dart      # Estilos de texto (títulos, corpo, botões)
+│   │   │   ├── app_spacing.dart         # Tokens de espaçamento/radius (4/8/16/24)
+│   │   │   ├── app_strings.dart         # Todos os textos da UI em pt/en/zh (i18n manual)
+│   │   │   └── app_constants.dart       # Códigos de idioma, limites de chars, chaves prefs
+│   │   ├── services/
+│   │   │   ├── translation_service.dart # Wrapper google_mlkit_translation (+ fallback TFLite)
+│   │   │   ├── stt_service.dart         # Wrapper vosk_flutter (microfone → texto)
+│   │   │   ├── tts_service.dart         # Wrapper flutter_tts (texto → áudio nativo)
+│   │   │   ├── model_manager_service.dart # Download/exclusão dos pacotes ML Kit
+│   │   │   ├── storage_service.dart     # Camada única sobre shared_preferences
+│   │   │   └── connectivity_service.dart# Stream online/offline (connectivity_plus)
+│   │   └── theme/
+│   │       └── app_theme.dart           # ThemeData construído EXCLUSIVAMENTE dos tokens
+│   ├── models/
+│   │   ├── language.dart                # enum Language { pt, en, zh } + metadados (nome)
+│   │   ├── translation_record.dart      # Registro de histórico/favorito (serializável JSON)
+│   │   └── app_settings.dart            # Preferências persistidas do usuário
+│   ├── state/
+│   │   ├── translator_view_model.dart   # Módulo 1 — ChangeNotifier
+│   │   ├── speech_view_model.dart       # Máquina de estados do microfone
+│   │   ├── tts_view_model.dart          # Estado de reprodução de áudio
+│   │   └── library_view_model.dart      # Histórico + favoritos + configurações
+│   └── ui/
+│       ├── screens/
+│       │   ├── home_screen.dart         # Shell com NavigationBar (Traduzir/Histórico/Ajustes)
+│       │   ├── translate_screen.dart    # Módulos 1–3 compostos
+│       │   ├── history_screen.dart      # Módulo 4
+│       │   ├── settings_screen.dart     # Módulo 4
+│       │   └── model_manager_screen.dart# Gestão dos pacotes de idiomas
+│       └── widgets/                     # language_pill, translation_card, mic_button,
+│                                        # waveform_indicator, mini_player_tts,
+│                                        # download_progress_card, connection_badge...
+├── test/
+│   ├── services/                        # Testes unitários com mocks dos plugins
+│   └── state/                           # Testes dos ViewModels
+└── pubspec.yaml
+```
+
+**Regras de dependência entre camadas (obrigatórias):**
+1. `ui/` NUNCA importa pacotes de plugin (`google_mlkit_*`, `vosk_flutter`, `flutter_tts`, `shared_preferences`) diretamente — somente ViewModels.
+2. ViewModels importam apenas `core/services/` e `models/`. Serviços não conhecem Flutter Widgets.
+3. Todo arquivo Dart declara imports na ordem: dart → flutter → packages → projeto.
+4. Nenhuma cor literal fora de `app_colors.dart`; nenhuma string literal de UI fora de `app_strings.dart`.
+
+---
+
+# 3. ESCOPO DO PRODUTO (REQUISITOS FUNCIONAIS)
+
+## 3.0 Visão Geral dos Módulos
+| Módulo | Nome | Prioridade |
+|---|---|---|
+| **M1** | Tradução de Texto (núcleo on-device) | P0 |
+| **M2** | Entrada por Voz — Speech-to-Text offline | P0 |
+| **M3** | Saída por Voz — Text-to-Speech nativo | P0 |
+| **M4** | Histórico, Favoritos, Configurações e Conectividade | P0 |
+
+### Dependências do `pubspec.yaml` (fechadas — não substituir)
+| Pacote | Uso | Observação |
+|---|---|---|
+| `google_mlkit_translation` | M1 — tradução on-device | Pacotes de idioma ~30 MB cada, download sob demanda |
+| `vosk_flutter` | M2 — STT 100% offline | Modelos embutidos em `assets/models/` |
+| `flutter_tts` | M3 — TTS | Usa motor nativo do SO (já no cache do projeto, v4.2.5) |
+| `tflite_flutter` | M1 — Plano B | Modelo TFLite embutido p/ dispositivos sem Google Play Services |
+| `shared_preferences` | M4 — persistência local | Equivalente ao "LocalStorage" |
+| `connectivity_plus` | M4 — status de rede / fallback híbrido | |
+| `provider` | Estado global (ChangeNotifier) | |
+| `permission_handler` | Permissão de microfone | |
+| `path_provider` | Caminhos locais (modelos Vosk) | Já resolvido no projeto |
+| `share_plus` | Compartilhar tradução | P1 (opcional na v1) |
+
+---
+
+## 3.1 MÓDULO 1 — TRADUÇÃO DE TEXTO
+
+### Lógica de Funcionamento
+- **RF-M1-01** — O aplicativo suporta exatamente os pares: `pt↔en`, `pt↔zh`, `en↔zh`. Os idiomas são um enum fechado (`Language { pt, en, zh }`) sem possibilidade de extensão pela UI.
+- **RF-M1-02** — Motor padrão: `google_mlkit_translation` (`OnDeviceTranslator`). Antes de traduzir o par `(origem, destino)`, verificar se ambos os modelos remotos estão baixados via `isModelDownloaded`. Se algum faltar, NÃO falhar silenciosamente: acionar o fluxo de download do **Card de Progresso de Modelo** (ver UI).
+- **RF-M1-03** — Download de pacote: usar `downloadModel` com listener de progresso; exibir porcentagem; permitir cancelamento (`cancelDownloadModel`); permitir exclusão (`deleteRemoteModel`). Tamanho estimado exibido: ~30 MB por idioma.
+- **RF-M1-04** — Tradução automática (live): após o usuário parar de digitar por **800 ms (debounce)**, disparar a tradução automaticamente, desde que o texto tenha ≥ 1 caractere. O botão **Traduzir** força execução imediata ignorando o debounce.
+- **RF-M1-05** — Limite de caracteres: **5.000**. Contador visível `n/5000`. Ao exceder, o campo trunca a entrada em 5000 e exibe aviso. Textos maiores que o limite do ML Kit são divididos em blocos ≤ 4.500 chars respeitando quebras de parágrafo/frase, traduzidos sequencialmente e concatenados preservando a ordem.
+- **RF-M1-06** — Botão inverter (⇄): troca origem↔destino E troca os textos dos dois cartões; recalcula a tradução para o novo par. Desabilitado durante tradução em andamento.
+- **RF-M1-07** — Plano B (dispositivos sem GMS): se `google_mlkit_translation` lançar erro de inicialização/download (Play Services ausente), o `TranslationService` faz fallback transparente para o interpretador `tflite_flutter` com modelo embutido em `assets/tflite/`. O usuário NUNCA vê stacktrace; vê apenas badge discreto "motor alternativo".
+- **RF-M1-08** — Enquanto traduz: cartão destino exibe skeleton shimmer; entradas ficam desabilitadas para novo envio até conclusão ou erro.
+- **RF-M1-09** — Ações sobre o resultado: copiar (clipboard), compartilhar (P1), favoritar ⭐ (M4), reproduzir áudio 🔊 (M3).
+
+### Elementos de Interface (Tela Traduzir)
+| Elemento | Especificação |
+|---|---|
+| AppBar | Logo "Translatoo" + `ConnectionBadge` (Módulo 4) à direita |
+| Cartão Origem | Pill seletora de idioma (canto sup. esq.) · botão limpar ✕ (canto sup. dir.) · `TextField` multilinha auto-expansível · contador `n/5000` · linha de ações: 🎤 (M2) · colar 📋 |
+| Botão ⇄ | Circular central entre cartões, 56 dp, elevação 2 |
+| Cartão Destino | Pill seletora de idioma · área somente-leitura do resultado (ou skeleton) · linha de ações: 🔊 (M3) · copiar · ⭐ · compartilhar |
+| Card Progresso Modelo | Aparece sobre o cartão afetado quando modelo ausente: nome do idioma, barra de progresso %, tamanho ~30 MB, botões **Baixar**/**Cancelar** |
+| Botão Traduzir | Primário, largura total do cartão origem em layout compacto |
+
+### Manipulação de Estado
+`TranslatorViewModel extends ChangeNotifier` (via `provider`):
+- Campos observáveis: `sourceLang`, `targetLang`, `sourceText`, `translatedText`, `status ∈ {idle, typing, translating, done, error}`, `modelStatus: Map<LanguagePair, ModelState{notDownloaded, downloading(progress), ready}>`.
+- Métodos públicos: `setSourceLang()`, `setTargetLang()`, `swapLanguages()`, `onTextChanged()` (gerencia debounce interno), `translateNow()`, `clearSource()`, `copyResult()`, `toggleFavorite()`.
+- Regras de notificação: usar `notifyListeners()` apenas em transições de estado; a UI consome com `Selector`/`context.select` para rebuild cirúrgico (nunca `Consumer` da ViewModel inteira nos campos de texto, evitando perda de foco/cursor).
+- Persistência do último par usado: delegada ao Módulo 4 (`settings.srcLang` / `settings.tgtLang`).
+
+## 3.2 MÓDULO 2 — ENTRADA POR VOZ (SPEECH-TO-TEXT OFFLINE)
+
+### Lógica de Funcionamento
+- **RF-M2-01** — Motor obrigatório: `vosk_flutter` com modelos acústicos **embutidos nos assets** (`assets/models/vosk-small-{pt,en,zh}`), garantindo STT offline mesmo sem Google Play Services. O pacote `speech_to_text` NÃO é a fonte primária, pois depende de ditado offline configurado pelo usuário no SO (fora do controle do app).
+- **RF-M2-02** — Idioma da escuta = idioma de ORIGEM selecionado no Módulo 1. Ao iniciar escuta, o modelo Vosk correspondente é carregado on-demand; primeira carga exibe estado `initializing` (spinner no botão).
+- **RF-M2-03** — Fluxo de permissão: ao tocar em 🎤, solicitar `RECORD_AUDIO`. Se negada permanentemente, exibir diálogo explicativo com botão "Abrir configurações" (`permission_handler.openAppSettings()`). Nenhuma exceção deve propagar à UI.
+- **RF-M2-04** — Resultados parciais: o texto reconhecido aparece EM TEMPO REAL (streaming) no campo origem, em cor secundária/itálico enquanto parcial.
+- **RF-M2-05** — Fim de fala: pausa de ≥ 1,5 s finaliza a frase; o texto final substitui o conteúdo do campo origem e dispara automaticamente a tradução do Módulo 1 (ignorando debounce).
+- **RF-M2-06** — Limites: duração máxima contínua de **60 s** (auto-stop usando último resultado final); cancelar descarta tudo e restaura o texto anterior ao início da escuta.
+- **RF-M2-07** — Durante a escuta, TTS é silenciado e o campo de digitação fica desabilitado.
+
+### Elementos de Interface
+| Elemento | Especificação |
+|---|---|
+| Botão 🎤 | 3 estados: `idle` (outline, cor primária) · `listening` (preenchido vermelho `colorError`, anel pulsante + waveform animada) · `error` (ícone com badge ! e tooltip da mensagem) |
+| Overlay de Escuta | Bottom-sheet durante listening: texto parcial grande (rolável), timer mm:ss, waveform, botões **Cancelar** e **Concluir** |
+| Feedback háptico | Vibração curta ao iniciar e encerrar a escuta (se suportado) |
+
+### Manipulação de Estado
+`SpeechViewModel extends ChangeNotifier`:
+- Máquina de estados: `SpeechState { idle, initializing, listening, processing, error }` — transições inválidas ignoradas (ex.: `stop()` quando `idle`).
+- Campos observáveis: `state`, `partialText`, `finalText`, `elapsedSeconds`, `errorMessage`.
+- Métodos públicos: `start(Language lang)`, `stop()`, `cancel()`.
+- Integração: ao emitir `finalText != null`, chama `TranslatorViewModel.acceptDictatedText(text)` que seta o campo origem e executa tradução imediata.
+
+---
+
+## 3.3 MÓDULO 3 — SAÍDA POR VOZ (TEXT-TO-SPEECH NATIVO)
+
+### Lógica de Funcionamento
+- **RF-M3-01** — Motor: `flutter_tts`, utilizando exclusivamente os motores de voz nativos do SO (Google/Samsung/Baidu no Android, Siri no iOS). Sem uso de internet.
+- **RF-M3-02** — Idioma da fala = idioma de DESTINO da tradução. Antes de falar, consultar vozes instaladas (`getVoices`/`isLanguageAvailable`).
+- **RF-M3-03** — Voz ausente: se o pacote de voz do idioma destino não estiver instalado no sistema, exibir **SnackBar persistente** com instrução explícita ("Instale o pacote de voz Chinês nas configurações do sistema → Idioma e entrada → Saída de síntese de voz") e ação sugerida para abrir as configurações do aparelho. O app não trava e mantém o resultado visível.
+- **RF-M3-04** — Fila única: um novo `speak()` sempre executa `stop()` antes (nunca sobrepor áudios). Reprodução pode ser interrompida a qualquer momento pelo usuário.
+- **RF-M3-05** — Parâmetros ajustáveis nas Configurações (M4): velocidade `rate ∈ [0.5, 2.0]` (default 1.0) e tom `pitch ∈ [0.5, 1.5]` (default 1.0), persistidos localmente.
+- **RF-M3-06** — Autoplay opcional (default OFF): quando ativado, toda tradução concluída é falada automaticamente. Quando a tradução se originou de ditado por voz (M2), a reprodução automática ocorre independentemente do autoplay (fluxo conversacional).
+
+### Elementos de Interface
+| Elemento | Especificação |
+|---|---|
+| Botão 🔊 | No cartão destino; alterna play ▶ / stop ⏹ conforme estado; desabilitado se resultado vazio |
+| Mini-player | Barra inferior durante reprodução: ícone animado, trecho sendo falado (scroll horizontal), botão stop |
+| Painel de voz | Em Ajustes: sliders rotulados de velocidade/tom com valor numérico ao lado |
+
+### Manipulação de Estado
+`TtsViewModel extends ChangeNotifier`:
+- Estados: `TtsState { idle, speaking }`; campos `currentText`, `currentLang`, `rate`, `pitch`, `voiceAvailable: Map<Language, bool>` (cache atualizado na abertura do app e ao retornar de segundo plano).
+- Handlers registrados no `flutter_tts`: `onComplete` → volta a `idle`; `onError` → `idle` + mensagem mapeada (tabela de erros, §4.8).
+- Regra: `speak()` é idempotente em relação a chamadas duplicadas do mesmo texto em ≤ 300 ms (debounce anti duplo-toque).
+
+## 3.4 MÓDULO 4 — HISTÓRICO, FAVORITOS, CONFIGURAÇÕES E CONECTIVIDADE
+
+### Lógica de Funcionamento
+- **RF-M4-01 — Histórico automático**: toda tradução concluída (`status == done`) é salva com `{id, sourceText, translatedText, sourceLang, targetLang, timestamp, isFavorite}`. Deduplicação: se a última entrada tiver mesmo texto de origem + par de idiomas, apenas atualiza `timestamp` e resultado (sem duplicar).
+- **RF-M4-02 — Capacidade**: histórico limitado a **200 entradas** (FIFO — a mais antiga é descartada). Favoritos são ilimitados e NUNCA são descartados automaticamente.
+- **RF-M4-03 — Busca e filtro**: campo de busca case-insensitive por substring em `sourceText` OU `translatedText`; chips de filtro por par de idiomas (`Todos`, `PT↔EN`, `PT↔ZH`, `EN↔ZH`).
+- **RF-M4-04 — Exclusão**: swipe para excluir item individual + SnackBar "Desfazer" por 5 s; ação "Limpar tudo" exige diálogo de confirmação e NÃO apaga favoritos.
+- **RF-M4-05 — Persistência local** (`shared_preferences` — equivalente ao LocalStorage), chaves prefixadas:
+  | Chave | Conteúdo |
+  |---|---|
+  | `translatoo.history` | JSON array de `TranslationRecord` (máx. 200) |
+  | `translatoo.favorites` | JSON array de ids + registros |
+  | `translatoo.settings.srcLang` / `tgtLang` | Último par usado |
+  | `translatoo.settings.ttsRate` / `ttsPitch` / `autoPlay` | Preferências de voz |
+  | `translatoo.settings.wifiOnly` | Download de modelos só via Wi-Fi (default `true`) |
+  | `translatoo.settings.schemaVersion` | Controle de migração |
+  Gravações agrupadas (debounce 500 ms) para evitar I/O excessivo. Toda leitura tolera JSON corrompido: reinicia coleção vazia e loga em modo debug.
+- **RF-M4-06 — Gerenciador de Modelos**: tela dedicada listando os 3 idiomas com estado (`Não baixado` · `Baixando n%` · `Pronto`), tamanho estimado (~30 MB) e ações Baixar/Excluir. Se `wifiOnly == true` e rede = dados móveis, bloquear com aviso + opção explícita "Baixar mesmo assim" (não altera a preferência).
+- **RF-M4-07 — Conectividade**: `connectivity_plus` expõe stream; `ConnectionBadge` no AppBar: 🟢 online / ⚪ offline. **Regra crítica: nenhum recurso da v1 é bloqueado por falta de internet** (tradução, ditado e voz são locais).
+- **RF-M4-08 — Modo híbrido (Fase 2, flag `cloudEnabled=false` na v1)**: quando online e flag ativa, tentar API em nuvem (maior precisão) com timeout de 2 s; qualquer erro/timeout → fallback silencioso para o motor on-device, com badge discreto "local" no resultado. Implementação isolada atrás da interface `TranslationBackend`.
+- **RF-M4-09 — Tela Ajustes**: par de idiomas padrão · autoplay TTS (switch) · velocidade/tom (sliders M3) · somente Wi-Fi (switch) · gerenciar modelos (link) · limpar histórico (ação destrutiva confirmada) · versão do app · declaração de privacidade ("Nenhum dado sai do seu aparelho").
+
+### Elementos de Interface
+| Elemento | Especificação |
+|---|---|
+| NavigationBar inferior | 3 destinos fixos: Traduzir · Histórico · Ajustes (ícone + rótulo, sempre visível) |
+| Lista de Histórico | Card por item: origem (cor texto secundária), tradução (destaque), pills dos idiomas, horário relativo ("há 5 min"), ícone ⭐ se favorito; toque reabre no Tradutor |
+| Barra de busca | Fixa no topo da lista + chips de filtro horizontal scrollável |
+| Estados vazios | Ilustração leve + texto orientativo ("Suas traduções aparecerão aqui") |
+| ConnectionBadge | Ícone 20 dp no AppBar com tooltip; nunca ocupa linha própria |
+
+### Manipulação de Estado
+`LibraryViewModel extends ChangeNotifier`:
+- Campos observáveis: `history: List<TranslationRecord>`, `favorites: Set<String>`, `query`, `activeFilter`, `settings: AppSettings` (imutável, cópia-com-`copyWith`).
+- Métodos públicos: `addRecord()`, `toggleFavorite(id)`, `delete(id)` (+`undoDelete()`), `clearHistory()`, `search(q)`, `filterBy(pair)`, `updateSettings(...)`.
+- `StorageService` é o ÚNICO ponto de acesso a `shared_preferences` (serializa/desserializa JSON); ViewModels nunca importam o plugin.
+- `ConnectivityService` expõe `ValueListenable<bool> isOnline`; consumido pelo badge sem rebuild das telas.
+
+## 3.5 REGRAS DE NEGÓCIO TRANSVERSAIS
+- **RN-01** — Idiomas são o enum fechado `Language { pt, en, zh }`; nenhum fluxo aceita idioma fora dele.
+- **RN-02** — O app opera 100% offline por padrão; internet só é usada para download de pacotes ML Kit e (Fase 2) API em nuvem.
+- **RN-03** — Nenhuma exceção de plugin chega crua à UI: todos os serviços capturam e convertem para `AppException(code)` da tabela §4.8.
+- **RN-04** — Proibido cor literal fora de `app_colors.dart` e string de UI literal fora de `app_strings.dart` (i18n pt-BR/en/zh).
+- **RN-05** — Logs apenas em modo debug (`kReleaseMode` guard); nunca logar conteúdo traduzido/falado.
+- **RN-06** — Acessibilidade: `Semantics` em todo botão de ícone; contraste mínimo AA (4.5:1); áreas de toque ≥ 48 dp.
+- **RN-07** — Ciclo de vida: ao ir para segundo plano durante escuta (M2), a escuta é encerrada com o resultado parcial finalizado; TTS (M3) continua até concluir ou ser interrompido pelo SO.
+
+---
+
+# 4. REQUISITOS NÃO-FUNCIONAIS (ESPECIFICAÇÕES TÉCNICAS)
+
+## 4.1 Responsividade Mobile-First (obrigatória)
+- Layout projetado primeiro para **telas compactas (< 600 dp)**, uma coluna empilhada (Cartão Origem → ⇄ → Cartão Destino), ações primárias no terço inferior.
+- Breakpoints via `LayoutBuilder`/`MediaQuery`:
+  | Largura | Layout |
+  |---|---|
+  | < 600 dp | Coluna única empilhada, `NavigationBar` inferior |
+  | 600–1024 dp | Cartões origem/destino lado a lado horizontalmente; navegação inferior mantida |
+  | ≥ 1024 dp | Conteúdo centralizado (`maxWidth` 720 dp), cartões lado a lado, `NavigationRail` à esquerda |
+- `SafeArea` obrigatória em todas as telas; validação visual mínima em 320 dp de largura.
+
+## 4.2 Armazenamento Local (equivalente ao LocalStorage)
+- Persistência exclusivamente via `shared_preferences`, encapsulada em `StorageService` (§3.4 RF-M4-05). Nenhum dado sensível além de preferências e histórico de traduções.
+- Sem backend, sem contas, sem sincronização. Desinstalar o app apaga 100% dos dados (comportamento aceito e documentado na tela Ajustes).
+- Dados do usuário (textos/áudios) permanecem 100% no dispositivo — diferencial competitivo frente a tradutores em nuvem.
+
+## 4.3 Organização do "CSS" — Tokens de Cor (equivalente a variáveis CSS)
+Arquivo único `lib/core/constants/app_colors.dart` no topo do projeto de estilos, espelhando a convenção de variáveis CSS para mapeamento direto da paleta existente:
+
+```dart
+/// FONTE ÚNICA DA PALETA — altere APENAS aqui para trocar o tema.
+class AppColors {
+  // --color-primary
+  static const Color colorPrimary       = Color(0xFF2563EB);
+  // --color-secondary
+  static const Color colorSecondary     = Color(0xFF10B981);
+  // --color-background
+  static const Color colorBackground    = Color(0xFFF8FAFC);
+  // --color-surface
+  static const Color colorSurface       = Color(0xFFFFFFFF);
+  // --color-text-primary / --color-text-secondary
+  static const Color colorTextPrimary   = Color(0xFF0F172A);
+  static const Color colorTextSecondary = Color(0xFF64748B);
+  // --color-success / --color-warning / --color-error
+  static const Color colorSuccess       = Color(0xFF22C55E);
+  static const Color colorWarning       = Color(0xFFF59E0B);
+  static const Color colorError         = Color(0xFFEF4444);
+  // --color-border / --color-overlay
+  static const Color colorBorder        = Color(0xFFE2E8F0);
+  static const Color colorOverlay       = Color(0x66000000);
+}
+```
+- `app_theme.dart` constrói `ThemeData` EXCLUSIVAMENTE a partir desses tokens (proibido `Color(0x…)` em qualquer outro arquivo).
+- Espaçamentos/raios também tokenizados em `app_spacing.dart` (escala 4/8/16/24/32; raio 12 padrão).
+- Modo escuro (P1): segunda classe `AppColorsDark` com os MESMOS nomes estáticos — troca de paleta sem tocar widgets.
+
+## 4.4 Desempenho
+| Métrica | Alvo |
+|---|---|
+| Cold start | < 2 s |
+| Tradução (pacote pronto, ≤ 500 chars) | ≤ 300 ms |
+| Início da escuta Vosk (modelo já carregado) | ≤ 500 ms |
+| Animações | 60 fps sem jank (mic pulsante/waveform via `AnimationController` único) |
+
+## 4.5 Privacidade e Permissões
+- `RECORD_AUDIO` somente durante uso ativo (runtime permission, justificativa prévia em diálogo).
+- iOS `Info.plist`: `NSMicrophoneUsageDescription` e `NSSpeechRecognitionUsageDescription` obrigatórios.
+- Política: nenhum dado coletado/compartilhado; áudio processado localmente (Vosk) ou pelo motor nativo do SO (TTS).
+
+## 4.6 Compatibilidade
+- Android minSdk **23+**; iOS **12+**. Validação explícita em dispositivos **sem Google Play Services** (cenário China): Plano B TFLite deve cobrir tradução e Vosk cobrir STT.
+- Web/Desktop: comportamento degradado aceitável (sem mic/Vosk), mas tradução de texto e histórico devem funcionar.
+
+## 4.7 Tamanho do Aplicativo
+| Variante | Limite |
+|---|---|
+| APK base (sem modelos embutidos, downloads on-demand) | < 40 MB |
+| APK completo (modelos Vosk/TFLite embutidos) | ≤ 180 MB (trade-off documentado: offline garantido × tamanho) |
+
+## 4.8 Tabela Única de Erros (mapeamento obrigatório)
+| Código | Gatilho | Mensagem exibida | Ação sugerida |
+|---|---|---|---|
+| `ERR_MODEL_NOT_DOWNLOADED` | Par sem pacote local | "Pacote de {idioma} não instalado" | Botão Baixar |
+| `ERR_DOWNLOAD_FAILED` | Falha/rede no download | "Falha ao baixar pacote" | Tentar novamente |
+| `ERR_WIFI_ONLY` | Download em dados móveis | "Download restrito a Wi-Fi" | "Baixar mesmo assim" |
+| `ERR_MIC_PERMISSION` | Permissão negada | "Precisamos do microfone para ouvir você" | Abrir configurações |
+| `ERR_STT_ENGINE` | Erro Vosk/modelo | "Não foi possível ouvir agora" | Tentar novamente |
+| `ERR_TTS_VOICE_MISSING` | Voz do SO ausente | "Instale a voz {idioma} nas configurações do sistema" | Abrir configurações |
+| `ERR_STORAGE` | shared_preferences falhou | "Não foi possível salvar" | Repetir ação |
+| `ERR_TRANSLATION_FAILED` | Motor falhou nos dois backends | "Tradução indisponível neste momento" | Tentar novamente |
+
+# 5. CRITÉRIOS DE ACEITE (USER STORIES)
+
+Formato obrigatório: **Dado que… Quando… Então…** Mínimo exigido: 2 por módulo.
+
+## US-1 — Tradução de Texto (Módulo 1)
+> **Como** usuário, **quero** traduzir texto entre PT, EN e ZH instantaneamente, **para que** eu me comunique sem internet.
+
+- **AC-M1-1** — **Dado que** os pacotes de idiomas `pt` e `zh` estão baixados e o aparelho está em modo avião, **quando** digito "Bom dia" com origem PT e destino ZH, **então** o cartão destino exibe a tradução em até 300 ms após o debounce de 800 ms, sem nenhuma mensagem de erro de rede.
+- **AC-M1-2** — **Dado que** o pacote do idioma destino ainda não foi baixado, **quando** seleciono esse idioma pela primeira vez, **então** o Card de Progresso Modelo aparece com barra %, tamanho estimado (~30 MB) e botões Baixar/Cancelar; ao concluir, o estado muda para "Pronto" e a tradução pendente executa automaticamente.
+- **AC-M1-3** — **Dado que** existem textos nos dois cartões, **quando** toco no botão ⇄, **então** idiomas e textos são invertidos, uma nova tradução é calculada para o par inverso e o botão fica desabilitado apenas durante o processamento.
+- **AC-M1-4** — **Dado que** estou em um dispositivo sem Google Play Services, **quando** tento traduzir com ML Kit indisponível, **então** o app usa automaticamente o motor TFLite embutido (badge "motor alternativo"), sem exibir stacktrace ou travar.
+
+## US-2 — Entrada por Voz / STT (Módulo 2)
+> **Como** usuário, **quero** ditar minha fala e vê-la transcrita, **para que** eu não precise digitar.
+
+- **AC-M2-1** — **Dado que** concedi permissão de microfone e o idioma de origem é PT, **quando** toco no 🎤 e digo "onde fica o banheiro", **então** vejo o texto parcial aparecendo em tempo real no campo origem e, após pausa de ~1,5 s, o texto final substitui o campo e dispara a tradução automaticamente.
+- **AC-M2-2** — **Dado que** neguei permanentemente a permissão de microfone, **quando** toco no 🎤, **então** é exibido um diálogo explicativo com botão "Abrir configurações", nenhuma exceção é lançada e o restante do app permanece utilizável.
+- **AC-M2-3** — **Dado que** estou gravando há mais de 60 s continuamente, **quando** o tempo máximo é atingido, **então** a escuta encerra sozinha e o último resultado final reconhecido permanece no campo origem.
+- **AC-M2-4** — **Dado que** a escuta está ativa, **quando** toco em Cancelar no overlay, **então** o texto volta a ser exatamente o anterior ao início da ditadura e nenhuma tradução é disparada.
+
+## US-3 — Saída por Voz / TTS (Módulo 3)
+> **Como** usuário, **quero** ouvir a tradução falada, **para que** eu aprenda a pronúncia e me comunique verbalmente.
+
+- **AC-M3-1** — **Dado que** existe uma tradução pronta com destino ZH, **quando** toco no 🔊, **então** ouço a frase em mandarim pelo motor nativo do sistema, o botão alterna para estado ⏹ e retorna a ▶ automaticamente ao concluir.
+- **AC-M3-2** — **Dado que** o celular não possui o pacote de voz chinesa instalado, **quando** aciono a reprodução, **então** aparece SnackBar persistente instruindo instalar a voz nas configurações do sistema; o app não trava e mantém o resultado visível.
+- **AC-M3-3** — **Dado que** um áudio está tocando, **quando** reproduzo outra tradução, **então** o áudio anterior é interrompido imediatamente (nunca há sobreposição de vozes).
+- **AC-M3-4** — **Dado que** ajustei a velocidade para 1.5 nos sliders de Ajustes, **quando** fecho e reabro o aplicativo, **então** a velocidade 1.5 permanece configurada e aplicada na próxima reprodução (persistência local).
+
+## US-4 — Histórico, Favoritos e Configurações (Módulo 4)
+> **Como** usuário, **quero** reencontrar traduções passadas e manter minhas preferências, **para que** o app se adapte a mim.
+
+- **AC-M4-1** — **Dado que** realizei 3 traduções distintas, **quando** abro a aba Histórico, **então** vejo as 3 entradas ordenadas da mais recente para a mais antiga, cada uma com origem, tradução, pills dos idiomas e horário relativo.
+- **AC-M4-2** — **Dado que** deslizo um item do histórico para excluí-lo, **quando** confirmo a exclusão, **então** o item desaparece da lista imediatamente e um SnackBar oferece "Desfazer" por 5 s, restaurando o item na posição original.
+- **AC-M4-3** — **Dado que** fechei completamente o app (ou reiniciei o aparelho), **quando** o reabro, **então** o último par de idiomas, as preferências de voz (rate/pitch/autoplay), o histórico e os favoritos estão exatamente como deixei (persistência via `shared_preferences`).
+- **AC-M4-4** — **Dado que** estou conectado via dados móveis e a opção "Somente Wi-Fi" está ativa, **quando** tento baixar um modelo no Gerenciador, **então** vejo aviso explicativo com opção "Baixar mesmo assim"; ao confirmar, o download prossegue e a preferência original permanece inalterada.
+- **AC-M4-5** — **Dado que** o aparelho perdeu totalmente a internet, **quando** uso qualquer função do app, **então** nada é bloqueado, o ConnectionBadge mostra offline e todas as operações (traduzir/ditar/ouvir/histórico) funcionam normalmente.
+
+# 6. ROADMAP, PRIORIDADES E DEFINIÇÃO DE PRONTO
+
+## 6.1 Priorização
+| Fase | Itens |
+|---|---|
+| **P0 (v1 — obrigatório)** | M1 tradução texto on-device + download de modelos; M2 ditado Vosk; M3 TTS nativo com aviso de voz ausente; M4 histórico/favoritos/configurações/persistência; tokens de cor; responsividade mobile-first; tabela de erros |
+| **P1** | Compartilhar tradução (`share_plus`); modo escuro (`AppColorsDark`); flavor leve sem modelos embutidos; NavigationRail desktop |
+| **P2 (Fase 2)** | Modo híbrido nuvem→local com `connectivity_plus` (flag `cloudEnabled`, timeout 2 s, badge "local"); detecção automática de idioma (ML Kit Language ID) |
+
+## 6.2 Definição de Pronto (DoD) por funcionalidade
+1. `flutter analyze` sem warnings; formatado com `dart format`.
+2. Testes unitários dos ViewModels/serviços envolvidos passando (`flutter test`).
+3. Todos os critérios de aceite do módulo verificados manualmente em Android físico.
+4. Nenhuma cor fora de `app_colors.dart`; nenhuma string de UI fora de `app_strings.dart`.
+5. Funcionamento validado em **modo avião** quando aplicável.
+6. Erros mapeados para a tabela §4.8 (nenhuma exceção crua na UI).
+
+## 6.3 Glossário
+| Termo | Definição |
+|---|---|
+| On-device | Processamento executado no processador do celular, sem servidores |
+| Pacote de idioma | Modelo de tradução ML Kit baixável (~30 MB por idioma) |
+| GMS | Google Mobile Services — ausente em celulares chineses nativos |
+| STT / TTS | Speech-to-Text (fala→texto) / Text-to-Speech (texto→fala) |
+| Token de cor | Constante nomeada que substitui variáveis CSS (`colorPrimary` ≙ `--color-primary`) |
+
+## 6.4 Referências — Decisões herdadas do documento `share.txt`
+| Decisão do `share.txt` | Como foi incorporada ao PRD |
+|---|---|
+| ML Kit como coração da tradução offline (~30 MB/idioma, gestão dinâmica) | RF-M1-02/03, US AC-M1-2 |
+| Plano B `tflite_flutter` para celulares sem Play Services (cenário China) | RF-M1-07, AC-M1-4, §4.6 |
+| Vosk como solução robusta de STT offline (modelo embutido ~50 MB mandarim) | RF-M2-01, arquitetura `assets/models/` |
+| `flutter_tts` offline via motor nativo + aviso sobre pacote de voz chinês no sistema | RF-M3-01/03, AC-M3-2 |
+| Arquitetura híbrida (nuvem melhor → fallback local silencioso via `connectivity_plus`) | RF-M4-08, P2 |
+| Trade-offs nuvem × offline (precisão × velocidade × tamanho × privacidade) | §1.1, §4.7, RN-02 |
+
+---
+*Fim do documento — Translatoo PRD v1.0 (2026-08-26).*
