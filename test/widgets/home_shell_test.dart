@@ -7,9 +7,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translatoo/core/constants/app_colors.dart';
 import 'package:translatoo/core/constants/app_spacing.dart';
 import 'package:translatoo/core/services/connectivity_service.dart';
+import 'package:translatoo/core/services/model_manager_service.dart';
 import 'package:translatoo/core/services/storage_service.dart';
+import 'package:translatoo/core/services/translation_backend.dart';
+import 'package:translatoo/core/services/translation_service.dart';
 import 'package:translatoo/core/theme/app_theme.dart';
 import 'package:translatoo/main.dart';
+import 'package:translatoo/models/language.dart';
+import 'package:translatoo/models/language_pair.dart';
 
 class _FakePlatform extends ConnectivityPlatform {
   _FakePlatform(this.initialResults);
@@ -44,6 +49,12 @@ void main() {
     final connectivity = ConnectivityService();
     await connectivity.start();
 
+    // Motor M1 stubado (F1): pacotes "instalados" para não exibir o card de
+    // download (evitaria pumpAndSettle com progresso indeterminado).
+    final translationService = TranslationService(primary: _StubBackend());
+    final manager = ModelManagerService(api: _StubApi());
+    await manager.refreshAll();
+
     // Nota: nesta versão do Flutter o MaterialApp lê o locale da instância
     // real da plataforma (host = en-US), ignorando overrides de teste. As
     // expectativas abaixo usam o idioma do ambiente de teste; a resolução
@@ -51,7 +62,12 @@ void main() {
     // AppStrings (AC-F0-2) e na validação manual em device.
 
     await tester.pumpWidget(
-      TranslatooApp(storage: storage, connectivity: connectivity),
+      TranslatooApp(
+        storage: storage,
+        connectivity: connectivity,
+        translationService: translationService,
+        modelManager: manager,
+      ),
     );
     await tester.pumpAndSettle();
 
@@ -107,4 +123,41 @@ void main() {
       ),
     );
   });
+}
+
+/// Backend stub p/ o shell (nenhuma chamada real ao plugin nos testes).
+class _StubBackend implements TranslationBackend {
+  @override
+  String get id => 'stub';
+
+  @override
+  Future<bool> isModelDownloaded(Language language) async => true;
+
+  @override
+  Future<bool> isReady(LanguagePair pair) async => true;
+
+  @override
+  Future<String> translate({
+    required Language source,
+    required Language target,
+    required String text,
+  }) async => text;
+
+  @override
+  void dispose() {}
+}
+
+/// API stub: todos os pacotes sempre instalados.
+class _StubApi implements ModelManagerApi {
+  @override
+  Future<bool> isModelDownloaded(Language language) async => true;
+
+  @override
+  Future<void> downloadModel(
+    Language language, {
+    required bool isWifiRequired,
+  }) async {}
+
+  @override
+  Future<void> deleteModel(Language language) async {}
 }

@@ -173,7 +173,7 @@ lib/
 
 ---
 
-# 6. FASE 0 — FUNDAÇÃO E DESIGN SYSTEM
+# 6. FASE 0 — FUNDAÇÃO E DESIGN SYSTEM [CHECK]
 
 > **Objetivo**: deixar o terreno pronto para que TODAS as fases seguintes sejam "só" feature: dependências fechadas, arquitetura de pastas viva, tokens Verde & Branco light/dark funcionando, i18n pt/en/zh, persistência e conectividade encapsulados, shell de navegação responsivo navegável e pipeline de qualidade rodando.
 

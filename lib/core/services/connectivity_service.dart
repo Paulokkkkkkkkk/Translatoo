@@ -19,26 +19,38 @@ class ConnectivityService {
 
   final ValueNotifier<bool> isOnline = ValueNotifier<bool>(true);
 
+  /// `true` quando a única rota ativa é dados móveis (rede medida). Consumido
+  /// pelo ModelManagerService (F1.3) para aplicar a preferência `wifiOnly`.
+  final ValueNotifier<bool> isOnMobileData = ValueNotifier<bool>(false);
+
   /// Lê o estado atual e assina mudanças. Idempotente.
   Future<void> start() async {
     if (_subscription != null) return;
     try {
-      isOnline.value = _compute(await _connectivity.checkConnectivity());
+      _apply(await _connectivity.checkConnectivity());
     } catch (e) {
       isOnline.value = true;
+      isOnMobileData.value = false;
     }
     _subscription = _connectivity.onConnectivityChanged.listen(
-      (results) => isOnline.value = _compute(results),
-      onError: (Object _) => isOnline.value = true,
+      _apply,
+      onError: (Object _) {
+        isOnline.value = true;
+        isOnMobileData.value = false;
+      },
     );
   }
 
-  static bool _compute(List<ConnectivityResult> results) =>
-      results.isNotEmpty && results.any((r) => r != ConnectivityResult.none);
+  void _apply(List<ConnectivityResult> results) {
+    isOnline.value =
+        results.isNotEmpty && results.any((r) => r != ConnectivityResult.none);
+    isOnMobileData.value = results.contains(ConnectivityResult.mobile);
+  }
 
   Future<void> dispose() async {
     await _subscription?.cancel();
     _subscription = null;
     isOnline.dispose();
+    isOnMobileData.dispose();
   }
 }

@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/constants/app_strings.dart';
 import '../../state/connection_view_model.dart';
 import '../widgets/connection_badge.dart';
+import 'debug_models_screen.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
 import 'translate_screen.dart';
@@ -35,7 +37,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.appName),
+        title: kDebugMode
+            ? GestureDetector(
+                onLongPress: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const DebugModelsScreen(),
+                  ),
+                ),
+                child: Text(t.appName),
+              )
+            : Text(t.appName),
         actions: [ConnectionBadge(isOnline: connection.isOnline)],
       ),
       body: SafeArea(

@@ -7,9 +7,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/constants/app_strings.dart';
 import 'core/services/connectivity_service.dart';
+import 'core/services/mlkit_translation_backend.dart';
+import 'core/services/model_manager_service.dart';
 import 'core/services/storage_service.dart';
+import 'core/services/tflite_translation_backend.dart';
+import 'core/services/translation_service.dart';
 import 'core/theme/app_theme.dart';
 import 'state/connection_view_model.dart';
+import 'state/translator_view_model.dart';
 import 'ui/screens/home_screen.dart';
 
 Future<void> main() async {
@@ -24,7 +29,28 @@ Future<void> main() async {
   final connectivity = ConnectivityService();
   unawaited(connectivity.start());
 
-  runApp(TranslatooApp(storage: storage, connectivity: connectivity));
+  // ── Composição do motor M1 (F1) ───────────────────────────────────────────
+  // Plano A ML Kit + Plano B TFLite atrás da MESMA TranslationBackend
+  // interface; fallback transparente controlado por flag (F1.4).
+  final translationService = TranslationService(
+    primary: MlKitTranslationBackend(),
+    fallback: TfliteTranslationBackend(),
+  );
+  final modelManager = ModelManagerService(
+    api: MlKitModelManagerApi(),
+    online: connectivity.isOnline,
+    onMobileData: connectivity.isOnMobileData,
+  );
+  unawaited(modelManager.refreshAll());
+
+  runApp(
+    TranslatooApp(
+      storage: storage,
+      connectivity: connectivity,
+      translationService: translationService,
+      modelManager: modelManager,
+    ),
+  );
 }
 
 /// Raiz de composição: injeta os serviços via `provider` e monta o
@@ -35,10 +61,14 @@ class TranslatooApp extends StatelessWidget {
     super.key,
     required this.storage,
     required this.connectivity,
+    required this.translationService,
+    required this.modelManager,
   });
 
   final StorageService storage;
   final ConnectivityService connectivity;
+  final TranslationService translationService;
+  final ModelManagerService modelManager;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +76,16 @@ class TranslatooApp extends StatelessWidget {
       providers: [
         Provider<StorageService>.value(value: storage),
         Provider<ConnectivityService>.value(value: connectivity),
+        Provider<TranslationService>.value(value: translationService),
+        Provider<ModelManagerService>.value(value: modelManager),
         ChangeNotifierProvider<ConnectionViewModel>(
           create: (_) => ConnectionViewModel(connectivity),
+        ),
+        ChangeNotifierProvider<TranslatorViewModel>(
+          create: (_) => TranslatorViewModel(
+            translationService: translationService,
+            modelManager: modelManager,
+          ),
         ),
       ],
       child: MaterialApp(

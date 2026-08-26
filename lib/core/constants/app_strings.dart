@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../models/model_state.dart';
+import '../services/app_exception.dart';
+
 /// ─────────────────────────────────────────────────────────────────────────
 /// TRANSLATOO — i18n manual (RN-04 / plano F0.5)
 ///
@@ -52,6 +55,31 @@ abstract final class AppStrings {
   String get actionFavorite;
   String get actionShare;
   String get actionSwapLanguages;
+
+  // Tela Traduzir (M1)
+  String get actionPaste;
+  String get actionClear;
+  String get sourceHint;
+  String get charLimitReached;
+  String get buttonTranslate;
+  String get actionDictate;
+  String get actionListen;
+  String get comingSoon;
+  String get feedbackCopied;
+  String get modelSizeEstimate;
+  String get engineAlternative;
+
+  // Tela de debug de pacotes (F1.3 — só visível em builds debug)
+  String get debugModelsTitle;
+
+  // Estados de pacote de idioma
+  String get modelStateReady;
+  String get modelStateNotInstalled;
+  String get modelStateDownloading;
+
+  // Semantics dos cartões (RN-06)
+  String get originLabel;
+  String get destinationLabel;
 
   // Erros — Tabela Única §4.8
   String errModelNotDownloaded(String language);
@@ -125,6 +153,45 @@ final class _PtStrings extends AppStrings {
   String get actionShare => 'Compartilhar';
   @override
   String get actionSwapLanguages => 'Trocar idiomas';
+
+  @override
+  String get actionPaste => 'Colar';
+  @override
+  String get actionClear => 'Limpar';
+  @override
+  String get sourceHint => 'Digite o texto para traduzir';
+  @override
+  String get charLimitReached =>
+      'Limite de 5.000 caracteres atingido. O texto foi truncado.';
+  @override
+  String get buttonTranslate => 'Traduzir';
+  @override
+  String get actionDictate => 'Ditar';
+  @override
+  String get actionListen => 'Ouvir tradução';
+  @override
+  String get comingSoon => 'chega na próxima fase';
+  @override
+  String get feedbackCopied => 'Tradução copiada';
+  @override
+  String get modelSizeEstimate => '~30 MB por pacote · via Wi-Fi';
+  @override
+  String get engineAlternative => 'Motor alternativo';
+
+  @override
+  String get debugModelsTitle => 'Pacotes de idiomas (debug)';
+
+  @override
+  String get modelStateReady => 'Pronto';
+  @override
+  String get modelStateNotInstalled => 'Não instalado';
+  @override
+  String get modelStateDownloading => 'Baixando';
+
+  @override
+  String get originLabel => 'Idioma de origem';
+  @override
+  String get destinationLabel => 'Idioma de destino';
 
   @override
   String errModelNotDownloaded(String language) =>
@@ -215,6 +282,45 @@ final class _EnStrings extends AppStrings {
   String get actionSwapLanguages => 'Swap languages';
 
   @override
+  String get actionPaste => 'Paste';
+  @override
+  String get actionClear => 'Clear';
+  @override
+  String get sourceHint => 'Type text to translate';
+  @override
+  String get charLimitReached =>
+      '5,000-character limit reached. Text was truncated.';
+  @override
+  String get buttonTranslate => 'Translate';
+  @override
+  String get actionDictate => 'Dictate';
+  @override
+  String get actionListen => 'Listen to translation';
+  @override
+  String get comingSoon => 'coming in the next phase';
+  @override
+  String get feedbackCopied => 'Translation copied';
+  @override
+  String get modelSizeEstimate => '~30 MB per package · over Wi-Fi';
+  @override
+  String get engineAlternative => 'Alternative engine';
+
+  @override
+  String get debugModelsTitle => 'Language packages (debug)';
+
+  @override
+  String get modelStateReady => 'Ready';
+  @override
+  String get modelStateNotInstalled => 'Not installed';
+  @override
+  String get modelStateDownloading => 'Downloading';
+
+  @override
+  String get originLabel => 'Source language';
+  @override
+  String get destinationLabel => 'Target language';
+
+  @override
   String errModelNotDownloaded(String language) =>
       '$language package is not installed';
   @override
@@ -302,6 +408,44 @@ final class _ZhStrings extends AppStrings {
   String get actionSwapLanguages => '交换语言';
 
   @override
+  String get actionPaste => '粘贴';
+  @override
+  String get actionClear => '清除';
+  @override
+  String get sourceHint => '输入要翻译的文字';
+  @override
+  String get charLimitReached => '已达 5,000 字符上限，文本已截断。';
+  @override
+  String get buttonTranslate => '翻译';
+  @override
+  String get actionDictate => '语音输入';
+  @override
+  String get actionListen => '朗读译文';
+  @override
+  String get comingSoon => '下一阶段推出';
+  @override
+  String get feedbackCopied => '译文已复制';
+  @override
+  String get modelSizeEstimate => '每个语言包约 30 MB · 通过 Wi-Fi 下载';
+  @override
+  String get engineAlternative => '备用引擎';
+
+  @override
+  String get debugModelsTitle => '语言包（调试）';
+
+  @override
+  String get modelStateReady => '就绪';
+  @override
+  String get modelStateNotInstalled => '未安装';
+  @override
+  String get modelStateDownloading => '下载中';
+
+  @override
+  String get originLabel => '源语言';
+  @override
+  String get destinationLabel => '目标语言';
+
+  @override
   String errModelNotDownloaded(String language) => '尚未安装$language语言包';
   @override
   String get errDownloadFailed => '软件包下载失败';
@@ -338,3 +482,33 @@ final class _ZhStrings extends AppStrings {
   @override
   String get settingsPrivacy => '任何数据都不会离开您的设备。';
 }
+
+/// Mapeamento ÚNICO `ErrorCode` → mensagem i18n da tabela §4.8 (RN-03/RN-04).
+/// A UI JAMAIS traduz códigos manualmente — sempre passa por aqui.
+///
+/// [missingLanguageLabel]: nome nativo do idioma sem pacote, quando conhecido
+/// (`errModelNotDownloaded` é parametrizado na tabela). Fallback razoável:
+/// rótulo do idioma de origem corrente.
+String errorMessageOf(
+  AppStrings t,
+  ErrorCode code, {
+  String? missingLanguageLabel,
+}) => switch (code) {
+  ErrorCode.modelNotDownloaded => t.errModelNotDownloaded(
+    missingLanguageLabel ?? '',
+  ),
+  ErrorCode.downloadFailed => t.errDownloadFailed,
+  ErrorCode.wifiOnly => t.errWifiOnly,
+  ErrorCode.micPermission => t.errMicPermission,
+  ErrorCode.sttEngine => t.errSttEngine,
+  ErrorCode.ttsVoiceMissing => t.errTtsVoiceMissing(missingLanguageLabel ?? ''),
+  ErrorCode.storage => t.errStorage,
+  ErrorCode.translationFailed => t.errTranslationFailed,
+};
+
+/// Rótulo i18n do estado de um pacote (tela de debug F1.3 / cartões).
+String modelStateLabel(AppStrings t, ModelState state) => switch (state) {
+  ModelReady() => t.modelStateReady,
+  ModelDownloading() => t.modelStateDownloading,
+  ModelNotDownloaded() => t.modelStateNotInstalled,
+};

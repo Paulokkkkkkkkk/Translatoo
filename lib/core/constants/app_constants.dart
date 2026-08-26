@@ -38,6 +38,27 @@ abstract final class AppConstants {
 
   /// Timeout do modo híbrido nuvem (P2 — flag `cloudEnabled`).
   static const Duration cloudTimeout = Duration(milliseconds: 2000);
+
+  /// Alvo de latência por tradução (M1) — medido e logado só em debug.
+  static const int translationLatencyTargetMs = 300;
+
+  /// Tamanho ESTIMADO de um pacote de idiomas (exibição na UI de download).
+  /// O valor real varia por idioma/plataforma (~30 MB segundo o PRD §3.1).
+  static const int estimatedModelSizeMb = 30;
+
+  /// Plano B (F1.4): motor alternativo TFLite p/ devices sem GMS. Enquanto a
+  /// spike não embutir um modelo viável (docs/tflite_spike.md), permanece OFF.
+  static const bool enableAlternativeEngine = false;
+
+  /// Passo do progresso simulado durante o download de pacote (o plugin ML Kit
+  /// não expõe progresso nativo; sondamos o estado — ver ModelManagerService).
+  static const int modelDownloadProgressStep = 7;
+
+  /// Teto do progresso simulado antes da confirmação real de conclusão.
+  static const int modelDownloadProgressCap = 90;
+
+  /// Intervalo de sondagem do estado do modelo durante o download.
+  static const Duration modelDownloadPollInterval = Duration(milliseconds: 400);
 }
 
 /// Chaves de persistência (PRD §M4). Único lugar onde as strings existem.
