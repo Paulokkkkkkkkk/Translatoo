@@ -57,21 +57,24 @@ class DownloadProgressCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       language.displayName,
-                      style: Theme.of(context).textTheme.titleSmall
-                          ?.copyWith(color: scheme.onPrimaryContainer),
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: scheme.onPrimaryContainer,
+                      ),
                     ),
                   ),
                   if (percent != null)
                     Text(
                       '$percent%',
-                      style: Theme.of(context).textTheme.labelLarge
-                          ?.copyWith(color: scheme.onPrimaryContainer),
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: scheme.onPrimaryContainer,
+                      ),
                     )
                   else
                     Text(
                       modelStateLabel(t, state),
-                      style: Theme.of(context).textTheme.labelMedium
-                          ?.copyWith(color: scheme.onPrimaryContainer),
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: scheme.onPrimaryContainer,
+                      ),
                     ),
                 ],
               ),
@@ -88,8 +91,9 @@ class DownloadProgressCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.xs),
               Text(
                 '${t.modelSizeEstimate} · ${AppConstants.estimatedModelSizeMb} MB',
-                style: Theme.of(context).textTheme.labelSmall
-                    ?.copyWith(color: scheme.onPrimaryContainer),
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: scheme.onPrimaryContainer,
+                ),
               ),
               const SizedBox(height: AppSpacing.sm),
               Align(

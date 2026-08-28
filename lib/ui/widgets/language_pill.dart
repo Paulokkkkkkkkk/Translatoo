@@ -65,8 +65,9 @@ class LanguagePill extends StatelessWidget {
             children: [
               Text(
                 language.displayName,
-                style: Theme.of(context).textTheme.labelLarge
-                    ?.copyWith(color: scheme.onPrimaryContainer),
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: scheme.onPrimaryContainer,
+                ),
               ),
               Icon(
                 Icons.keyboard_arrow_down_rounded,

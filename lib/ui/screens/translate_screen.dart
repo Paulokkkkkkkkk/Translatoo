@@ -296,8 +296,9 @@ class _OriginFooter extends StatelessWidget {
                 // Alerta de limite — token de erro do tema vigente.
                 child: Text(
                   t.charLimitReached,
-                  style: Theme.of(context).textTheme.bodySmall
-                      ?.copyWith(color: Theme.of(context).colorScheme.error),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                 ),
               ),
             Row(

@@ -60,8 +60,9 @@ final class MlKitTranslationBackend implements TranslationBackend {
     required String text,
   }) async {
     try {
-      return await _translatorFor(LanguagePair(source: source, target: target))
-          .translateText(text);
+      return await _translatorFor(
+        LanguagePair(source: source, target: target),
+      ).translateText(text);
     } on AppException {
       rethrow;
     } catch (e, st) {
