@@ -9,10 +9,13 @@ download de pacotes de idiomas e, no futuro, modo híbrido (P2).
 | Fase | Escopo | Status |
 |---|---|---|
 | **F0** | Fundação e design system (tokens, tema, i18n, storage, conectividade, shell responsivo, pipeline de qualidade) | ✅ **concluída** |
-| F1 | Motor de tradução offline (ML Kit + Plano B TFLite) | ⬜ |
-| F2 | Voz: ditado STT (Vosk) + leitura TTS nativa | ⬜ |
-| F3 | Histórico, favoritos, ajustes, gerenciador de modelos | ⬜ |
+| **F1** | Motor de tradução offline (ML Kit + Plano B TFLite) | ✅ **concluída** (F1.1–F1.8) · ⬜ F1.9 tipografia CJK |
+| F2 | Voz: ditado STT + leitura TTS nativa | ⬜ — bloqueada pela spike **F2.0** (motor de STT) |
+| F3 | Histórico, favoritos, ajustes, gerenciador de modelos | ⬜ — pode ser antecipada (depende de F1, não de F2) |
 | F4 | Polimento, modo híbrido, performance, release v1 | ⬜ |
+
+O backlog completo está nas [issues](../../issues) — uma por subfase do
+`implementation_plan.md`, com objetivo, tarefas, entregável e critérios de aceite.
 
 ## Setup
 
@@ -21,7 +24,8 @@ flutter pub get
 flutter run                # device/emulador Android (minSdk 23)
 ```
 
-Requisitos: Flutter com Dart `^3.13.1`.
+Requisitos: Flutter com Dart `^3.12.2` · Android `minSdk 23` · iOS **15.5**
+(imposto pelo pod `GoogleMLKit/Translate`).
 
 ## Pipeline de qualidade (obrigatório por subfase)
 
@@ -76,13 +80,52 @@ sem tocar em widget algum.
 Único acesso pelo `StorageService`: gravações agrupadas (debounce 500 ms),
 leitura tolerante a JSON corrompido, migrações por `schemaVersion`.
 
-## Desvio documentado
+## Desvios documentados
 
-- `vosk_flutter` (M2/Fase 2): a versão publicada (0.3.48) declara
-  `sdk <3.0.0` e não resolve com Dart 3. A integração ocorrerá na F2 atrás
-  da interface `SttService`, com fork compatível ou override (risco R5).
+- **Motor de STT indefinido (M2/Fase 2)** — `vosk_flutter` 0.3.48 declara
+  `sdk <3.0.0` e não resolve com Dart 3; está comentado no `pubspec.yaml` e
+  foi **removido da lista fechada** de dependências. O motor será escolhido
+  pela spike **F2.0** (risco R5b). A interface `SttService` isola a decisão,
+  então F2.4/F2.5 podem ser programadas em paralelo.
+- **Plano B TFLite desligado** — a spike F1.4 (`docs/tflite_spike.md`) não
+  encontrou modelo NMT compacto viável para os 3 pares.
+  `AppConstants.enableAlternativeEngine = false`. Consequência assumida: sem
+  acesso aos servidores de download do Google, o app não traduz (risco R9).
+- **Tipografia CJK pendente (F1.9)** — sem fonte com cobertura Han embutida,
+  mandarim renderiza como tofu (□□□) em Androids sem esses glifos (risco R8).
 
 ## Nota de ambiente (risco R6)
 
 O projeto vive dentro de pasta sincronizada pelo OneDrive. Antes do release,
 avaliar mover para pasta local e garantir `.gitignore` cobrindo `build/`.
+
+---
+
+## Como contribuir
+
+Leia o [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrir um PR. Em resumo:
+pegue uma issue, trabalhe em branch própria, rode o pipeline de qualidade e
+**credite seu nome na tabela abaixo** — é um requisito de merge, não uma
+gentileza.
+
+## Créditos por issue
+
+> **Regra do projeto (obrigatória).** Toda issue concluída **deve** registrar
+> aqui quem a desenvolveu. A atualização desta tabela faz parte do PR que
+> fecha a issue: **PR que não credita o autor não é aprovado.** A tabela é a
+> memória de quem construiu cada parte do Translatoo.
+>
+> Preencha uma linha por issue concluída, em ordem crescente de subfase:
+
+| Subfase | Issue | Entrega | Desenvolvido por |
+|---|---|---|---|
+| F0.1–F0.9 | [#1](../../issues/1)–[#9](../../issues/9) | Fundação e design system | [@Paulokkkkkkkkk](https://github.com/Paulokkkkkkkkk) |
+| F1.1–F1.8 | [#10](../../issues/10)–[#17](../../issues/17) | Motor de tradução offline (M1) | [@Paulokkkkkkkkk](https://github.com/Paulokkkkkkkkk) |
+| F1.9 | [#18](../../issues/18) | Tipografia CJK | _disponível_ |
+| F2.0 | [#19](../../issues/19) | Spike do motor de STT | _disponível_ |
+
+_As demais linhas são preenchidas conforme as issues forem concluídas._
+
+**Como preencher**: use seu handle do GitHub no formato
+`[@usuario](https://github.com/usuario)`. Se a issue teve mais de uma pessoa,
+liste todas separadas por vírgula. Não remova linhas de outras pessoas.

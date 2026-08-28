@@ -4,8 +4,9 @@
 | Campo | Valor |
 |---|---|
 | **Produto** | Translatoo |
-| **Versão do documento** | 1.0 |
-| **Data** | 2026-08-26 |
+| **Versão do documento** | 1.1 |
+| **Data** | 2026-08-28 |
+| **Histórico** | v1.0 (2026-08-26) · v1.1 — ver §7 Registro de Revisões |
 | **Stack obrigatória** | Dart + Flutter (exclusivamente) |
 | **Plataformas-alvo** | Android (prioridade máxima), iOS (secundária), Desktop/Web (terciária) |
 | **Idiomas suportados** | Português (`pt`), Inglês (`en`), Chinês Mandarim (`zh`) |
@@ -21,6 +22,7 @@
 4. [Requisitos Não-Funcionais](#4-requisitos-não-funcionais-especificações-técnicas)
 5. [Critérios de Aceite (User Stories)](#5-critérios-de-aceite-user-stories)
 6. [Roadmap, Prioridades e Definição de Pronto](#6-roadmap-prioridades-e-definição-de-pronto)
+7. [Registro de Revisões](#7-registro-de-revisões)
 
 ---
 
@@ -31,8 +33,8 @@ O Translatoo é um aplicativo de tradução **offline-first** entre **Português
 
 Objetivos centrais:
 - **Traduzir texto instantaneamente no dispositivo (on-device)** usando Google ML Kit (`google_mlkit_translation`), sem enviar dados para servidores.
-- **Garantir funcionamento em celulares chineses nativos (Xiaomi, Huawei, Vivo locais) sem Google Play Services**, através de Plano B com modelo TensorFlow Lite embutido (`tflite_flutter`) na pasta `assets`.
-- **Entrada por voz offline (Speech-to-Text)** com o motor Vosk (`vosk_flutter`) e modelos acústicos embarcados no aplicativo.
+- **Garantir funcionamento em celulares chineses nativos (Xiaomi, Huawei, Vivo locais)**. ⚠️ **Correção v1.1**: o plugin `google_mlkit_translation` usa o SDK **standalone** (`com.google.mlkit:translate`), empacotado no próprio APK — ele **NÃO depende de Google Play Services** e funciona nesses aparelhos. O risco real não é a ausência de GMS, e sim o **download dos pacotes de idioma (~30 MB) a partir de servidores do Google, potencialmente inacessíveis na China**. É esse cenário — e só ele — que o Plano B TFLite (`tflite_flutter`, modelo embutido em `assets`) existe para cobrir.
+- **Entrada por voz offline (Speech-to-Text)** com modelos acústicos embarcados no aplicativo. ⚠️ **Status v1.1**: o motor está **pendente de decisão técnica**. O `vosk_flutter` (0.3.48) declara `sdk <3.0.0` e **não resolve com Dart 3**, estando comentado no `pubspec.yaml`. A escolha do motor sai da spike **F2.0** do plano de implementação (candidatos: fork do `vosk_flutter`, `sherpa-onnx`, `whisper.cpp`). O requisito de produto — ditado 100% offline, sem depender de configuração do SO — permanece inalterado; apenas a implementação está em aberto.
 - **Saída por voz (Text-to-Speech)** via motor nativo do sistema operacional (`flutter_tts`), sem consumo de internet.
 - **Privacidade total**: nenhum texto ou áudio sai do aparelho na operação padrão.
 - **Arquitetura híbrida preparada (Fase 2)**: quando houver internet, o app poderá usar API em nuvem para maior qualidade; sem internet, faz fallback silencioso para os motores locais (`connectivity_plus`).
@@ -48,10 +50,15 @@ Objetivos centrais:
 | UX-06 | Feedback de erro acionável | Todo erro mostra mensagem clara + ação sugerida (ex.: "Abrir configurações") |
 
 ## 1.3 Métricas de Sucesso
-- ≥ 95% das traduções concluídas sem erro em modo avião (offline total).
-- Tempo médio de tradução ≤ 300 ms (on-device, pacote pronto).
-- 0 (zero) envio de conteúdo do usuário para servidores na operação padrão.
-- Taxa de crash < 0,1% das sessões.
+
+> **Decisão v1.1 — como estas métricas são medidas.** O produto adota **zero telemetria** (RN-05, §4.5): não há coleta de crashes, latências ou contagem de sessões. Portanto nenhuma métrica abaixo pode ser apurada em campo. Todas são **metas de qualidade verificadas em bateria de QA manual** (plano de implementação, F4.6), com amostra e roteiro definidos — não são indicadores de produção. A promessa de privacidade prevalece sobre a observabilidade: é o diferencial competitivo do produto (§4.2).
+
+| ID | Meta | Como é verificada |
+|---|---|---|
+| MS-01 | ≥ 95% das traduções concluídas sem erro em modo avião | QA manual: roteiro de **40 traduções** (frases curtas/médias/longas × 3 pares) em modo avião, com pacotes prontos. Aprovado com ≤ 2 falhas |
+| MS-02 | Tempo médio de tradução ≤ 300 ms (on-device, pacote pronto) | Medição via DevTools em device de referência classe média (ex.: Snapdragon 6xx), amostra de 20 traduções ≤ 500 chars (F4.4) |
+| MS-03 | 0 (zero) envio de conteúdo do usuário para servidores | Auditoria de tráfego com proxy durante a bateria de QA: nenhuma requisição além do download de pacotes ML Kit |
+| MS-04 | Estabilidade: nenhum crash na bateria de QA | Execução completa dos ACs (F4.6) sem crash. **Não** é medível como "% de sessões" sem telemetria |
 
 ## 1.4 Fora do Escopo (v1)
 Tradução de imagem/câmera (OCR), modo conversa dupla em tempo real, login/contas, sincronização em nuvem, anúncios, detecção automática de idioma (Planejado P2 via ML Kit Language ID), loja de frases pré-traduzidas.
@@ -65,10 +72,13 @@ Estrutura em camadas simples, compatível com os diretórios já existentes no p
 ```text
 translatoo/
 ├── assets/
+│   ├── fonts/                           # Subset Noto Sans SC — fallback CJK (§4.9)
 │   └── models/                          # Modelos embutidos (offline garantido)
-│       ├── vosk-small-pt/               # Modelo acústico Vosk Português (~50 MB)
-│       ├── vosk-small-en/               # Modelo acústico Vosk Inglês
-│       ├── vosk-small-zh/               # Modelo acústico Vosk Mandarim
+│       ├── stt-pt/                      # Modelo acústico STT Português (~50 MB)
+│       ├── stt-en/                      # Modelo acústico STT Inglês
+│       ├── stt-zh/                      # Modelo acústico STT Mandarim
+│       │                                # (nomes definitivos após a spike F2.0;
+│       │                                #  hoje `vosk-small-*` no repositório)
 │       └── tflite/                      # (Plano B) modelo de tradução TFLite embutido
 ├── lib/
 │   ├── main.dart                        # Bootstrap: MultiProvider + MaterialApp(AppTheme)
@@ -81,7 +91,7 @@ translatoo/
 │   │   │   └── app_constants.dart       # Códigos de idioma, limites de chars, chaves prefs
 │   │   ├── services/
 │   │   │   ├── translation_service.dart # Wrapper google_mlkit_translation (+ fallback TFLite)
-│   │   │   ├── stt_service.dart         # Wrapper vosk_flutter (microfone → texto)
+│   │   │   ├── stt_service.dart         # Wrapper do motor STT (microfone → texto)
 │   │   │   ├── tts_service.dart         # Wrapper flutter_tts (texto → áudio nativo)
 │   │   │   ├── model_manager_service.dart # Download/exclusão dos pacotes ML Kit
 │   │   │   ├── storage_service.dart     # Camada única sobre shared_preferences
@@ -114,7 +124,7 @@ translatoo/
 ```
 
 **Regras de dependência entre camadas (obrigatórias):**
-1. `ui/` NUNCA importa pacotes de plugin (`google_mlkit_*`, `vosk_flutter`, `flutter_tts`, `shared_preferences`) diretamente — somente ViewModels.
+1. `ui/` NUNCA importa pacotes de plugin (`google_mlkit_*`, o motor de STT, `flutter_tts`, `shared_preferences`) diretamente — somente ViewModels.
 2. ViewModels importam apenas `core/services/` e `models/`. Serviços não conhecem Flutter Widgets.
 3. Todo arquivo Dart declara imports na ordem: dart → flutter → packages → projeto.
 4. Nenhuma cor literal fora de `app_colors.dart`; nenhuma string literal de UI fora de `app_strings.dart`.
@@ -135,9 +145,9 @@ translatoo/
 | Pacote | Uso | Observação |
 |---|---|---|
 | `google_mlkit_translation` | M1 — tradução on-device | Pacotes de idioma ~30 MB cada, download sob demanda |
-| `vosk_flutter` | M2 — STT 100% offline | Modelos embutidos em `assets/models/` |
+| *(motor de STT — **a definir na spike F2.0**)* | M2 — STT 100% offline | `vosk_flutter` **removido da lista fechada na v1.1**: não resolve com Dart 3. Modelos embutidos em `assets/models/` |
 | `flutter_tts` | M3 — TTS | Usa motor nativo do SO (já no cache do projeto, v4.2.5) |
-| `tflite_flutter` | M1 — Plano B | Modelo TFLite embutido p/ dispositivos sem Google Play Services |
+| `tflite_flutter` | M1 — Plano B | Modelo TFLite embutido p/ cenários **sem acesso aos servidores de download do Google** (ver RF-M1-07; a v1.0 dizia "sem Google Play Services", premissa corrigida na v1.1) |
 | `shared_preferences` | M4 — persistência local | Equivalente ao "LocalStorage" |
 | `connectivity_plus` | M4 — status de rede / fallback híbrido | |
 | `provider` | Estado global (ChangeNotifier) | |
@@ -156,9 +166,11 @@ translatoo/
 - **RF-M1-04** — Tradução automática (live): após o usuário parar de digitar por **800 ms (debounce)**, disparar a tradução automaticamente, desde que o texto tenha ≥ 1 caractere. O botão **Traduzir** força execução imediata ignorando o debounce.
 - **RF-M1-05** — Limite de caracteres: **5.000**. Contador visível `n/5000`. Ao exceder, o campo trunca a entrada em 5000 e exibe aviso. Textos maiores que o limite do ML Kit são divididos em blocos ≤ 4.500 chars respeitando quebras de parágrafo/frase, traduzidos sequencialmente e concatenados preservando a ordem.
 - **RF-M1-06** — Botão inverter (⇄): troca origem↔destino E troca os textos dos dois cartões; recalcula a tradução para o novo par. Desabilitado durante tradução em andamento.
-- **RF-M1-07** — Plano B (dispositivos sem GMS): se `google_mlkit_translation` lançar erro de inicialização/download (Play Services ausente), o `TranslationService` faz fallback transparente para o interpretador `tflite_flutter` com modelo embutido em `assets/tflite/`. O usuário NUNCA vê stacktrace; vê apenas badge discreto "motor alternativo".
+- **RF-M1-07** — **Plano B (motor alternativo)**. *Revisado na v1.1 — a justificativa da v1.0 ("dispositivos sem Google Play Services") era tecnicamente incorreta: o SDK ML Kit standalone é embarcado no APK e funciona sem GMS.* O gatilho correto é a **impossibilidade de obter os pacotes de idioma**: o download vem de servidores do Google, que podem estar bloqueados ou inacessíveis (cenário China continental), deixando o ML Kit sem modelos utilizáveis. Nesse caso — e em qualquer erro de inicialização do motor — o `TranslationService` faz fallback transparente para o interpretador `tflite_flutter` com modelo embutido em `assets/models/tflite/`. O usuário NUNCA vê stacktrace; vê apenas badge discreto "motor alternativo".
+  - **Estado atual (v1.1)**: a spike `docs/tflite_spike.md` concluiu que não há modelo NMT compacto viável hoje para os 3 pares. O backend permanece atrás da interface `TranslationBackend` com a feature-flag `AppConstants.enableAlternativeEngine = false`. **Consequência assumida e documentada**: sem acesso à CDN do Google, o app não traduz. O fluxo de fallback segue testável por mocks e a flag pode ser ligada sem tocar em UI ou ViewModels.
 - **RF-M1-08** — Enquanto traduz: cartão destino exibe skeleton shimmer; entradas ficam desabilitadas para novo envio até conclusão ou erro.
 - **RF-M1-09** — Ações sobre o resultado: copiar (clipboard), compartilhar (P1), favoritar ⭐ (M4), reproduzir áudio 🔊 (M3).
+- **RF-M1-10** *(novo na v1.1 — lacuna: os dois seletores expõem os 3 idiomas, e a v1.0 não definia o caso origem == destino)* — **Nunca existe estado com origem igual a destino.** Ao escolher, em um seletor, o idioma já usado no outro, o app **troca os dois** (comportamento de swap, idêntico ao botão ⇄) em vez de rejeitar a seleção ou exibir erro. Exemplo: par atual `pt→en`; usuário abre o seletor de destino e escolhe `pt` ⇒ o par vira `en→pt`, com os textos invertidos como em RF-M1-06. Regra válida para ambos os seletores e para o estado restaurado da persistência (par inválido salvo ⇒ volta ao default `pt→en`).
 
 ### Elementos de Interface (Tela Traduzir)
 | Elemento | Especificação |
@@ -180,7 +192,8 @@ translatoo/
 ## 3.2 MÓDULO 2 — ENTRADA POR VOZ (SPEECH-TO-TEXT OFFLINE)
 
 ### Lógica de Funcionamento
-- **RF-M2-01** — Motor obrigatório: `vosk_flutter` com modelos acústicos **embutidos nos assets** (`assets/models/vosk-small-{pt,en,zh}`), garantindo STT offline mesmo sem Google Play Services. O pacote `speech_to_text` NÃO é a fonte primária, pois depende de ditado offline configurado pelo usuário no SO (fora do controle do app).
+- **RF-M2-01** — **Requisito de motor** *(revisado na v1.1)*: STT **100% offline**, com modelos acústicos **embutidos nos assets** (`assets/models/`), sem depender de ditado offline configurado pelo usuário no SO e sem exigir Google Play Services. O pacote `speech_to_text` **NÃO** é aceitável como fonte primária justamente por delegar essa configuração ao usuário.
+  - **Motor concreto: em aberto.** A v1.0 fixava `vosk_flutter`, mas essa versão (0.3.48) declara `sdk <3.0.0` e **não resolve com Dart 3** — está comentada no `pubspec.yaml`. A escolha final sai da spike **F2.0** (plano de implementação), que avalia fork do `vosk_flutter`, `sherpa-onnx` e `whisper.cpp` contra critérios de tamanho, qualidade PT/EN/ZH, licença e manutenção. **Nenhum outro requisito do M2 depende dessa escolha**: todos são expressos contra a interface `SttService`.
 - **RF-M2-02** — Idioma da escuta = idioma de ORIGEM selecionado no Módulo 1. Ao iniciar escuta, o modelo Vosk correspondente é carregado on-demand; primeira carga exibe estado `initializing` (spinner no botão).
 - **RF-M2-03** — Fluxo de permissão: ao tocar em 🎤, solicitar `RECORD_AUDIO`. Se negada permanentemente, exibir diálogo explicativo com botão "Abrir configurações" (`permission_handler.openAppSettings()`). Nenhuma exceção deve propagar à UI.
 - **RF-M2-04** — Resultados parciais: o texto reconhecido aparece EM TEMPO REAL (streaming) no campo origem, em cor secundária/itálico enquanto parcial.
@@ -244,6 +257,7 @@ translatoo/
   | `translatoo.settings.wifiOnly` | Download de modelos só via Wi-Fi (default `true`) |
   | `translatoo.settings.schemaVersion` | Controle de migração |
   Gravações agrupadas (debounce 500 ms) para evitar I/O excessivo. Toda leitura tolera JSON corrompido: reinicia coleção vazia e loga em modo debug.
+  - **Política de migração de `schemaVersion`** *(novo na v1.1 — a v1.0 previa o campo mas não o que fazer com ele)*: no boot, `StorageService` compara a versão persistida com `AppConstants.schemaVersion`. **(a)** Iguais ⇒ leitura normal. **(b)** Persistida **menor** ⇒ aplica em sequência as funções de migração registradas para cada versão intermediária; se alguma falhar, a coleção afetada é descartada (não o conjunto todo) e o app segue com ela vazia. **(c)** Persistida **maior** que a do app (downgrade de versão) ⇒ dados **não** são interpretados: as coleções são descartadas e as preferências voltam ao default, evitando leitura de formato desconhecido. **(d)** Ausente ⇒ tratada como versão 1. Preferências (`settings.*`) são sempre migradas campo a campo com default para chaves novas, de modo que acrescentar uma preferência **não** exige nova versão de schema. Toda migração é registrada em log de debug e coberta por teste unitário.
 - **RF-M4-06 — Gerenciador de Modelos**: tela dedicada listando os 3 idiomas com estado (`Não baixado` · `Baixando n%` · `Pronto`), tamanho estimado (~30 MB) e ações Baixar/Excluir. Se `wifiOnly == true` e rede = dados móveis, bloquear com aviso + opção explícita "Baixar mesmo assim" (não altera a preferência).
 - **RF-M4-07 — Conectividade**: `connectivity_plus` expõe stream; `ConnectionBadge` no AppBar: 🟢 online / ⚪ offline. **Regra crítica: nenhum recurso da v1 é bloqueado por falta de internet** (tradução, ditado e voz são locais).
 - **RF-M4-08 — Modo híbrido (Fase 2, flag `cloudEnabled=false` na v1)**: quando online e flag ativa, tentar API em nuvem (maior precisão) com timeout de 2 s; qualquer erro/timeout → fallback silencioso para o motor on-device, com badge discreto "local" no resultado. Implementação isolada atrás da interface `TranslationBackend`.
@@ -337,14 +351,52 @@ class AppColors {
 - Política: nenhum dado coletado/compartilhado; áudio processado localmente (Vosk) ou pelo motor nativo do SO (TTS).
 
 ## 4.6 Compatibilidade
-- Android minSdk **23+**; iOS **12+**. Validação explícita em dispositivos **sem Google Play Services** (cenário China): Plano B TFLite deve cobrir tradução e Vosk cobrir STT.
-- Web/Desktop: comportamento degradado aceitável (sem mic/Vosk), mas tradução de texto e histórico devem funcionar.
 
-## 4.7 Tamanho do Aplicativo
-| Variante | Limite |
-|---|---|
-| APK base (sem modelos embutidos, downloads on-demand) | < 40 MB |
-| APK completo (modelos Vosk/TFLite embutidos) | ≤ 180 MB (trade-off documentado: offline garantido × tamanho) |
+| Plataforma | Mínimo | Origem da restrição |
+|---|---|---|
+| Android | **minSdk 23** | Definido pelo produto (plugin ML Kit exige apenas 21) |
+| iOS | **15.5** | **Imposto** pelo pod `GoogleMLKit/Translate ~> 9.0.0`, dependência de `google_mlkit_translation` |
+
+> **Correção v1.1 — iOS.** A v1.0 declarava "iOS 12+", o que é **impossível**: o pod do ML Kit exige deployment target **15.5**, e o projeto estava configurado em 15.0 (o `pod install` falharia). O valor correto e obrigatório é **15.5**, aplicado em `ios/Podfile` e no `IPHONEOS_DEPLOYMENT_TARGET` do target Runner.
+
+- **Cenário China**: o ML Kit standalone **funciona sem Google Play Services** (§1.1). A validação necessária não é "aparelho sem GMS", e sim **aparelho sem acesso aos servidores do Google**: nesse caso não há como baixar pacotes, e a cobertura depende do Plano B TFLite (RF-M1-07), hoje com flag desligada.
+- Web/Desktop: comportamento degradado aceitável (sem microfone/STT), mas tradução de texto e histórico devem funcionar.
+
+## 4.7 Tamanho do Aplicativo e Flavors de Build
+
+Os dois limites de tamanho só são alcançáveis com **dois flavors de build distintos** — a v1.0 citava as variantes sem definir o mecanismo. A especificação normativa é:
+
+| Flavor | `applicationIdSuffix` | Conteúdo | Limite | Distribuição |
+|---|---|---|---|---|
+| **`lite`** | `.lite` | Sem modelos STT embutidos. Tradução via ML Kit (download sob demanda). Ditado (M2) **indisponível**: o botão 🎤 fica oculto, não desabilitado | **APK < 40 MB** | Play Store (padrão) |
+| **`full`** | *(nenhum)* | Modelos STT dos 3 idiomas + modelo TFLite (quando existir) embutidos em `assets/models/` | **AAB ≤ 180 MB** | Play Store (variante offline garantido) / distribuição direta |
+
+- A seleção do flavor é **compile-time**: `AppConstants.hasEmbeddedSttModels` (via `--dart-define`) controla a exibição de todo o M2. Nenhuma checagem de flavor pode vazar para `ui/` — ela é lida uma única vez e exposta pelos ViewModels.
+- Trade-off documentado e aceito: offline garantido × tamanho do download.
+- Medição dos limites faz parte do DoD da fase de release (plano F4.6).
+
+## 4.9 Tipografia de Idiomas CJK (obrigatório)
+
+> *Seção nova na v1.1 — lacuna crítica: um terço do produto é mandarim, e nem o PRD nem o plano tratavam da renderização dos glifos.*
+
+- **Problema**: Flutter não embute fontes CJK. Em aparelhos Android **fora do mercado chinês**, muitas ROMs não trazem cobertura de Han, e todo texto em `zh` renderiza como **tofu** (`□□□`) — atingindo a tela Traduzir, o histórico e os seletores.
+- **RF-CJK-01** — O app **DEVE** embutir uma fonte com cobertura de Han simplificado (referência: **Noto Sans SC**), declarada em `pubspec.yaml` e aplicada via `fontFamilyFallback` no `TextTheme` de `app_theme.dart` — nunca widget a widget.
+- **RF-CJK-02** — A fonte entra como **fallback**, não como fonte primária: PT e EN continuam na tipografia padrão da plataforma, preservando a identidade visual e o hinting nativo.
+- **RF-CJK-03** — Para respeitar o limite do flavor `lite` (< 40 MB), a fonte **DEVE** ser um *subset* dos glifos necessários, e não o arquivo completo (~16 MB). Meta: **≤ 5 MB** no APK.
+- **RF-CJK-04** — Verificação obrigatória no DoD: renderizar 中文 em um emulador **sem locale chinês instalado** e confirmar ausência de tofu.
+
+## 4.10 Identidade Visual e Conformidade de Loja (obrigatório para release)
+
+> *Seção nova na v1.1 — a v1.0 mencionava apenas "screenshots e descrição"; os itens abaixo são bloqueadores de publicação.*
+
+| ID | Entregável | Especificação |
+|---|---|---|
+| RF-REL-01 | **Ícone do app** | Substituir o ícone padrão do Flutter. Adaptive icon Android (foreground + background separados, área segura 66 dp de 108 dp) e conjunto iOS completo. Derivado da paleta Verde & Branco |
+| RF-REL-02 | **Splash screen** | Nativa (Android 12+ `SplashScreen` API), fundo `colorBackground` e logo central; versões light e dark. Sem tela branca entre splash e primeiro frame |
+| RF-REL-03 | **Política de privacidade** | Documento **publicamente acessível por URL** (exigência do Play). Deve afirmar: nenhum dado coletado, nenhum texto/áudio enviado, download de pacotes é a única conexão, desinstalar apaga tudo |
+| RF-REL-04 | **Formulário Data Safety** | Preenchido no Play Console coerente com RF-REL-03: nenhuma coleta, nenhum compartilhamento. Divergência entre formulário e comportamento é motivo de rejeição |
+| RF-REL-05 | **Declaração de permissões** | Justificar `RECORD_AUDIO` (ditado local) e `INTERNET` (somente download de pacotes) no formulário da loja |
+| RF-REL-06 | **Store listing** | Screenshots light e dark, descrição enfatizando privacidade/offline, notas da v1.0 |
 
 ## 4.8 Tabela Única de Erros (mapeamento obrigatório)
 | Código | Gatilho | Mensagem exibida | Ação sugerida |
@@ -368,7 +420,8 @@ Formato obrigatório: **Dado que… Quando… Então…** Mínimo exigido: 2 por
 - **AC-M1-1** — **Dado que** os pacotes de idiomas `pt` e `zh` estão baixados e o aparelho está em modo avião, **quando** digito "Bom dia" com origem PT e destino ZH, **então** o cartão destino exibe a tradução em até 300 ms após o debounce de 800 ms, sem nenhuma mensagem de erro de rede.
 - **AC-M1-2** — **Dado que** o pacote do idioma destino ainda não foi baixado, **quando** seleciono esse idioma pela primeira vez, **então** o Card de Progresso Modelo aparece com barra %, tamanho estimado (~30 MB) e botões Baixar/Cancelar; ao concluir, o estado muda para "Pronto" e a tradução pendente executa automaticamente.
 - **AC-M1-3** — **Dado que** existem textos nos dois cartões, **quando** toco no botão ⇄, **então** idiomas e textos são invertidos, uma nova tradução é calculada para o par inverso e o botão fica desabilitado apenas durante o processamento.
-- **AC-M1-4** — **Dado que** estou em um dispositivo sem Google Play Services, **quando** tento traduzir com ML Kit indisponível, **então** o app usa automaticamente o motor TFLite embutido (badge "motor alternativo"), sem exibir stacktrace ou travar.
+- **AC-M1-4** *(reformulado na v1.1 — a redação original partia da premissa incorreta de que o ML Kit exige Google Play Services)* — **Dado que** estou em um aparelho **sem acesso aos servidores de download do Google** (cenário China), de modo que os pacotes de idioma não podem ser obtidos, **quando** tento traduzir e o ML Kit fica sem modelos utilizáveis, **então** o app recorre automaticamente ao motor alternativo embutido (badge "motor alternativo"), sem exibir stacktrace ou travar.
+  - **Verificação enquanto `enableAlternativeEngine = false`**: validado por mock da interface `TranslationBackend`. Em aparelho real, o comportamento esperado hoje é a mensagem `ERR_MODEL_NOT_DOWNLOADED` com ação sugerida — nunca um crash.
 
 ## US-2 — Entrada por Voz / STT (Módulo 2)
 > **Como** usuário, **quero** ditar minha fala e vê-la transcrita, **para que** eu não precise digitar.
@@ -400,7 +453,7 @@ Formato obrigatório: **Dado que… Quando… Então…** Mínimo exigido: 2 por
 ## 6.1 Priorização
 | Fase | Itens |
 |---|---|
-| **P0 (v1 — obrigatório)** | M1 tradução texto on-device + download de modelos; M2 ditado Vosk; M3 TTS nativo com aviso de voz ausente; M4 histórico/favoritos/configurações/persistência; tokens de cor; responsividade mobile-first; tabela de erros |
+| **P0 (v1 — obrigatório)** | M1 tradução texto on-device + download de modelos; **fonte CJK embutida (§4.9)**; M2 ditado offline (motor definido na spike F2.0); M3 TTS nativo com aviso de voz ausente; M4 histórico/favoritos/configurações/persistência; tokens de cor; responsividade mobile-first; tabela de erros; **flavors lite/full (§4.7)**; **entregáveis de loja (§4.10)** |
 | **P1** | Compartilhar tradução (`share_plus`); modo escuro (`AppColorsDark`); flavor leve sem modelos embutidos; NavigationRail desktop |
 | **P2 (Fase 2)** | Modo híbrido nuvem→local com `connectivity_plus` (flag `cloudEnabled`, timeout 2 s, badge "local"); detecção automática de idioma (ML Kit Language ID) |
 
@@ -432,4 +485,26 @@ Formato obrigatório: **Dado que… Quando… Então…** Mínimo exigido: 2 por
 | Trade-offs nuvem × offline (precisão × velocidade × tamanho × privacidade) | §1.1, §4.7, RN-02 |
 
 ---
-*Fim do documento — Translatoo PRD v1.0 (2026-08-26).*
+
+# 7. REGISTRO DE REVISÕES
+
+## v1.1 — 2026-08-28
+
+Revisão de completude conduzida sobre o código já entregue (F0 e F1 concluídas). Nenhum requisito foi removido; as mudanças corrigem premissas incorretas, resolvem contradições internas e preenchem lacunas que impediriam concluir o produto.
+
+| # | Mudança | Seções | Motivo |
+|---|---|---|---|
+| 1 | **Premissa do Plano B corrigida** | §1.1, RF-M1-07, §4.6 | O plugin usa `com.google.mlkit:translate:17.0.3` — SDK **standalone**, embarcado no APK, que **funciona sem Google Play Services**. A justificativa "para celulares sem GMS" era falsa. O gatilho real é a **inacessibilidade dos servidores de download do Google** (cenário China) |
+| 2 | **Motor de STT despromovido a decisão em aberto** | §1.1, RF-M2-01 | `vosk_flutter` 0.3.48 declara `sdk <3.0.0` e **não resolve com Dart 3** (está comentado no `pubspec.yaml`). Um módulo P0 inteiro estava apoiado numa dependência que não instala. Motor será definido pela spike **F2.0** |
+| 3 | **iOS mínimo: 12+ → 15.5** | §4.6 | Três valores conflitantes (PRD 12, projeto 15.0, pod ML Kit **15.5**). O `pod install` falharia. 15.5 é imposto pela dependência |
+| 4 | **Métricas de sucesso reclassificadas** | §1.3 | §1.3 exigia crash-rate e latência média enquanto RN-05/§4.5 proíbem telemetria — nenhuma era medível. Agora são metas de **QA manual** com roteiro definido, preservando a promessa de privacidade |
+| 5 | **Tipografia CJK (novo requisito)** | §4.9 | Sem fonte embutida, mandarim renderiza como tofu (□□□) em Androids sem cobertura Han — quebra visualmente um terço do produto |
+| 6 | **Flavors lite/full especificados** | §4.7 | Os limites de 40 MB / 180 MB eram citados sem mecanismo que os produzisse |
+| 7 | **Identidade visual e conformidade de loja (novo)** | §4.10 | Ícone, splash, política de privacidade por URL e Data Safety são bloqueadores de publicação e não constavam |
+| 8 | **Comportamento origem == destino** | RF-M1-10 | Os dois seletores expõem os 3 idiomas; o estado origem == destino não tinha regra definida |
+| 9 | **Política de migração de `schemaVersion`** | RF-M4-05 | O campo existia desde a v1.0 sem nenhuma regra sobre o que fazer quando a versão muda |
+
+**Consciente e deliberadamente NÃO incluído nesta revisão**: pipeline de CI (analyze/format/test automatizados por push) — avaliado e **dispensado pelo product owner**; o DoD segue verificado manualmente.
+
+---
+*Fim do documento — Translatoo PRD v1.1 (2026-08-28).*

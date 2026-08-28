@@ -4,9 +4,10 @@
 | Campo | Valor |
 |---|---|
 | **Produto** | Translatoo |
-| **Versão do plano** | 1.0 |
-| **Data** | 2026-08-26 |
-| **Documento-fonte** | `PRD.md` v1.0 (requisitos, módulos, critérios de aceite) |
+| **Versão do plano** | 1.1 |
+| **Data** | 2026-08-28 |
+| **Documento-fonte** | `prd.md` **v1.1** (requisitos, módulos, critérios de aceite) |
+| **Estado real** | **F0 e F1 concluídas** · F1.9 e F2.0 são os próximos passos |
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
@@ -30,6 +31,7 @@
 12. [Riscos e Mitigações](#12-riscos-e-mitigações)
 13. [Padrões Emprestados de Apps Existentes](#13-padrões-emprestados-de-apps-existentes)
 14. [Definition of Done Global](#14-definition-of-done-global)
+15. [Registro de Revisões do Plano](#15-registro-de-revisões-do-plano)
 
 ---
 
@@ -65,8 +67,11 @@
 | Animações | 60 fps sem jank |
 | APK base (sem modelos embutidos) | < 40 MB |
 | APK completo (modelos embutidos) | ≤ 180 MB |
-| Sucesso de traduções em modo avião | ≥ 95% |
-| Crash-free sessions | > 99,9% |
+| Sucesso de traduções em modo avião | ≥ 95% (QA manual — PRD MS-01) |
+| Estabilidade | Zero crash na bateria de QA (PRD MS-04) |
+| Fonte CJK embutida (subset) | ≤ 5 MB no APK (PRD §4.9) |
+
+> **Nota v1.1 — observabilidade.** Estas metas **não** são medidas em produção: o produto adota zero telemetria (RN-05). Todas são verificadas na bateria de QA manual da F4.6, conforme PRD §1.3 revisado.
 
 ## 2.3 Regras transversais que moldam a arquitetura
 - `RN-01`: enum fechado `Language { pt, en, zh }` — sem extensão pela UI.
@@ -76,6 +81,9 @@
 - `RN-06`: `Semantics` em todo botão de ícone; contraste AA 4.5:1; toque ≥ 48 dp.
 - `RN-07`: ciclo de vida — escuta morre em background; TTS continua até concluir.
 - Responsividade: < 600 dp coluna única + `NavigationBar`; 600–1024 dp cartões lado a lado; ≥ 1024 dp conteúdo 720 dp + `NavigationRail`.
+- **`RF-CJK-01..04` (novo, PRD §4.9)**: fonte com cobertura Han embutida como `fontFamilyFallback` no tema — sem ela, todo `zh` vira tofu.
+- **`RF-M1-10` (novo, PRD §4.1)**: origem nunca igual a destino — selecionar o idioma do outro lado executa swap.
+- **Mínimos de plataforma**: Android `minSdk 23`; **iOS 15.5** (imposto pelo pod `GoogleMLKit/Translate ~> 9.0.0` — a v1.0 dizia 12+, o que é inviável).
 
 ---
 
@@ -136,6 +144,7 @@ lib/
 ├── main.dart                  # MultiProvider + MaterialApp(AppTheme)
 ├── core/
 │   ├── constants/             # app_colors / app_typography / app_spacing / app_strings / app_constants
+│   │                          # (app_typography carrega o fallback CJK da F1.9)
 │   ├── services/              # translation / stt / tts / model_manager / storage / connectivity
 │   └── theme/                 # app_theme.dart
 ├── models/                    # language.dart / translation_record.dart / app_settings.dart
@@ -153,7 +162,11 @@ lib/
 4. Toda exceção cruza a fronteira de serviço convertida em `AppException(code)`.
 
 **Dependências do `pubspec.yaml` (lista fechada do PRD — não substituir):**
-`google_mlkit_translation` · `vosk_flutter` · `flutter_tts` · `tflite_flutter` · `shared_preferences` · `connectivity_plus` · `provider` · `permission_handler` · `path_provider` · `share_plus` (P1). Android `minSdk 23+`; iOS 12+.
+`google_mlkit_translation` · `flutter_tts` · `tflite_flutter` · `shared_preferences` · `connectivity_plus` · `provider` · `permission_handler` · `path_provider` · `share_plus` (P1).
+
+**Pendência de dependência (v1.1):** o pacote de **STT continua indefinido**. `vosk_flutter` foi removido da lista fechada porque a versão publicada (0.3.48) declara `sdk <3.0.0` e não resolve com Dart 3 — está comentado no `pubspec.yaml`. A entrada definitiva será acrescentada ao fim da spike **F2.0**, e só então a lista volta a estar fechada.
+
+**Mínimos de plataforma:** Android `minSdk 23` · **iOS 15.5** (imposto pelo pod do ML Kit).
 
 ---
 
@@ -163,11 +176,13 @@ lib/
 |---|---|---|---|---|---|
 | **F0** | Fundação e Design System | §2 arquitetura, §4.3 tokens, RN-04/06, UX-05, base i18n/persistência/conectividade | P0 | — | ~1 semana |
 | **F1** | Motor de Tradução Offline (M1) | §3.1 completo, US-1 (AC-M1-1…4), §4.8 erros M1 | P0 | F0 | ~2 semanas |
-| **F2** | Voz Completa: STT + TTS (M2+M3) | §3.2 e §3.3 completas, US-2/US-3, §4.5 permissões, RN-07 | P0 | F1 | ~2–3 semanas |
+| **F2** | Voz Completa: STT + TTS (M2+M3) | §3.2 e §3.3 completas, US-2/US-3, §4.5 permissões, RN-07 | P0 | F1, **F1.9** | ~3–4 semanas (**+1 semana**: spike F2.0 do motor de STT) |
 | **F3** | Histórico, Favoritos, Ajustes e Conectividade (M4) | §3.4 completa, US-4 (AC-M4-1…5), Gerenciador de Modelos, tema light/dark toggle | P0 | F1 (sliders de voz: F2) | ~1–2 semanas |
 | **F4** | Polimento, Híbrido, Performance e Release | P1 (share, dark refinado, NavigationRail), P2 (híbrido nuvem→local, Language ID opcional), §4.1/4.4/4.6/4.7, QA final modo avião | P1/P2 | F0–F3 | ~1–2 semanas |
 
 \* Estimativa para 1 desenvolvedor sênior com ambiente Flutter/Android Studio pronto. F2 e F3 podem rodar parcialmente em paralelo após F1.
+
+> **Ajuste v1.1.** A F2 cresceu porque o motor de STT deixou de ser uma decisão tomada e virou uma **spike bloqueante** (F2.0): a dependência que o plano v1.0 assumia não instala. Como F3 depende de F1 (não de F2), **a F3 pode ser antecipada e executada enquanto a spike roda** — recomendado para não ociosar o cronograma. Foi ainda inserida a **F1.9** (fonte CJK), débito de fundação descoberto após o fechamento da F0.
 
 **Regra de saída de cada fase**: app compila, roda no Android físico, critérios de aceite da fase verificados em modo avião, `flutter analyze` sem warnings, testes da fase verdes.
 
@@ -235,7 +250,7 @@ lib/
 
 # 7. FASE 1 — MOTOR DE TRADUÇÃO OFFLINE (M1)
 
-> **Objetivo**: entregar o coração do produto — traduzir texto PT⇄EN⇄ZH 100% on-device, com download gerenciado de pacotes e Plano B para aparelhos sem Google Play Services (cenário China). Ao fim desta fase o app já é utilizável como tradutor de texto em modo avião.
+> **Objetivo**: entregar o coração do produto — traduzir texto PT⇄EN⇄ZH 100% on-device, com download gerenciado de pacotes e Plano B para o cenário China (*aparelhos sem acesso aos servidores de download do Google — **não** "sem Google Play Services", premissa corrigida na v1.1*). Ao fim desta fase o app já é utilizável como tradutor de texto em modo avião.
 
 ## Subfases
 
@@ -266,6 +281,7 @@ lib/
 ### F1.5 — `TranslatorViewModel`
 - Estado observável: `status ∈ {idle, typing, translating, done, error}`, `modelStatus: Map<LanguagePair, ModelState>`, textos, par de idiomas.
 - Debounce 800 ms em `onTextChanged()` (≥ 1 char); `translateNow()` ignora debounce; `swapLanguages()` troca idiomas E textos e retraduz; bloqueios durante `translating`; `acceptDictatedText()` (gancho p/ F2) dispara tradução imediata.
+- **RF-M1-10 (🆕 v1.1)**: `setSourceLang()`/`setTargetLang()` garantem origem ≠ destino — escolher o idioma já usado no outro lado executa **swap** (idiomas e textos), nunca produz estado inválido nem erro. Teste unitário dedicado para os dois seletores.
 - Rebuild cirúrgico com `Selector`/`context.select` — jamais `Consumer` inteiro nos campos de texto (evita perder foco/cursor).
 - Persistência do último par delegada à F3 (`settings.srcLang/tgtLang`) — por ora, memória.
 - **Entregável**: VM com testes unitários (fake backend) cobrindo debounce, swap, erro.
@@ -291,6 +307,16 @@ lib/
   - AC-F1-4 ≙ AC-M1-4: sem GMS → motor alternativo, sem stacktrace.
   - AC-F1-5: erros de rede/download exibem mensagem da tabela §4.8 com ação sugerida.
 
+### F1.9 — Tipografia CJK (débito de fundação) — PRD §4.9 · RF-CJK-01..04 🆕 v1.1
+
+> **Por que está aqui.** Esta subfase deveria ter nascido na F0 (é design system), mas a lacuna só foi identificada na revisão v1.1, com a F0 já fechada. Como a tela Traduzir **já renderiza mandarim** desde a F1.6, o defeito é visível hoje: em Androids sem cobertura de Han, todo `zh` aparece como tofu (□□□). **É bloqueante para a F2** — não faz sentido validar ditado e leitura em chinês numa tela que não exibe chinês.
+
+- Obter **Noto Sans SC** (licença SIL OFL 1.1, compatível com uso comercial) e gerar **subset** dos glifos necessários — o arquivo completo (~16 MB) inviabiliza o flavor `lite` (< 40 MB). Meta: **≤ 5 MB**.
+- Declarar a família em `pubspec.yaml` e aplicá-la **exclusivamente** via `fontFamilyFallback` no `TextTheme` de `app_theme.dart`. PT/EN permanecem na tipografia nativa da plataforma (RF-CJK-02). **Proibido** aplicar fonte widget a widget — mesma regra dos tokens de cor (RN-04).
+- Registrar em `docs/` a origem do arquivo, a licença e o comando de geração do subset, para que a fonte seja reproduzível.
+- **Entregável**: 中文 renderizado corretamente em emulador **sem locale chinês instalado**; peso do subset medido e registrado.
+- **Critério de aceite**: **AC-F1-6** — dado um emulador Android limpo sem pacote de idioma chinês, quando exibo uma tradução com destino ZH, então os caracteres aparecem legíveis (zero tofu) nas telas Traduzir, Histórico e nos seletores.
+
 ---
 
 # 8. FASE 2 — VOZ COMPLETA: DITADO STT + LEITURA TTS (M2+M3)
@@ -299,13 +325,54 @@ lib/
 
 ## Subfases
 
-### F2.1 — Aquisição e embutimento dos modelos Vosk
-- Baixar os modelos *small* oficiais (alphacephei): `vosk-model-small-pt-0.3`, `vosk-model-small-en-us-0.15`, `vosk-model-small-cn-0.22` (~40–50 MB cada).
-- Colocar em `assets/models/vosk-small-{pt,en,zh}`; no primeiro uso, copiar para diretório de dados (`path_provider`) — Vosk exige caminho real de arquivo.
-- Criar **flavor "full"** (modelos embutidos ≤ 180 MB) vs **flavor "lite"** (sem STT embutido, APK < 40 MB), conforme PRD §4.7.
+### F2.0 — SPIKE BLOQUEANTE: motor de STT offline 🆕 v1.1
+
+> **Por que existe.** O plano v1.0 fixava `vosk_flutter` como decisão tomada. Na prática, a versão publicada (0.3.48) declara `sdk <3.0.0`, **não resolve com Dart 3** e está comentada no `pubspec.yaml`. Um módulo **P0 inteiro** apoiava-se numa dependência que não instala. Esta spike espelha o formato que já funcionou na **F1.4** (Plano B TFLite): investigação time-boxed, critérios escritos antes, decisão documentada — inclusive a decisão de não fazer.
+
+- **Time-box: 5 dias úteis.** Nenhuma linha de UI do M2 é escrita antes da conclusão.
+- **Critérios de avaliação** (definidos ANTES de testar, para evitar viés de esforço investido):
+  | Critério | Peso | Limiar de reprovação |
+  |---|---|---|
+  | Resolve com Dart 3 / Flutter atual | Eliminatório | Não resolver |
+  | Cobertura offline real de **pt, en, zh** | Eliminatório | Faltar qualquer idioma |
+  | Licença compatível com app comercial | Eliminatório | Copyleft viral |
+  | Tamanho somado dos 3 modelos | Alto | > 180 MB (estoura flavor `full`) |
+  | Manutenção ativa (commits < 12 meses) | Alto | Abandonado |
+  | Suporte a resultados **parciais** em streaming | Alto | Ausente (quebra RF-M2-04) |
+  | Esforço de integração | Médio | — |
+- **Candidatos a avaliar**:
+  1. **Fork do `vosk_flutter`** com a constraint de SDK corrigida + `dependency_override` — menor esforço, mas cria um fork sob sua manutenção e o upstream aparenta estagnação.
+  2. **`sherpa-onnx`** — mantido ativamente, modelos offline PT/EN/ZH, streaming nativo. Principal alternativa estruturada.
+  3. **`whisper.cpp`** via FFI — melhor qualidade, especialmente em ZH; avaliar latência em device médio e ausência de streaming parcial nativo.
+- **Saídas obrigatórias da spike**:
+  - `docs/stt_spike.md` no mesmo padrão de `docs/tflite_spike.md`: candidatos, medições, decisão e justificativa.
+  - Atualização de **RF-M2-01 no PRD** com o motor escolhido.
+  - Entrada definitiva no `pubspec.yaml`, **reabrindo e refechando a lista de dependências**.
+  - Renomear `assets/models/vosk-small-*` se o motor escolhido não for Vosk.
+- **Plano de contingência** (se nenhum candidato passar nos eliminatórios): aplicar a mesma "limitação honesta" da F1.4 — `SttService` permanece como interface com implementação `Unavailable` atrás de feature-flag desligada, o botão 🎤 fica **oculto** (não desabilitado), **M2 é rebaixado para v1.1** e a v1 sai com M1+M3+M4. Esta decisão exige aprovação explícita do product owner.
+- **Entregável**: decisão registrada, dependência instalada (ou contingência aprovada), F2.1 destravada.
+
+### F2.1 — Aquisição e embutimento dos modelos de STT
+> **Depende de F2.0.** Os nomes/formatos abaixo assumem Vosk (hipótese da v1.0) e **serão substituídos** pelo que a spike decidir. A estrutura da subfase não muda.
+
+- Baixar os modelos *small* do motor escolhido — referência Vosk (alphacephei): `vosk-model-small-pt-0.3`, `vosk-model-small-en-us-0.15`, `vosk-model-small-cn-0.22` (~40–50 MB cada).
+- Colocar em `assets/models/`; no primeiro uso, copiar para diretório de dados (`path_provider`) — os motores de STT exigem caminho real de arquivo, não asset bundle.
 - **Entregável**: assets versionados + script/README de atualização dos modelos.
 
-### F2.2 — `SttService` (wrapper vosk_flutter)
+### F2.1b — Flavors `lite` e `full` (PRD §4.7) 🆕 v1.1
+
+> **Por que virou subfase própria.** A v1.0 citava os flavors numa linha solta dentro da F2.1, sem nenhuma especificação de build — os limites de 40 MB e 180 MB não tinham mecanismo que os produzisse. Hoje o projeto **não tem flavor algum** configurado.
+
+- `android/app/build.gradle.kts`: `flavorDimensions += "models"` com `lite` (`applicationIdSuffix = ".lite"`) e `full`.
+- Assets condicionais: os modelos de STT entram **apenas** no flavor `full`; `lite` embarca somente a fonte CJK (F1.9) e o mínimo.
+- `AppConstants.hasEmbeddedSttModels` alimentado por `--dart-define`, lido **uma única vez** e exposto pelos ViewModels. Nenhuma checagem de flavor pode aparecer em `ui/` (regra de camadas §4).
+- No flavor `lite`, o botão 🎤 é **omitido da árvore de widgets**, não renderizado desabilitado — um controle permanentemente inerte é pior que sua ausência.
+- Documentar os comandos de build de cada flavor no README.
+- **Entregável**: `flutter build apk --flavor lite` < 40 MB e `--flavor full` ≤ 180 MB, ambos medidos e registrados.
+
+### F2.2 — `SttService` (wrapper do motor escolhido na F2.0)
+> **Depende de F2.0.** A interface abaixo é **independente do motor** — é justamente ela que permitiu adiar a decisão sem travar o resto da F2. Toda a F2.4–F2.5 programa contra ela.
+
 - Carregar modelo on-demand pelo idioma de ORIGEM; expor estado `initializing` na primeira carga.
 - API: `start(lang)`, `stop()`, `cancel()`; stream com resultados **parciais** e **finais**.
 - Regras RF-M2-05/06: fim de fala por pausa ≥ 1,5 s encerra frase; limite duro de 60 s com auto-stop usando o último resultado final.
@@ -323,7 +390,7 @@ lib/
 - Campos: `partialText`, `finalText`, `elapsedSeconds`, `errorMessage`.
 - Ao emitir final → chama `TranslatorViewModel.acceptDictatedText(text)` (tradução imediata, ignora debounce).
 - Durante escuta: TTS silenciado + campo de digitação desabilitado (RF-M2-07).
-- **Entregável**: VM testada com fake do SttService (parciais, timeout 60 s, cancelamento).
+- **Entregável**: VM testada com fake do `SttService` (parciais, timeout 60 s, cancelamento) — **executável mesmo com a F2.0 ainda em curso**, pois depende só da interface.
 
 ### F2.5 — UI de ditado
 - `mic_button.dart`: 3 estados — idle (outline verde) · listening (preenchido `colorError` vermelho + anel pulsante + waveform) · error (badge ! + tooltip).
@@ -401,6 +468,8 @@ lib/
 ### F3.6 — Persistência integral
 - Chaves finais `translatoo.*`: history, favorites, settings.srcLang/tgtLang, ttsRate/ttsPitch/autoPlay, wifiOnly, themeMode, schemaVersion.
 - Restauração no boot: último par de idiomas, preferências de voz, histórico e favoritos exatamente como deixados (AC-M4-3).
+- **Migração de `schemaVersion` (PRD RF-M4-05, 🆕 v1.1)**: implementar as quatro rotas — versão igual (leitura normal), **menor** (migrações encadeadas, com descarte apenas da coleção que falhar), **maior** (downgrade ⇒ descarta coleções e reseta preferências, nunca interpreta formato desconhecido) e **ausente** (tratada como versão 1). Preferências migram campo a campo com default, de modo que **acrescentar uma preferência não exige nova versão**. Cada rota coberta por teste unitário.
+- **Par de idiomas inválido na persistência** (ex.: origem == destino gravado por versão anterior) ⇒ volta ao default `pt→en` (RF-M1-10).
 - **Entregável**: restart completo do app/aparelho preserva 100% do estado.
 
 ### F3.7 — Qualidade da fase
@@ -450,7 +519,8 @@ lib/
 ### F4.6 — QA final e compatibilidade
 - Bateria completa dos 16 ACs do PRD em Android físico, incluindo:
   - Modo avião total (todas as funções);
-  - Dispositivo/aparelho sem Google Play Services (Plano B TFLite + Vosk);
+  - **Aparelho sem acesso aos servidores do Google** (cenário China) — *corrigido na v1.1: o teste NÃO é "sem Google Play Services", já que o ML Kit standalone funciona sem GMS; o que quebra é a impossibilidade de baixar os pacotes*;
+  - **Emulador sem locale chinês instalado**: mandarim legível, zero tofu (AC-F1-6);
   - Perda de rede durante download de pacote;
   - Background/foreground durante escuta e reprodução;
   - JSON corrompido no storage (reinício limpo);
@@ -458,14 +528,28 @@ lib/
 - Correção de bugs priorizada por severidade; zero exceção crua na UI.
 - **Entregável**: planilha de execução de ACs assinada.
 
-### F4.7 — Release
-- Build de release Android: assinatura keystore, `--obfuscate --split-debug-info`, split por ABI; iOS: archive/TestFlight (secundário).
+### F4.7 — Identidade visual e conformidade de loja (PRD §4.10) 🆕 v1.1
+
+> **Por que existe.** A v1.0 tratava release como "screenshots + descrição". Os itens abaixo são **bloqueadores de publicação**: sem eles o app não entra na Play Store. O ícone ainda é o padrão do Flutter.
+
+- **RF-REL-01 — Ícone**: adaptive icon Android (foreground/background separados, respeitando a área segura de 66 dp em 108 dp) + conjunto completo iOS, derivados da paleta Verde & Branco.
+- **RF-REL-02 — Splash**: nativa via API `SplashScreen` do Android 12+, fundo `colorBackground`, versões light e dark, sem flash branco entre splash e primeiro frame.
+- **RF-REL-03 — Política de privacidade**: documento em **URL pública** (exigência do Play), afirmando: nenhum dado coletado, nenhum texto ou áudio enviado, download de pacotes como única conexão, desinstalação apaga tudo. Deve bater **exatamente** com a declaração já exibida na tela Ajustes.
+- **RF-REL-04 — Data Safety**: formulário do Play Console preenchido coerente com a política. **Divergência entre formulário e comportamento real é motivo de rejeição** — e o app tem permissão de microfone, que atrai revisão manual.
+- **RF-REL-05 — Justificativa de permissões**: `RECORD_AUDIO` (ditado local, áudio nunca sai do aparelho) e `INTERNET` (somente download de pacotes).
+- **Entregável**: checklist de conformidade completo antes de qualquer upload.
+
+### F4.8 — Build de release
+- Build de release Android: assinatura keystore, `--obfuscate --split-debug-info`, split por ABI, **nos dois flavors** (`lite` e `full`); iOS: archive/TestFlight (secundário).
 - Store listing: screenshots light/dark, descrição enfatizando privacidade/offline, notas da v1.0.
 - Versionamento `1.0.0+1`; tag git de release.
 - **Critérios de aceite da fase**:
   - AC-F4-1: todos os DoD das fases anteriores seguem verdes após refactors de responsividade.
   - AC-F4-2: APK/AAB de release instalado de fábrica funciona offline do primeiro uso (após baixar pacotes uma única vez com internet).
   - AC-F4-3: metas §4.4 confirmadas em device médio (ex.: classe Snapdragon 6xx).
+  - **AC-F4-4** 🆕: `lite` < 40 MB e `full` ≤ 180 MB, medidos no artefato assinado.
+  - **AC-F4-5** 🆕: ícone e splash próprios em ambos os temas; nenhum resquício do padrão Flutter.
+  - **AC-F4-6** 🆕: política de privacidade acessível por URL e Data Safety coerente com ela.
 
 ---
 
@@ -487,6 +571,12 @@ lib/
 | §4.4 performance / §4.6 compatibilidade / §4.7 tamanho | F2.1, F4.4, F4.6 | Flavors full/lite |
 | §4.5 privacidade/permissões | F2.3, F4.5 | iOS Info.plist incluso |
 | P1 share_plus · dark mode refinado · NavigationRail | F4.1 / F3.3+F0.3 / F4.2 | Dark já nasce na fundação por decisão do produto |
+| **§4.9 RF-CJK-01..04 (tipografia CJK)** 🆕 | **F1.9** | Débito de fundação; bloqueia F2 |
+| **RF-M1-10 (origem ≠ destino)** 🆕 | **F1.5 + F1.6** (ajuste) | Regra de swap no seletor |
+| **§4.7 flavors `lite`/`full`** 🆕 | **F2.1b**, F4.6, F4.8 | Mecanismo que produz os limites de tamanho |
+| **§4.10 RF-REL-01..06 (loja)** 🆕 | **F4.7** | Bloqueadores de publicação |
+| **RF-M4-05 política de `schemaVersion`** 🆕 | **F3.6** (ajuste) | Migração, downgrade e descarte seletivo |
+| **RF-M2-01 (motor de STT em aberto)** 🆕 | **F2.0** | Spike bloqueante |
 
 ---
 
@@ -494,13 +584,17 @@ lib/
 
 | # | Risco | Prob. | Impacto | Mitigação |
 |---|---|---|---|---|
-| R1 | Plano B TFLite: não existir modelo NMT compacto viável p/ os 3 pares | Média | Alto | Spike cedo (F1.4); interface `TranslationBackend` isola o motor; feature-flag e nota técnica se inviável; ML Kit continua cobrindo a maioria dos devices |
+| R1 | Plano B TFLite: não existir modelo NMT compacto viável p/ os 3 pares | ~~Média~~ **Confirmado** | Alto | **Materializou-se** (spike F1.4 inconclusiva, `docs/tflite_spike.md`). Mitigação aplicada: interface `TranslationBackend` isola o motor, flag desligada, fluxo testável por mock. **Impacto residual**: sem acesso à CDN do Google, o app não traduz — ver R9 |
 | R2 | Modelos Vosk estouram o limite de loja (180 MB full) | Baixa | Médio | Flavors lite/full; download sob demanda como alternativa futura |
 | R3 | Voz chinesa TTS ausente em muitos aparelhos | Alta | Médio | Fluxo AC-M3-2 já previsto: SnackBar persistente + atalho às configurações do SO |
 | R4 | Latência > 300 ms em devices fracos | Média | Médio | Pré-aquecimento, medição desde F1.2, chunking eficiente |
-| R5 | Incompatibilidade entre versões dos plugins ML Kit/Vosk/TTS | Média | Alto | Versões travadas no pubspec; upgrade só com regressão completa |
+| R5 | Incompatibilidade entre versões dos plugins ML Kit/TTS | Média | Alto | Versões travadas no pubspec; upgrade só com regressão completa |
+| **R5b** | **`vosk_flutter` não instala com Dart 3** (declara `sdk <3.0.0`) — M2, um módulo P0, sem dependência viável | ~~—~~ **Confirmado** | **Crítico** | *Novo na v1.1 — a v1.0 tratava só de "conflito de versões", que não descreve este problema.* Spike **F2.0** com critérios eliminatórios e time-box de 5 dias; interface `SttService` mantém F2.4/F2.5 programáveis em paralelo; contingência de rebaixar M2 para v1.1 com aprovação explícita |
 | R6 | OneDrive sincronizando `build/` e assets grandes | Média | Baixo/Médio | `.gitignore` robusto; considerar mover projeto fora de pasta sincronizada antes do release |
 | R7 | Perda de foco/cursor por rebuild excessivo nos campos de texto | Média | Médio | Regra arquitetural F1.5 (`Selector`/`context.select`), widget test dedicado |
+| **R8** | **Mandarim renderiza como tofu (□□□)** em Androids sem cobertura de glifos Han | Alta | **Alto** | *Novo na v1.1.* F1.9 embute subset de Noto Sans SC como `fontFamilyFallback`; verificação obrigatória em emulador sem locale chinês (AC-F1-6) |
+| **R9** | **Pacotes ML Kit inacessíveis na China** (download vem de servidores do Google) | Alta *no mercado-alvo* | **Alto** | *Novo na v1.1 — substitui a premissa incorreta de "ausência de GMS".* Sem Plano B viável (R1), a China fica descoberta. Opções a decidir: aceitar e documentar, ou reabrir a spike TFLite com escopo reduzido (só `pt↔zh` e `en↔zh`) |
+| **R10** | **Rejeição na Play Store** por Data Safety incoerente ou política de privacidade ausente | Média | Alto | *Novo na v1.1.* F4.7 trata os entregáveis como bloqueadores; permissão de microfone atrai revisão manual, exigindo justificativa precisa |
 
 ---
 
@@ -525,6 +619,7 @@ Uma funcionalidade só está pronta quando **tudo** isto vale (herdado do PRD §
 4. Nenhuma cor fora de `app_colors.dart`; nenhuma string de UI fora de `app_strings.dart`.
 5. Funcionamento validado em modo avião.
 6. Erros mapeados para a tabela §4.8 — nenhuma exceção crua na UI.
+7. **(🆕 v1.1)** Textos em mandarim renderizados sem tofu quando a tela exibir `zh`.
 
 ## Comando padrão de validação (rodar ao fim de cada subfase)
 ```bash
@@ -539,13 +634,50 @@ flutter run --release   # validação manual no device
 | Marco | Conteúdo |
 |---|---|
 | **M-F0** | Design system verde/branco light+dark navegável |
-| **M-F1** | Tradutor de texto completo offline (usável em modo avião) |
+| **M-F1** | Tradutor de texto completo offline (usável em modo avião) **+ mandarim legível (F1.9)** |
 | **M-F2** | Ciclo conversacional fala→tradução→áudio fechado |
 | **M-F3** | Produto completo v1 (memória, ajustes, modelos, tema) |
 | **M-F4** | Release candidate assinada → **v1.0.0** |
 
 ---
-*Plano gerado a partir do `PRD.md` v1.0 — Translatoo (2026-08-26). Alterações de escopo devem refletir aqui E no PRD.*
+
+# 15. REGISTRO DE REVISÕES DO PLANO
+
+## v1.1 — 2026-08-28
+
+Revisão de completude feita **contra o código entregue** (F0 e F1 concluídas e commitadas), não apenas contra o texto. Nenhuma fase foi removida; o plano ganhou as etapas que faltavam para o app chegar a release.
+
+### Subfases novas
+| Subfase | Conteúdo | Motivo |
+|---|---|---|
+| **F1.9** | Tipografia CJK (subset Noto Sans SC como fallback) | Sem ela, mandarim vira tofu — um terço do produto quebra visualmente. Bloqueia F2 |
+| **F2.0** | **Spike bloqueante** do motor de STT | `vosk_flutter` não instala com Dart 3; o M2 (P0) estava sem dependência viável |
+| **F2.1b** | Flavors `lite` / `full` com spec de gradle | Os limites de 40/180 MB não tinham mecanismo que os produzisse |
+| **F4.7** | Identidade visual e conformidade de loja | Ícone, splash, política por URL e Data Safety são bloqueadores de publicação |
+
+### Alterações em subfases existentes
+- **F1.5 / F1.6** — regra RF-M1-10 (origem ≠ destino via swap).
+- **F2.1 / F2.2** — deixam de citar Vosk como decisão tomada; passam a depender da F2.0 e a programar contra a interface `SttService`.
+- **F3.6** — política de migração de `schemaVersion` (4 rotas + teste por rota).
+- **F4.6** — o teste de campo deixa de ser "aparelho sem GMS" e passa a ser "aparelho sem acesso aos servidores do Google"; soma-se o teste de tofu.
+- **F4.7 antigo → F4.8**, agora cobrindo os dois flavors.
+- **§2.2 / §14** — métricas viram metas de QA manual; DoD ganha o item de renderização CJK.
+
+### Riscos
+- **R1** e **R5b** reclassificados de "prováveis" para **confirmados** — ambos já se materializaram no código.
+- **R8** (tofu), **R9** (CDN do Google inacessível na China) e **R10** (rejeição na loja) adicionados.
+
+### Fora de escopo por decisão do product owner
+**Pipeline de CI** (analyze/format/test por push) foi avaliado e **dispensado**. O DoD permanece verificado manualmente. Registrado aqui para que a ausência seja lida como decisão, não como esquecimento.
+
+### Sequência recomendada a partir de hoje
+1. **F1.9** (fonte CJK) — curta, destrava a validação visual de tudo que envolve ZH.
+2. **F2.0** (spike STT) — inicia em paralelo; time-box de 5 dias.
+3. **F3** — antecipar durante a spike: depende de F1, não de F2, e evita cronograma ocioso.
+4. **F2.1+** — retoma quando a spike decidir o motor.
+
+---
+*Plano v1.1 gerado a partir do `prd.md` v1.1 — Translatoo (2026-08-28). Alterações de escopo devem refletir aqui E no PRD.*
 
 
 
