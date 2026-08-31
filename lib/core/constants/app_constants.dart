@@ -3,7 +3,7 @@
 ///
 /// Nota de projeto: os códigos BCP-47 (`pt-BR`, `en-US`, `zh-CN`) vivem no
 /// enum FECHADO `Language` (models/language.dart, RN-01), junto dos códigos
-/// ML Kit / TTS / Vosk, mantendo o domínio coeso.
+/// ML Kit / TTS / STT, mantendo o domínio coeso.
 ///
 /// Timings de fases futuras já contratados pelo PRD e definidos como
 /// constantes de nível superior:

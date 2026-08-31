@@ -5,7 +5,8 @@
 /// - [bcp47Code]: BCP-47 completo (`pt-BR`, `en-US`, `zh-CN`);
 /// - [mlKitCode]: código do pacote `google_mlkit_translation`;
 /// - [ttsCode]: locale TTS nativo do SO (M3);
-/// - [voskCode]: identificador do modelo Vosk embutido (M2).
+/// - [sttCode]: código de idioma passado ao motor de STT (M2 — whisper,
+///   escolhido na spike F2.0; ver `docs/stt_spike.md`).
 enum Language {
   pt('Português', 'pt-BR', 'pt', 'pt-BR', 'pt'),
   en('English', 'en-US', 'en', 'en-US', 'en'),
@@ -16,14 +17,14 @@ enum Language {
     this.bcp47Code,
     this.mlKitCode,
     this.ttsCode,
-    this.voskCode,
+    this.sttCode,
   );
 
   final String displayName;
   final String bcp47Code;
   final String mlKitCode;
   final String ttsCode;
-  final String voskCode;
+  final String sttCode;
 
   /// Código usado em persistência/JSON (estável, nome do enum).
   String get jsonCode => name;

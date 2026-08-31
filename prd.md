@@ -34,7 +34,7 @@ O Translatoo é um aplicativo de tradução **offline-first** entre **Português
 Objetivos centrais:
 - **Traduzir texto instantaneamente no dispositivo (on-device)** usando Google ML Kit (`google_mlkit_translation`), sem enviar dados para servidores.
 - **Garantir funcionamento em celulares chineses nativos (Xiaomi, Huawei, Vivo locais)**. ⚠️ **Correção v1.1**: o plugin `google_mlkit_translation` usa o SDK **standalone** (`com.google.mlkit:translate`), empacotado no próprio APK — ele **NÃO depende de Google Play Services** e funciona nesses aparelhos. O risco real não é a ausência de GMS, e sim o **download dos pacotes de idioma (~30 MB) a partir de servidores do Google, potencialmente inacessíveis na China**. É esse cenário — e só ele — que o Plano B TFLite (`tflite_flutter`, modelo embutido em `assets`) existe para cobrir.
-- **Entrada por voz offline (Speech-to-Text)** com modelos acústicos embarcados no aplicativo. ⚠️ **Status v1.1**: o motor está **pendente de decisão técnica**. O `vosk_flutter` (0.3.48) declara `sdk <3.0.0` e **não resolve com Dart 3**, estando comentado no `pubspec.yaml`. A escolha do motor sai da spike **F2.0** do plano de implementação (candidatos: fork do `vosk_flutter`, `sherpa-onnx`, `whisper.cpp`). O requisito de produto — ditado 100% offline, sem depender de configuração do SO — permanece inalterado; apenas a implementação está em aberto.
+- **Entrada por voz offline (Speech-to-Text)** com modelo acústico embarcado no aplicativo. ✅ **Status**: motor **decidido na spike F2.0** — `whisper_ggml` (whisper.cpp), um único modelo ggml multilíngue para pt/en/zh. Ver `docs/stt_spike.md`.
 - **Saída por voz (Text-to-Speech)** via motor nativo do sistema operacional (`flutter_tts`), sem consumo de internet.
 - **Privacidade total**: nenhum texto ou áudio sai do aparelho na operação padrão.
 - **Arquitetura híbrida preparada (Fase 2)**: quando houver internet, o app poderá usar API em nuvem para maior qualidade; sem internet, faz fallback silencioso para os motores locais (`connectivity_plus`).
@@ -75,10 +75,9 @@ translatoo/
 │   ├── fonts/                           # Subset Noto Sans SC — fallback CJK (§4.9)
 │   └── models/                          # Modelos embutidos (offline garantido)
 │       ├── stt-pt/                      # Modelo acústico STT Português (~50 MB)
-│       ├── stt-en/                      # Modelo acústico STT Inglês
-│       ├── stt-zh/                      # Modelo acústico STT Mandarim
-│       │                                # (nomes definitivos após a spike F2.0;
-│       │                                #  hoje `vosk-small-*` no repositório)
+│       ├── whisper/                     # Modelo ggml multilíngue de STT
+│       │                                # (um só arquivo cobre pt/en/zh —
+│       │                                #  decidido na spike F2.0)
 │       └── tflite/                      # (Plano B) modelo de tradução TFLite embutido
 ├── lib/
 │   ├── main.dart                        # Bootstrap: MultiProvider + MaterialApp(AppTheme)
@@ -145,14 +144,14 @@ translatoo/
 | Pacote | Uso | Observação |
 |---|---|---|
 | `google_mlkit_translation` | M1 — tradução on-device | Pacotes de idioma ~30 MB cada, download sob demanda |
-| *(motor de STT — **a definir na spike F2.0**)* | M2 — STT 100% offline | `vosk_flutter` **removido da lista fechada na v1.1**: não resolve com Dart 3. Modelos embutidos em `assets/models/` |
+| `whisper_ggml` | M2 — STT 100% offline | **Definido na spike F2.0** (`docs/stt_spike.md`): whisper.cpp com um único modelo ggml multilíngue (56,9 MB) em `assets/models/whisper/`. Substitui `vosk_flutter`, que não resolve com Dart 3 |
 | `flutter_tts` | M3 — TTS | Usa motor nativo do SO (já no cache do projeto, v4.2.5) |
 | `tflite_flutter` | M1 — Plano B | Modelo TFLite embutido p/ cenários **sem acesso aos servidores de download do Google** (ver RF-M1-07; a v1.0 dizia "sem Google Play Services", premissa corrigida na v1.1) |
 | `shared_preferences` | M4 — persistência local | Equivalente ao "LocalStorage" |
 | `connectivity_plus` | M4 — status de rede / fallback híbrido | |
 | `provider` | Estado global (ChangeNotifier) | |
 | `permission_handler` | Permissão de microfone | |
-| `path_provider` | Caminhos locais (modelos Vosk) | Já resolvido no projeto |
+| `path_provider` | Caminhos locais (modelos de STT/TFLite) | Já resolvido no projeto |
 | `share_plus` | Compartilhar tradução | P1 (opcional na v1) |
 
 ---
@@ -193,8 +192,11 @@ translatoo/
 
 ### Lógica de Funcionamento
 - **RF-M2-01** — **Requisito de motor** *(revisado na v1.1)*: STT **100% offline**, com modelos acústicos **embutidos nos assets** (`assets/models/`), sem depender de ditado offline configurado pelo usuário no SO e sem exigir Google Play Services. O pacote `speech_to_text` **NÃO** é aceitável como fonte primária justamente por delegar essa configuração ao usuário.
-  - **Motor concreto: em aberto.** A v1.0 fixava `vosk_flutter`, mas essa versão (0.3.48) declara `sdk <3.0.0` e **não resolve com Dart 3** — está comentada no `pubspec.yaml`. A escolha final sai da spike **F2.0** (plano de implementação), que avalia fork do `vosk_flutter`, `sherpa-onnx` e `whisper.cpp` contra critérios de tamanho, qualidade PT/EN/ZH, licença e manutenção. **Nenhum outro requisito do M2 depende dessa escolha**: todos são expressos contra a interface `SttService`.
-- **RF-M2-02** — Idioma da escuta = idioma de ORIGEM selecionado no Módulo 1. Ao iniciar escuta, o modelo Vosk correspondente é carregado on-demand; primeira carga exibe estado `initializing` (spinner no botão).
+  - **Motor concreto: `whisper_ggml` (whisper.cpp)** *(decidido na spike F2.0 — `docs/stt_spike.md`)*. Um único modelo `ggml-base-q5_1.bin` (**56,9 MB**) cobre pt, en e zh; o flavor `lite` pode usar `ggml-tiny-q5_1.bin` (30,7 MB). Escolhido contra `vosk_flutter_2` (113 MB, Android-only, sem release há ~2 anos) e `sherpa_onnx` (~176 MB e **sem modelo streaming de português**). Licença MIT. `vosk_flutter` foi reprovado nos eliminatórios: além do `sdk <3.0.0`, exige `permission_handler ^10.2.0`, incompatível com o `^11.3.1` que o próprio M2 usa.
+  - **Ressalva sobre os parciais.** whisper.cpp não tem streaming incremental: os parciais são **refinados**, isto é, o texto já exibido pode ser reescrito e não apenas estendido. A RF-M2-04 continua atendida (há feedback contínuo durante a fala), mas o overlay de escuta deve tratar cada parcial como bloco substituível — nunca concatenar emissões.
+  - **Risco em aberto:** latência em Android de gama média **não foi medida na spike** (sem device físico disponível). Medição obrigatória na F2.1; escada de recuo registrada em `docs/stt_spike.md` (`tiny-q5_1` → plano B `sherpa_onnx`).
+  - **Nenhum outro requisito do M2 depende dessa escolha**: todos são expressos contra a interface `SttService`.
+- **RF-M2-02** — Idioma da escuta = idioma de ORIGEM selecionado no Módulo 1. O modelo whisper é multilíngue e único: basta passar `Language.sttCode` ao motor, sem troca de arquivo por idioma. A primeira carga exibe estado `initializing` (spinner no botão); as seguintes reaproveitam o modelo residente (`keepModelLoaded`).
 - **RF-M2-03** — Fluxo de permissão: ao tocar em 🎤, solicitar `RECORD_AUDIO`. Se negada permanentemente, exibir diálogo explicativo com botão "Abrir configurações" (`permission_handler.openAppSettings()`). Nenhuma exceção deve propagar à UI.
 - **RF-M2-04** — Resultados parciais: o texto reconhecido aparece EM TEMPO REAL (streaming) no campo origem, em cor secundária/itálico enquanto parcial.
 - **RF-M2-05** — Fim de fala: pausa de ≥ 1,5 s finaliza a frase; o texto final substitui o conteúdo do campo origem e dispara automaticamente a tradução do Módulo 1 (ignorando debounce).
@@ -342,13 +344,13 @@ class AppColors {
 |---|---|
 | Cold start | < 2 s |
 | Tradução (pacote pronto, ≤ 500 chars) | ≤ 300 ms |
-| Início da escuta Vosk (modelo já carregado) | ≤ 500 ms |
+| Início da escuta (modelo de STT já carregado) | ≤ 500 ms |
 | Animações | 60 fps sem jank (mic pulsante/waveform via `AnimationController` único) |
 
 ## 4.5 Privacidade e Permissões
 - `RECORD_AUDIO` somente durante uso ativo (runtime permission, justificativa prévia em diálogo).
 - iOS `Info.plist`: `NSMicrophoneUsageDescription` e `NSSpeechRecognitionUsageDescription` obrigatórios.
-- Política: nenhum dado coletado/compartilhado; áudio processado localmente (Vosk) ou pelo motor nativo do SO (TTS).
+- Política: nenhum dado coletado/compartilhado; áudio processado localmente (whisper.cpp) ou pelo motor nativo do SO (TTS).
 
 ## 4.6 Compatibilidade
 
@@ -405,7 +407,7 @@ Os dois limites de tamanho só são alcançáveis com **dois flavors de build di
 | `ERR_DOWNLOAD_FAILED` | Falha/rede no download | "Falha ao baixar pacote" | Tentar novamente |
 | `ERR_WIFI_ONLY` | Download em dados móveis | "Download restrito a Wi-Fi" | "Baixar mesmo assim" |
 | `ERR_MIC_PERMISSION` | Permissão negada | "Precisamos do microfone para ouvir você" | Abrir configurações |
-| `ERR_STT_ENGINE` | Erro Vosk/modelo | "Não foi possível ouvir agora" | Tentar novamente |
+| `ERR_STT_ENGINE` | Erro do motor/modelo de STT | "Não foi possível ouvir agora" | Tentar novamente |
 | `ERR_TTS_VOICE_MISSING` | Voz do SO ausente | "Instale a voz {idioma} nas configurações do sistema" | Abrir configurações |
 | `ERR_STORAGE` | shared_preferences falhou | "Não foi possível salvar" | Repetir ação |
 | `ERR_TRANSLATION_FAILED` | Motor falhou nos dois backends | "Tradução indisponível neste momento" | Tentar novamente |
@@ -495,7 +497,7 @@ Revisão de completude conduzida sobre o código já entregue (F0 e F1 concluíd
 | # | Mudança | Seções | Motivo |
 |---|---|---|---|
 | 1 | **Premissa do Plano B corrigida** | §1.1, RF-M1-07, §4.6 | O plugin usa `com.google.mlkit:translate:17.0.3` — SDK **standalone**, embarcado no APK, que **funciona sem Google Play Services**. A justificativa "para celulares sem GMS" era falsa. O gatilho real é a **inacessibilidade dos servidores de download do Google** (cenário China) |
-| 2 | **Motor de STT despromovido a decisão em aberto** | §1.1, RF-M2-01 | `vosk_flutter` 0.3.48 declara `sdk <3.0.0` e **não resolve com Dart 3** (está comentado no `pubspec.yaml`). Um módulo P0 inteiro estava apoiado numa dependência que não instala. Motor será definido pela spike **F2.0** |
+| 2 | **Motor de STT despromovido a decisão em aberto** | §1.1, RF-M2-01 | `vosk_flutter` 0.3.48 declara `sdk <3.0.0` e **não resolve com Dart 3** (está comentado no `pubspec.yaml`). Um módulo P0 inteiro estava apoiado numa dependência que não instala. Motor será definido pela spike **F2.0** — **resolvido**: `whisper_ggml`, ver `docs/stt_spike.md` |
 | 3 | **iOS mínimo: 12+ → 15.5** | §4.6 | Três valores conflitantes (PRD 12, projeto 15.0, pod ML Kit **15.5**). O `pod install` falharia. 15.5 é imposto pela dependência |
 | 4 | **Métricas de sucesso reclassificadas** | §1.3 | §1.3 exigia crash-rate e latência média enquanto RN-05/§4.5 proíbem telemetria — nenhuma era medível. Agora são metas de **QA manual** com roteiro definido, preservando a promessa de privacidade |
 | 5 | **Tipografia CJK (novo requisito)** | §4.9 | Sem fonte embutida, mandarim renderiza como tofu (□□□) em Androids sem cobertura Han — quebra visualmente um terço do produto |

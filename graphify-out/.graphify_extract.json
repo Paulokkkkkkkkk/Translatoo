@@ -3153,8 +3153,8 @@
       "_origin": "ast"
     },
     {
-      "id": "lib_models_language_voskcode",
-      "label": "voskCode",
+      "id": "lib_models_language_sttcode",
+      "label": "sttCode",
       "file_type": "code",
       "source_file": "lib/models/language.dart",
       "source_location": null,
@@ -16952,7 +16952,7 @@
     },
     {
       "source": "lib_models_language",
-      "target": "lib_models_language_voskcode",
+      "target": "lib_models_language_sttcode",
       "relation": "defines",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,

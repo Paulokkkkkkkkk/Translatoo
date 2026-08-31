@@ -10,6 +10,7 @@ environment:
 # -------------------------------------------------------------------------
 # Lista FECHADA de dependencias (plano Secao 4 - nao substituir sem revisao).
 # Internet e usada APENAS para download de pacotes de idiomas (RN-02).
+# Reaberta e refechada na F2.0 para a entrada do motor de STT (whisper_ggml).
 # -------------------------------------------------------------------------
 dependencies:
   flutter:
@@ -28,7 +29,7 @@ dependencies:
   # Conectividade (M4 - ConnectionBadge; nada e bloqueado offline)
   connectivity_plus: ^6.0.0
 
-  # Caminhos de arquivos (modelos Vosk/TFLite)
+  # Caminhos de arquivos (modelos whisper/TFLite)
   path_provider: ^2.1.4
 
   # Permissoes (M2 - microfone; uso so a partir da Fase 2)
@@ -40,11 +41,10 @@ dependencies:
   # M1 - motor de traducao offline (Plano A)
   google_mlkit_translation: ^0.13.0
 
-  # M2 - ditado offline STT (ENTRA NA FASE 2)
-  # DESVIO DOCUMENTADO (risco R5): a versao atual do vosk_flutter (0.3.48)
-  # declara sdk <3.0.0 e nao resolve com Dart 3. Integracao ocorrera na F2
-  # via fork compativel/override, isolada atras de SttService.
-  # vosk_flutter: ^0.3.48
+  # M2 - ditado offline STT (whisper.cpp). Motor decidido na spike F2.0:
+  # um unico modelo ggml multilingue cobre pt/en/zh em 56,9 MB, contra 113 MB
+  # do Vosk e ~176 MB do sherpa-onnx. Ver docs/stt_spike.md.
+  whisper_ggml: ^2.6.0
 
   # M1 - Plano B TFLite (devices sem Google Play Services)
   tflite_flutter: ^0.11.0
@@ -69,9 +69,7 @@ flutter:
 
   # Diretorios reservados aos modelos embutidos (preenchidos nas Fases 1-2).
   assets:
-    - assets/models/vosk-small-pt/
-    - assets/models/vosk-small-en/
-    - assets/models/vosk-small-zh/
+    - assets/models/whisper/
     - assets/models/tflite/
 
   # F1.9 - cobertura de Han para o mandarim (RF-CJK-01..04, risco R8).

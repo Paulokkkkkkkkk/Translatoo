@@ -3564,14 +3564,14 @@
       "norm_label": "ttscode"
     },
     {
-      "label": "voskCode",
+      "label": "sttCode",
       "file_type": "code",
       "source_file": "lib/models/language.dart",
       "source_location": null,
       "_origin": "ast",
-      "id": "lib_models_language_voskcode",
+      "id": "lib_models_language_sttcode",
       "community": 27,
-      "norm_label": "voskcode"
+      "norm_label": "sttcode"
     },
     {
       "label": "jsonCode",
@@ -12585,6 +12585,17 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "lib_models_language",
+      "target": "lib_models_language_sttcode"
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/models/language.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "lib_models_language",
       "target": "lib_models_language_tryfromcode"
     },
     {
@@ -12597,17 +12608,6 @@
       "_origin": "ast",
       "source": "lib_models_language",
       "target": "lib_models_language_ttscode"
-    },
-    {
-      "relation": "defines",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/models/language.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "lib_models_language",
-      "target": "lib_models_language_voskcode"
     },
     {
       "relation": "references",
@@ -16992,5 +16992,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "eb8dbc7e8f9a969bc7a46273c5b2a98bcdf412e7"
+  "built_at_commit": "5c62dc4c940509028fc3d32dcbd26c90702afe4b"
 }

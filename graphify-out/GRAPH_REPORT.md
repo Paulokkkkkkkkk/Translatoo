@@ -1,7 +1,7 @@
 # Graph Report - .  (2026-08-31)
 
 ## Corpus Check
-- 49 files · ~16,681 words
+- 49 files · ~16,693 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -189,7 +189,7 @@ Nodes (7): ../../core/constants/app_strings.dart, build, HistoryScreen, build, S
 
 ### Community 27 - "lib_models_language Community"
 Cohesion: 0.22
-Nodes (8): bcp47Code, displayName, jsonCode, mlKitCode, tryFromCode, ttsCode, voskCode, String get
+Nodes (8): bcp47Code, displayName, jsonCode, mlKitCode, sttCode, tryFromCode, ttsCode, String get
 
 ### Community 28 - "lib_ui_widgets_translation_card Community"
 Cohesion: 0.22

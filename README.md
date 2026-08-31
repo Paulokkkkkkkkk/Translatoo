@@ -10,7 +10,7 @@ download de pacotes de idiomas e, no futuro, modo híbrido (P2).
 |---|---|---|
 | **F0** | Fundação e design system (tokens, tema, i18n, storage, conectividade, shell responsivo, pipeline de qualidade) | ✅ **concluída** |
 | **F1** | Motor de tradução offline (ML Kit + Plano B TFLite) | ✅ **concluída** (F1.1–F1.9, tipografia CJK incluída) |
-| F2 | Voz: ditado STT + leitura TTS nativa | ⬜ — bloqueada pela spike **F2.0** (motor de STT) |
+| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 spike **F2.0 concluída** (motor: `whisper_ggml`) · ⬜ F2.1–F2.9 |
 | F3 | Histórico, favoritos, ajustes, gerenciador de modelos | ⬜ — pode ser antecipada (depende de F1, não de F2) |
 | F4 | Polimento, modo híbrido, performance, release v1 | ⬜ |
 
@@ -82,11 +82,19 @@ leitura tolerante a JSON corrompido, migrações por `schemaVersion`.
 
 ## Desvios documentados
 
-- **Motor de STT indefinido (M2/Fase 2)** — `vosk_flutter` 0.3.48 declara
-  `sdk <3.0.0` e não resolve com Dart 3; está comentado no `pubspec.yaml` e
-  foi **removido da lista fechada** de dependências. O motor será escolhido
-  pela spike **F2.0** (risco R5b). A interface `SttService` isola a decisão,
-  então F2.4/F2.5 podem ser programadas em paralelo.
+- ~~**Motor de STT indefinido (M2/Fase 2)**~~ — **resolvido na spike F2.0**:
+  `whisper_ggml` (whisper.cpp), com um único modelo ggml multilíngue cobrindo
+  pt/en/zh em 56,9 MB — contra 113 MB do Vosk (Android-only, sem release há
+  ~2 anos) e ~176 MB do `sherpa-onnx` (sem modelo streaming de português). A
+  lista fechada de dependências voltou a estar fechada. Risco R5b encerrado;
+  medições e ressalvas em `docs/stt_spike.md`.
+- **Latência do STT não medida (F2.1)** — whisper.cpp é mais pesado em CPU que
+  um zipformer streaming e a spike não teve Android físico disponível. A F2.1
+  deve medir carga do modelo e latência dos parciais em gama média; a escada de
+  recuo (`tiny-q5_1` → `sherpa_onnx`) está registrada na nota da spike.
+- **Parciais de STT são refinados, não incrementais** — whisper.cpp reescreve o
+  texto parcial a cada emissão. O overlay de escuta da F2.5 deve tratá-lo como
+  bloco substituível, nunca concatenar emissões.
 - **Plano B TFLite desligado** — a spike F1.4 (`docs/tflite_spike.md`) não
   encontrou modelo NMT compacto viável para os 3 pares.
   `AppConstants.enableAlternativeEngine = false`. Consequência assumida: sem
@@ -125,7 +133,7 @@ gentileza.
 | F0.1–F0.9 | [#1](../../issues/1)–[#9](../../issues/9) | Fundação e design system | [@Paulokkkkkkkkk](https://github.com/Paulokkkkkkkkk) |
 | F1.1–F1.8 | [#10](../../issues/10)–[#17](../../issues/17) | Motor de tradução offline (M1) | [@Paulokkkkkkkkk](https://github.com/Paulokkkkkkkkk) |
 | F1.9 | [#18](../../issues/18) | Tipografia CJK — subset de Noto Sans SC como `fontFamilyFallback` | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
-| F2.0 | [#19](../../issues/19) | Spike do motor de STT | _disponível_ |
+| F2.0 | [#19](../../issues/19) | Spike do motor de STT — decisão por `whisper_ggml` | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 

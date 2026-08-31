@@ -9,14 +9,14 @@ void main() {
       expect(Language.zh.displayName, '中文');
     });
 
-    test('expõe códigos BCP-47 / ML Kit / TTS / Vosk', () {
+    test('expõe códigos BCP-47 / ML Kit / TTS / STT', () {
       expect(Language.pt.bcp47Code, 'pt-BR');
       expect(Language.en.bcp47Code, 'en-US');
       expect(Language.zh.bcp47Code, 'zh-CN');
 
       expect(Language.zh.mlKitCode, 'zh');
       expect(Language.pt.ttsCode, 'pt-BR');
-      expect(Language.en.voskCode, 'en');
+      expect(Language.en.sttCode, 'en');
     });
 
     test('jsonCode estável para persistência', () {

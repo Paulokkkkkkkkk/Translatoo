@@ -7,7 +7,7 @@
 | **Versão do plano** | 1.1 |
 | **Data** | 2026-08-28 |
 | **Documento-fonte** | `prd.md` **v1.1** (requisitos, módulos, critérios de aceite) |
-| **Estado real** | **F0 e F1 concluídas, F1.9 incluída** · F2.0 (spike de STT) é o próximo passo |
+| **Estado real** | **F0, F1 (com F1.9) e a spike F2.0 concluídas** · F2.1 é o próximo passo |
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
@@ -54,7 +54,7 @@
 | Módulo | Escopo | Motores |
 |---|---|---|
 | **M1 — Tradução de Texto** | Pares fechados `pt↔en`, `pt↔zh`, `en↔zh`; tradução automática com debounce 800 ms; limite 5.000 chars com fatiamento ≤ 4.500; botão ⇄; download de pacotes com progresso | `google_mlkit_translation` + Plano B `tflite_flutter` |
-| **M2 — Entrada por Voz (STT)** | Ditado offline com modelos Vosk **embutidos**; resultados parciais em streaming; pausa 1,5 s encerra frase; máx. 60 s; permissão de microfone com fluxo completo | `vosk_flutter` |
+| **M2 — Entrada por Voz (STT)** | Ditado offline com modelo ggml multilíngue **embutido**; resultados parciais (refinados, ver F2.0); pausa 1,5 s encerra frase; máx. 60 s; permissão de microfone com fluxo completo | `whisper_ggml` |
 | **M3 — Saída por Voz (TTS)** | Voz nativa do SO; checagem de voz instalada; aviso acionável se ausente; rate/pitch configuráveis; autoplay opcional | `flutter_tts` |
 | **M4 — Dados e Conectividade** | Histórico FIFO 200 entradas com dedupe; favoritos ilimitados; busca + filtros por par; swipe-delete com desfazer 5 s; persistência `shared_preferences`; Gerenciador de Modelos; `ConnectionBadge`; modo híbrido nuvem (P2) | `shared_preferences`, `connectivity_plus`, `share_plus` (P1) |
 
@@ -63,7 +63,7 @@
 |---|---|
 | Latência de tradução (≤ 500 chars, pacote pronto) | ≤ 300 ms |
 | Cold start | < 2 s |
-| Início da escuta Vosk (modelo carregado) | ≤ 500 ms |
+| Início da escuta (modelo de STT carregado) | ≤ 500 ms |
 | Animações | 60 fps sem jank |
 | APK base (sem modelos embutidos) | < 40 MB |
 | APK completo (modelos embutidos) | ≤ 180 MB |
@@ -164,7 +164,7 @@ lib/
 **Dependências do `pubspec.yaml` (lista fechada do PRD — não substituir):**
 `google_mlkit_translation` · `flutter_tts` · `tflite_flutter` · `shared_preferences` · `connectivity_plus` · `provider` · `permission_handler` · `path_provider` · `share_plus` (P1).
 
-**Pendência de dependência (v1.1):** o pacote de **STT continua indefinido**. `vosk_flutter` foi removido da lista fechada porque a versão publicada (0.3.48) declara `sdk <3.0.0` e não resolve com Dart 3 — está comentado no `pubspec.yaml`. A entrada definitiva será acrescentada ao fim da spike **F2.0**, e só então a lista volta a estar fechada.
+**Dependência de STT resolvida (F2.0):** a lista fechada foi reaberta e **refechada** com `whisper_ggml: ^2.6.0`. `vosk_flutter` ficou de fora: além do `sdk <3.0.0`, exige `permission_handler ^10.2.0`, incompatível com o `^11.3.1` do projeto. Decisão e medições em `docs/stt_spike.md`.
 
 **Mínimos de plataforma:** Android `minSdk 23` · **iOS 15.5** (imposto pelo pod do ML Kit).
 
@@ -197,7 +197,7 @@ lib/
 ### F0.1 — Bootstrap do projeto
 - Criar/validar `pubspec.yaml` com a lista fechada de dependências (§4 deste plano); travar versões compatíveis entre si.
 - Configurar Android: `minSdk 23`, permissão `RECORD_AUDIO` declarada (uso só a partir da F2), `INTERNET` apenas para downloads de pacotes.
-- Criar árvore de pastas exata do PRD §2 (`core/constants`, `core/services`, `core/theme`, `models`, `state`, `ui/screens`, `ui/widgets`, `test/services`, `test/state`) + `assets/models/{vosk-small-pt,vosk-small-en,vosk-small-zh,tflite}` registrados no pubspec.
+- Criar árvore de pastas exata do PRD §2 (`core/constants`, `core/services`, `core/theme`, `models`, `state`, `ui/screens`, `ui/widgets`, `test/services`, `test/state`) + `assets/models/{whisper,tflite}` registrados no pubspec (os três diretórios `vosk-small-*` originais viraram um só na F2.0).
 - `analysis_options.yaml`: lints Flutter recomendados + regras de ordenação de imports.
 - **Entregável**: `flutter run` abre app vazio no device; `flutter analyze` limpo.
 
@@ -221,7 +221,7 @@ lib/
 - **Entregável**: zero string literal de UI fora do arquivo (regra RN-04).
 
 ### F0.6 — Modelos de domínio
-- `language.dart`: `enum Language { pt, en, zh }` com `displayName` nativo ("Português", "English", "中文"), código ML Kit e código TTS/Vosk.
+- `language.dart`: `enum Language { pt, en, zh }` com `displayName` nativo ("Português", "English", "中文"), código ML Kit e códigos TTS/STT.
 - `translation_record.dart`: `{id, sourceText, translatedText, sourceLang, targetLang, timestamp, isFavorite}` com `toJson/fromJson`.
 - `app_settings.dart`: imutável com `copyWith` (srcLang, tgtLang, ttsRate, ttsPitch, autoPlay, wifiOnly, cloudEnabled=false, themeMode, schemaVersion).
 - **Entregável**: round-trip JSON testado.
@@ -321,11 +321,11 @@ lib/
 
 # 8. FASE 2 — VOZ COMPLETA: DITADO STT + LEITURA TTS (M2+M3)
 
-> **Objetivo**: fechar o ciclo conversacional — o usuário fala (Vosk offline) e ouve a tradução (motor nativo do SO). Inclui permissões, modelos embutidos, overlay de escuta animado, mini-player e integração automática fala→tradução→fala.
+> **Objetivo**: fechar o ciclo conversacional — o usuário fala (whisper.cpp offline) e ouve a tradução (motor nativo do SO). Inclui permissões, modelos embutidos, overlay de escuta animado, mini-player e integração automática fala→tradução→fala.
 
 ## Subfases
 
-### F2.0 — SPIKE BLOQUEANTE: motor de STT offline 🆕 v1.1
+### F2.0 — SPIKE BLOQUEANTE: motor de STT offline 🆕 v1.1 ✅ concluída ([#19](../../issues/19) · decisão: `whisper_ggml`, ver `docs/stt_spike.md`)
 
 > **Por que existe.** O plano v1.0 fixava `vosk_flutter` como decisão tomada. Na prática, a versão publicada (0.3.48) declara `sdk <3.0.0`, **não resolve com Dart 3** e está comentada no `pubspec.yaml`. Um módulo **P0 inteiro** apoiava-se numa dependência que não instala. Esta spike espelha o formato que já funcionou na **F1.4** (Plano B TFLite): investigação time-boxed, critérios escritos antes, decisão documentada — inclusive a decisão de não fazer.
 
@@ -353,9 +353,10 @@ lib/
 - **Entregável**: decisão registrada, dependência instalada (ou contingência aprovada), F2.1 destravada.
 
 ### F2.1 — Aquisição e embutimento dos modelos de STT
-> **Depende de F2.0.** Os nomes/formatos abaixo assumem Vosk (hipótese da v1.0) e **serão substituídos** pelo que a spike decidir. A estrutura da subfase não muda.
+> **Atualizado pela F2.0.** A spike decidiu por `whisper_ggml`: **um único** modelo ggml multilíngue substitui os três modelos por idioma que a v1.0 assumia. A estrutura da subfase não muda.
 
-- Baixar os modelos *small* do motor escolhido — referência Vosk (alphacephei): `vosk-model-small-pt-0.3`, `vosk-model-small-en-us-0.15`, `vosk-model-small-cn-0.22` (~40–50 MB cada).
+- Baixar de `huggingface.co/ggerganov/whisper.cpp`: `ggml-base-q5_1.bin` (56,9 MB, flavor `full`) e `ggml-tiny-q5_1.bin` (30,7 MB, flavor `lite`) para `assets/models/whisper/`.
+- **Medir em Android físico de gama média** (obrigação herdada da F2.0): tempo de carga do modelo, latência do primeiro parcial e latência do final após a pausa de 1,5 s. Se `base-q5_1` não couber no orçamento, recuar para `tiny-q5_1` e, em último caso, para o plano B `sherpa_onnx`.
 - Colocar em `assets/models/`; no primeiro uso, copiar para diretório de dados (`path_provider`) — os motores de STT exigem caminho real de arquivo, não asset bundle.
 - **Entregável**: assets versionados + script/README de atualização dos modelos.
 
@@ -364,14 +365,14 @@ lib/
 > **Por que virou subfase própria.** A v1.0 citava os flavors numa linha solta dentro da F2.1, sem nenhuma especificação de build — os limites de 40 MB e 180 MB não tinham mecanismo que os produzisse. Hoje o projeto **não tem flavor algum** configurado.
 
 - `android/app/build.gradle.kts`: `flavorDimensions += "models"` com `lite` (`applicationIdSuffix = ".lite"`) e `full`.
-- Assets condicionais: os modelos de STT entram **apenas** no flavor `full`; `lite` embarca somente a fonte CJK (F1.9) e o mínimo.
+- Assets condicionais: `full` embarca `ggml-base-q5_1.bin`; `lite` embarca `ggml-tiny-q5_1.bin` mais a fonte CJK (F1.9) — com 30,7 MB de STT o `lite` deixa de ficar sem ditado, como a v1.0 previa.
 - `AppConstants.hasEmbeddedSttModels` alimentado por `--dart-define`, lido **uma única vez** e exposto pelos ViewModels. Nenhuma checagem de flavor pode aparecer em `ui/` (regra de camadas §4).
 - No flavor `lite`, o botão 🎤 é **omitido da árvore de widgets**, não renderizado desabilitado — um controle permanentemente inerte é pior que sua ausência.
 - Documentar os comandos de build de cada flavor no README.
 - **Entregável**: `flutter build apk --flavor lite` < 40 MB e `--flavor full` ≤ 180 MB, ambos medidos e registrados.
 
-### F2.2 — `SttService` (wrapper do motor escolhido na F2.0)
-> **Depende de F2.0.** A interface abaixo é **independente do motor** — é justamente ela que permitiu adiar a decisão sem travar o resto da F2. Toda a F2.4–F2.5 programa contra ela.
+### F2.2 — `SttService` (wrapper do motor escolhido na F2.0: `whisper_ggml`)
+> **Depende de F2.0 — concluída.** A interface abaixo é **independente do motor** — é justamente ela que permitiu adiar a decisão sem travar o resto da F2. Toda a F2.4–F2.5 programa contra ela.
 
 - Carregar modelo on-demand pelo idioma de ORIGEM; expor estado `initializing` na primeira carga.
 - API: `start(lang)`, `stop()`, `cancel()`; stream com resultados **parciais** e **finais**.
@@ -508,7 +509,7 @@ lib/
 
 ### F4.4 — Performance auditada (§4.4)
 - Perfis com DevTools: cold start < 2 s; tradução ≤ 300 ms (≤ 500 chars); início de escuta ≤ 500 ms (modelo carregado); animações 60 fps.
-- Otimizações típicas: lazy-load dos modelos Vosk (só no primeiro uso), pré-aquecimento do translator, evitar rebuilds globais (já garantido por `Selector`), const widgets.
+- Otimizações típicas: lazy-load do modelo de STT (só no primeiro uso, com `keepModelLoaded`), pré-aquecimento do translator, evitar rebuilds globais (já garantido por `Selector`), const widgets.
 - **Entregável**: relatório curto de medições vs metas.
 
 ### F4.5 — Acessibilidade e privacidade (RN-05/06, §4.5)
@@ -561,7 +562,7 @@ lib/
 | RF-M1-01..09 + AC-M1-1..4 (M1) | F1.1–F1.8 | Núcleo da tradução |
 | RN-01 (enum fechado) / RN-02 (offline) | F0.6 / transversal | Verificado em todas as fases |
 | RN-03 + tabela §4.8 (erros) | F0.7, F1.1, F2.2, F2.3, F2.6, F3.1 | `AppException(code)` na fronteira |
-| RF-M2-01..07 + AC-M2-1..4 (M2) | F2.1–F2.5 | Vosk embutido |
+| RF-M2-01..07 + AC-M2-1..4 (M2) | **F2.0** + F2.1–F2.5 | Modelo ggml multilíngue embutido (`whisper_ggml`) |
 | RF-M3-01..06 + AC-M3-1..4 (M3) | F2.6–F2.9 | TTS nativo |
 | RF-M4-01..07 + AC-M4-1..5 (M4) | F3.1–F3.7 | Dados/ajustes/conectividade |
 | RF-M4-08 híbrido nuvem (P2) | F4.3 | Flag `cloudEnabled=false` |
@@ -585,11 +586,11 @@ lib/
 | # | Risco | Prob. | Impacto | Mitigação |
 |---|---|---|---|---|
 | R1 | Plano B TFLite: não existir modelo NMT compacto viável p/ os 3 pares | ~~Média~~ **Confirmado** | Alto | **Materializou-se** (spike F1.4 inconclusiva, `docs/tflite_spike.md`). Mitigação aplicada: interface `TranslationBackend` isola o motor, flag desligada, fluxo testável por mock. **Impacto residual**: sem acesso à CDN do Google, o app não traduz — ver R9 |
-| R2 | Modelos Vosk estouram o limite de loja (180 MB full) | Baixa | Médio | Flavors lite/full; download sob demanda como alternativa futura |
+| R2 | Modelos de STT estouram o limite de loja (180 MB full) | ~~Baixa~~ **Muito baixa** | Médio | *Atenuado na F2.0*: o modelo escolhido ocupa 56,9 MB no `full` e 30,7 MB no `lite`, contra os ~113–176 MB dos concorrentes. Flavors lite/full mantidos |
 | R3 | Voz chinesa TTS ausente em muitos aparelhos | Alta | Médio | Fluxo AC-M3-2 já previsto: SnackBar persistente + atalho às configurações do SO |
 | R4 | Latência > 300 ms em devices fracos | Média | Médio | Pré-aquecimento, medição desde F1.2, chunking eficiente |
 | R5 | Incompatibilidade entre versões dos plugins ML Kit/TTS | Média | Alto | Versões travadas no pubspec; upgrade só com regressão completa |
-| **R5b** | **`vosk_flutter` não instala com Dart 3** (declara `sdk <3.0.0`) — M2, um módulo P0, sem dependência viável | ~~—~~ **Confirmado** | **Crítico** | *Novo na v1.1 — a v1.0 tratava só de "conflito de versões", que não descreve este problema.* Spike **F2.0** com critérios eliminatórios e time-box de 5 dias; interface `SttService` mantém F2.4/F2.5 programáveis em paralelo; contingência de rebaixar M2 para v1.1 com aprovação explícita |
+| **R5b** | **`vosk_flutter` não instala com Dart 3** (declara `sdk <3.0.0`) — M2, um módulo P0, sem dependência viável | ~~Confirmado~~ **FECHADO na F2.0** | ~~Crítico~~ | Spike F2.0 concluída: `whisper_ggml: ^2.6.0` na lista fechada, `flutter pub get` resolvendo. A contingência (rebaixar M2 para v1.1) **não foi acionada**. Risco residual transferido para a F2.1: **latência do whisper em Android de gama média, ainda não medida** — escada de recuo em `docs/stt_spike.md` |
 | R6 | OneDrive sincronizando `build/` e assets grandes | Média | Baixo/Médio | `.gitignore` robusto; considerar mover projeto fora de pasta sincronizada antes do release |
 | R7 | Perda de foco/cursor por rebuild excessivo nos campos de texto | Média | Médio | Regra arquitetural F1.5 (`Selector`/`context.select`), widget test dedicado |
 | **R8** | **Mandarim renderiza como tofu (□□□)** em Androids sem cobertura de glifos Han | Alta | **Alto** | *Novo na v1.1.* F1.9 embute subset de Noto Sans SC como `fontFamilyFallback`; verificação obrigatória em emulador sem locale chinês (AC-F1-6) |
