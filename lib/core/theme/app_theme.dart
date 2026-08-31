@@ -30,6 +30,16 @@ typedef _Tokens = ({
 /// Ajustes. Alternar o tema escuro do sistema muda o app inteiro sem tocar
 /// em nenhum widget.
 abstract final class AppTheme {
+  /// Cadeia de fallback tipográfico (F1.9 / RF-CJK-01..04, risco R8).
+  ///
+  /// Único lugar do app que nomeia uma família de fonte. PT e EN continuam na
+  /// tipografia nativa da plataforma: o subset de Noto Sans SC só é consultado
+  /// para os pontos de código que a fonte nativa não cobre — na prática, os
+  /// glifos Han, que sem isto renderizam como tofu (□□□) em Androids sem
+  /// pacote de idioma chinês. Aplicar fonte widget a widget é PROIBIDO (mesma
+  /// regra dos tokens de cor, RN-04): tudo nasce do [TextTheme] abaixo.
+  static const List<String> cjkFallback = <String>['NotoSansSC'];
+
   static ThemeData light() => _build(Brightness.light, (
     primary: AppColorsLight.colorPrimary,
     primaryContainer: AppColorsLight.colorPrimaryContainer,
@@ -65,6 +75,12 @@ abstract final class AppTheme {
   ));
 
   static ThemeData _build(Brightness brightness, _Tokens c) {
+    // Fallback CJK injetado uma única vez; os temas de componente abaixo
+    // derivam DESTE TextTheme, e não de AppTypography, para herdá-lo.
+    final text = AppTypography.textTheme().apply(
+      fontFamilyFallback: cjkFallback,
+    );
+
     final scheme = ColorScheme(
       brightness: brightness,
       primary: c.primary,
@@ -92,14 +108,14 @@ abstract final class AppTheme {
       brightness: brightness,
       colorScheme: scheme,
       scaffoldBackgroundColor: c.background,
-      textTheme: AppTypography.textTheme(),
+      textTheme: text,
       appBarTheme: AppBarTheme(
         backgroundColor: c.background,
         foregroundColor: c.textPrimary,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: AppTypography.titleLarge.copyWith(color: c.textPrimary),
+        titleTextStyle: text.titleLarge!.copyWith(color: c.textPrimary),
       ),
       cardTheme: CardThemeData(
         color: c.surface,
@@ -115,7 +131,7 @@ abstract final class AppTheme {
           backgroundColor: c.primary,
           foregroundColor: c.onPrimary,
           minimumSize: const Size(64, AppSpacing.minTouchTarget),
-          textStyle: AppTypography.labelLarge,
+          textStyle: text.labelLarge,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.radius),
           ),
@@ -126,7 +142,7 @@ abstract final class AppTheme {
           backgroundColor: c.primary,
           foregroundColor: c.onPrimary,
           minimumSize: const Size(64, AppSpacing.minTouchTarget),
-          textStyle: AppTypography.labelLarge,
+          textStyle: text.labelLarge,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.radius),
           ),
@@ -135,10 +151,8 @@ abstract final class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: c.surface,
-        hintStyle: AppTypography.bodyLarge.copyWith(color: c.textSecondary),
-        counterStyle: AppTypography.labelMedium.copyWith(
-          color: c.textSecondary,
-        ),
+        hintStyle: text.bodyLarge!.copyWith(color: c.textSecondary),
+        counterStyle: text.labelMedium!.copyWith(color: c.textSecondary),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
           vertical: AppSpacing.md,
@@ -159,9 +173,7 @@ abstract final class AppTheme {
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: c.textPrimary,
-        contentTextStyle: AppTypography.bodyMedium.copyWith(
-          color: c.background,
-        ),
+        contentTextStyle: text.bodyMedium!.copyWith(color: c.background),
         actionTextColor: c.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radius),
@@ -172,7 +184,7 @@ abstract final class AppTheme {
         indicatorColor: c.primaryContainer,
         height: 64,
         labelTextStyle: WidgetStatePropertyAll(
-          AppTypography.labelMedium.copyWith(color: c.textPrimary),
+          text.labelMedium!.copyWith(color: c.textPrimary),
         ),
         iconTheme: WidgetStateProperty.resolveWith(
           (states) => IconThemeData(

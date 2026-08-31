@@ -2633,6 +2633,22 @@
       "_origin": "ast"
     },
     {
+      "id": "lib_core_theme_app_theme_cjkfallback",
+      "label": "cjkFallback",
+      "file_type": "code",
+      "source_file": "lib/core/theme/app_theme.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "static_const_list",
+      "label": "static const List",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "lib_core_theme_app_theme_light",
       "label": "light",
       "file_type": "code",
@@ -6475,6 +6491,70 @@
     {
       "id": "package_translatoo_state_translator_view_model_dart",
       "label": "package:translatoo/state/translator_view_model.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_theme_cjk_fallback_test",
+      "label": "cjk_fallback_test.dart",
+      "file_type": "code",
+      "source_file": "test/theme/cjk_fallback_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_theme_cjk_fallback_test_main",
+      "label": "main",
+      "file_type": "code",
+      "source_file": "test/theme/cjk_fallback_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_theme_cjk_fallback_test_stylesof",
+      "label": "stylesOf",
+      "file_type": "code",
+      "source_file": "test/theme/cjk_fallback_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_io",
+      "label": "dart:io",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_flutter_material_dart",
+      "label": "package:flutter/material.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_flutter_test_flutter_test_dart",
+      "label": "package:flutter_test/flutter_test.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_translatoo_core_theme_app_theme_dart",
+      "label": "package:translatoo/core/theme/app_theme.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "file",
+      "label": "File",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -16035,6 +16115,29 @@
     },
     {
       "source": "lib_core_theme_app_theme",
+      "target": "lib_core_theme_app_theme_cjkfallback",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/theme/app_theme.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_theme_app_theme",
+      "target": "static_const_list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/theme/app_theme.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_theme_app_theme",
       "target": "lib_core_theme_app_theme_light",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -22369,6 +22472,84 @@
       "source_file": "test/state/translator_view_model_test.dart",
       "source_location": null,
       "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_theme_cjk_fallback_test",
+      "target": "test_theme_cjk_fallback_test_main",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/theme/cjk_fallback_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_theme_cjk_fallback_test",
+      "target": "test_theme_cjk_fallback_test_stylesof",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/theme/cjk_fallback_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_theme_cjk_fallback_test",
+      "target": "dart_io",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/theme/cjk_fallback_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_theme_cjk_fallback_test",
+      "target": "package_flutter_material_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/theme/cjk_fallback_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_theme_cjk_fallback_test",
+      "target": "package_flutter_test_flutter_test_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/theme/cjk_fallback_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_theme_cjk_fallback_test",
+      "target": "package_translatoo_core_theme_app_theme_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/theme/cjk_fallback_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_theme_cjk_fallback_test",
+      "target": "file",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/theme/cjk_fallback_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "type_lookup",
       "_origin": "ast"
     },
     {

@@ -9,7 +9,7 @@ download de pacotes de idiomas e, no futuro, modo híbrido (P2).
 | Fase | Escopo | Status |
 |---|---|---|
 | **F0** | Fundação e design system (tokens, tema, i18n, storage, conectividade, shell responsivo, pipeline de qualidade) | ✅ **concluída** |
-| **F1** | Motor de tradução offline (ML Kit + Plano B TFLite) | ✅ **concluída** (F1.1–F1.8) · ⬜ F1.9 tipografia CJK |
+| **F1** | Motor de tradução offline (ML Kit + Plano B TFLite) | ✅ **concluída** (F1.1–F1.9, tipografia CJK incluída) |
 | F2 | Voz: ditado STT + leitura TTS nativa | ⬜ — bloqueada pela spike **F2.0** (motor de STT) |
 | F3 | Histórico, favoritos, ajustes, gerenciador de modelos | ⬜ — pode ser antecipada (depende de F1, não de F2) |
 | F4 | Polimento, modo híbrido, performance, release v1 | ⬜ |
@@ -91,8 +91,11 @@ leitura tolerante a JSON corrompido, migrações por `schemaVersion`.
   encontrou modelo NMT compacto viável para os 3 pares.
   `AppConstants.enableAlternativeEngine = false`. Consequência assumida: sem
   acesso aos servidores de download do Google, o app não traduz (risco R9).
-- **Tipografia CJK pendente (F1.9)** — sem fonte com cobertura Han embutida,
-  mandarim renderiza como tofu (□□□) em Androids sem esses glifos (risco R8).
+- ~~**Tipografia CJK pendente (F1.9)**~~ — **resolvido**: subset GB2312 de Noto
+  Sans SC (4,20 MB, SIL OFL 1.1) embutido como `fontFamilyFallback` do tema.
+  Mandarim renderiza sem tofu em Androids sem pacote de idioma chinês
+  (risco R8 fechado). Origem, licença e comando de regeração em
+  `docs/cjk_font.md`; regenerar com `bash scripts/build_cjk_subset.sh`.
 
 ## Nota de ambiente (risco R6)
 
@@ -121,7 +124,7 @@ gentileza.
 |---|---|---|---|
 | F0.1–F0.9 | [#1](../../issues/1)–[#9](../../issues/9) | Fundação e design system | [@Paulokkkkkkkkk](https://github.com/Paulokkkkkkkkk) |
 | F1.1–F1.8 | [#10](../../issues/10)–[#17](../../issues/17) | Motor de tradução offline (M1) | [@Paulokkkkkkkkk](https://github.com/Paulokkkkkkkkk) |
-| F1.9 | [#18](../../issues/18) | Tipografia CJK | _disponível_ |
+| F1.9 | [#18](../../issues/18) | Tipografia CJK — subset de Noto Sans SC como `fontFamilyFallback` | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.0 | [#19](../../issues/19) | Spike do motor de STT | _disponível_ |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._

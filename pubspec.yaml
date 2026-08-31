@@ -73,3 +73,16 @@ flutter:
     - assets/models/vosk-small-en/
     - assets/models/vosk-small-zh/
     - assets/models/tflite/
+
+  # F1.9 - cobertura de Han para o mandarim (RF-CJK-01..04, risco R8).
+  # Subset GB2312 de Noto Sans SC (SIL OFL 1.1) - 2,10 MB por peso, 4,20 MB no
+  # total, dentro do orcamento de 5 MB do flavor `lite`. Aplicado APENAS como
+  # `fontFamilyFallback` em app_theme.dart: PT e EN seguem na fonte nativa.
+  # Regeneracao: bash scripts/build_cjk_subset.sh (ver docs/cjk_font.md).
+  fonts:
+    - family: NotoSansSC
+      fonts:
+        - asset: assets/fonts/NotoSansSC-Regular.subset.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansSC-Bold.subset.ttf
+          weight: 700

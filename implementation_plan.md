@@ -7,7 +7,7 @@
 | **Versão do plano** | 1.1 |
 | **Data** | 2026-08-28 |
 | **Documento-fonte** | `prd.md` **v1.1** (requisitos, módulos, critérios de aceite) |
-| **Estado real** | **F0 e F1 concluídas** · F1.9 e F2.0 são os próximos passos |
+| **Estado real** | **F0 e F1 concluídas, F1.9 incluída** · F2.0 (spike de STT) é o próximo passo |
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
@@ -307,7 +307,7 @@ lib/
   - AC-F1-4 ≙ AC-M1-4: sem GMS → motor alternativo, sem stacktrace.
   - AC-F1-5: erros de rede/download exibem mensagem da tabela §4.8 com ação sugerida.
 
-### F1.9 — Tipografia CJK (débito de fundação) — PRD §4.9 · RF-CJK-01..04 🆕 v1.1
+### F1.9 — Tipografia CJK (débito de fundação) — PRD §4.9 · RF-CJK-01..04 🆕 v1.1 ✅ concluída ([#18](../../issues/18) · `docs/cjk_font.md`)
 
 > **Por que está aqui.** Esta subfase deveria ter nascido na F0 (é design system), mas a lacuna só foi identificada na revisão v1.1, com a F0 já fechada. Como a tela Traduzir **já renderiza mandarim** desde a F1.6, o defeito é visível hoje: em Androids sem cobertura de Han, todo `zh` aparece como tofu (□□□). **É bloqueante para a F2** — não faz sentido validar ditado e leitura em chinês numa tela que não exibe chinês.
 
