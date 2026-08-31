@@ -393,7 +393,7 @@ Os dois limites de tamanho só são alcançáveis com **dois flavors de build di
 
 | ID | Entregável | Especificação |
 |---|---|---|
-| RF-REL-01 | **Ícone do app** | Substituir o ícone padrão do Flutter. Adaptive icon Android (foreground + background separados, área segura 66 dp de 108 dp) e conjunto iOS completo. Derivado da paleta Verde & Branco |
+| RF-REL-01 | **Ícone do app** | Substituir o ícone padrão do Flutter. Adaptive icon Android (foreground + background separados, área segura 66 dp de 108 dp) e conjunto iOS completo. Derivado da paleta Azul & Branco (`docs/design_system.md`) |
 | RF-REL-02 | **Splash screen** | Nativa (Android 12+ `SplashScreen` API), fundo `colorBackground` e logo central; versões light e dark. Sem tela branca entre splash e primeiro frame |
 | RF-REL-03 | **Política de privacidade** | Documento **publicamente acessível por URL** (exigência do Play). Deve afirmar: nenhum dado coletado, nenhum texto/áudio enviado, download de pacotes é a única conexão, desinstalar apaga tudo |
 | RF-REL-04 | **Formulário Data Safety** | Preenchido no Play Console coerente com RF-REL-03: nenhuma coleta, nenhum compartilhamento. Divergência entre formulário e comportamento é motivo de rejeição |

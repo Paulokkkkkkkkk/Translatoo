@@ -11,7 +11,7 @@
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
-| **Paleta** | **Verde & Branco**, com modos **Light** e **Dark** |
+| **Paleta** | **Azul & Branco**, com modos **Light** e **Dark** |
 | **Público** | Devs Flutter / agentes de IA de programação |
 
 ---
@@ -19,7 +19,7 @@
 ## SUMÁRIO
 1. [Princípios do Plano](#1-princípios-do-plano)
 2. [Síntese da Análise do PRD](#2-síntese-da-análise-do-prd)
-3. [Design System — Paleta Verde & Branco (Light/Dark)](#3-design-system--paleta-verde--branco-lightdark)
+3. [Design System — Paleta Azul & Branco (Light/Dark)](#3-design-system--paleta-azul--branco-lightdark)
 4. [Arquitetura Alvo](#4-arquitetura-alvo)
 5. [Roadmap Macro — Visão das 5 Fases](#5-roadmap-macro--visão-das-5-fases)
 6. [FASE 0 — Fundação e Design System](#6-fase-0--fundação-e-design-system)
@@ -87,45 +87,52 @@
 
 ---
 
-# 3. DESIGN SYSTEM — PALETA VERDE & BRANCO (LIGHT/DARK)
+# 3. DESIGN SYSTEM — PALETA AZUL & BRANCO (LIGHT/DARK)
 
-> **Decisão registrada**: o PRD §4.3 traz um exemplo *ilustrativo* de tokens com azul (`0xFF2563EB`) como primária. A diretriz vigente do produto fixa a identidade em **VERDE & BRANCO**. A arquitetura de tokens (nomes estáticos idênticos entre classes, fonte única `app_colors.dart`, `ThemeData` construído exclusivamente deles) permanece **exatamente** como especificada — apenas os valores hex mudam. Nenhum widget precisará ser tocado para ajustes futuros de paleta.
+> **Decisão registrada (revisada).** A identidade era **VERDE & BRANCO** até a extração do design system em `docs/design_system.md`, que expôs uma falha de acessibilidade: branco sobre a primária verde (`0xFF16A34A`) dá **3,30:1**, abaixo do mínimo AA de 4,5:1 — e **1,74:1** no tema escuro. Como o layout extraído do case assenta texto sobre um bloco de marca, a primária verde inviabilizava o cabeçalho.
+>
+> A identidade passa a ser **AZUL & BRANCO**, com a primária `0xFF3954FD` **amostrada dos arquivos do case** (`docs/design/`), não escolhida a olho. Branco sobre ela dá **5,44:1**.
+>
+> A arquitetura de tokens não muda em nada: mesmos 14 nomes estáticos, mesma fonte única `app_colors.dart`, mesmo `ThemeData` derivado só deles. **Nenhum widget foi tocado na troca** — o que era a promessa do design system desde a F0.2, agora exercitada de verdade.
 
-## 3.1 Tokens — Modo LIGHT (Verde sobre Branco)
+## 3.1 Tokens — Modo LIGHT (Azul sobre Branco)
 | Token | Hex | Uso |
 |---|---|---|
-| `colorPrimary` | `0xFF16A34A` | Botões primários, pills ativas, foco, marca |
-| `colorPrimaryContainer` | `0xFFDCFCE7` | Fundo de pills/seletores inativos, badges suaves |
-| `colorOnPrimary` | `0xFFFFFFFF` | Texto/ícone sobre primária |
-| `colorOnPrimaryContainer` | `0xFF14532A` | Texto sobre container verde claro |
-| `colorSecondary` | `0xFF22C55E` | Acentos secundários, waveform, destaques |
-| `colorBackground` | `0xFFF8FAFC` | Fundo geral (branco gelo) |
+| `colorPrimary` | `0xFF3954FD` | Botões primários, pills ativas, foco, marca |
+| `colorPrimaryContainer` | `0xFFE9ECFF` | Fundo de pills/seletores inativos, badges suaves |
+| `colorOnPrimary` | `0xFFFFFFFF` | Texto/ícone sobre primária — 5,44:1 |
+| `colorOnPrimaryContainer` | `0xFF101C6B` | Texto sobre container azul claro — 12,79:1 |
+| `colorSecondary` | `0xFF2438D9` | Acentos secundários, waveform, destaques |
+| `colorBackground` | `0xFFF5F6FF` | Fundo geral (branco levemente azulado, extraído do case) |
 | `colorSurface` | `0xFFFFFFFF` | Cartões origem/destino, sheets (branco puro) |
-| `colorTextPrimary` | `0xFF0F172A` | Textos principais |
-| `colorTextSecondary` | `0xFF64748B` | Textos de apoio, contador n/5000, timestamps |
-| `colorSuccess` | `0xFF16A34A` | Badge online 🟢, download concluído |
-| `colorWarning` | `0xFFF59E0B` | Avisos (Wi-Fi restrito, voz ausente) |
-| `colorError` | `0xFFEF4444` | Botão mic gravando, erros |
-| `colorBorder` | `0xFFE2E8F0` | Bordas de cartões e inputs |
+| `colorTextPrimary` | `0xFF131C42` | Textos principais (navy) |
+| `colorTextSecondary` | `0xFF5F678F` | Textos de apoio, contador n/5000, timestamps |
+| `colorSuccess` | `0xFF15803D` | Badge online 🟢, download concluído |
+| `colorWarning` | `0xFFB45309` | Avisos (Wi-Fi restrito, voz ausente) |
+| `colorError` | `0xFFDC2626` | Botão mic gravando, erros |
+| `colorBorder` | `0xFFCED5EC` | Bordas de cartões e inputs (decorativa) |
 | `colorOverlay` | `0x66000000` | Scrim do overlay de escuta |
 
 ## 3.2 Tokens — Modo DARK (mesmos nomes, valores próprios)
 | Token | Hex | Uso |
 |---|---|---|
-| `colorPrimary` | `0xFF4ADE80` | Primária clara p/ contraste em fundo escuro |
-| `colorPrimaryContainer` | `0xFF14532A` | Containers/pills em dark |
-| `colorOnPrimary` | `0xFF052E16` | Texto escuro sobre verde claro |
-| `colorOnPrimaryContainer` | `0xFFBBF7D0` | Texto sobre container |
-| `colorSecondary` | `0xFF22C55E` | Acentos |
-| `colorBackground` | `0xFF0F172A` | Fundo geral |
-| `colorSurface` | `0xFF1E293B` | Cartões/sheets |
-| `colorTextPrimary` | `0xFFF1F5F9` | Textos principais |
-| `colorTextSecondary` | `0xFF94A3B8` | Textos de apoio |
+| `colorPrimary` | `0xFF93A4FF` | Primária clara p/ contraste em fundo escuro |
+| `colorPrimaryContainer` | `0xFF232E76` | Containers/pills em dark |
+| `colorOnPrimary` | `0xFF080F33` | Texto escuro sobre azul claro — 7,99:1 |
+| `colorOnPrimaryContainer` | `0xFFD9E0FF` | Texto sobre container |
+| `colorSecondary` | `0xFF6478FF` | Acentos |
+| `colorBackground` | `0xFF0C1030` | Fundo geral |
+| `colorSurface` | `0xFF171C42` | Cartões/sheets |
+| `colorTextPrimary` | `0xFFEDEFFA` | Textos principais |
+| `colorTextSecondary` | `0xFFA3ABD0` | Textos de apoio |
 | `colorSuccess` | `0xFF4ADE80` | Badge online 🟢 |
 | `colorWarning` | `0xFFFBBF24` | Avisos |
-| `colorError` | `0xFFF87171` | Erros / mic gravando |
-| `colorBorder` | `0xFF334155` | Bordas |
+| `colorError` | `0xFFF87171` | Erros |
+| `colorBorder` | `0xFF2F3768` | Bordas |
 | `colorOverlay` | `0x99000000` | Scrim |
+
+> Todos os pares texto/fundo desta paleta são verificados automaticamente em
+> `test/theme/palette_contrast_test.dart` contra o mínimo AA de 4,5:1.
 
 ## 3.3 Regras de tema
 1. `AppColorsLight` e `AppColorsDark` expõem **os mesmos nomes estáticos**; trocar de paleta = trocar de classe (UX-05).
@@ -190,7 +197,7 @@ lib/
 
 # 6. FASE 0 — FUNDAÇÃO E DESIGN SYSTEM [CHECK]
 
-> **Objetivo**: deixar o terreno pronto para que TODAS as fases seguintes sejam "só" feature: dependências fechadas, arquitetura de pastas viva, tokens Verde & Branco light/dark funcionando, i18n pt/en/zh, persistência e conectividade encapsulados, shell de navegação responsivo navegável e pipeline de qualidade rodando.
+> **Objetivo**: deixar o terreno pronto para que TODAS as fases seguintes sejam "só" feature: dependências fechadas, arquitetura de pastas viva, tokens Azul & Branco light/dark funcionando, i18n pt/en/zh, persistência e conectividade encapsulados, shell de navegação responsivo navegável e pipeline de qualidade rodando.
 
 ## Subfases
 
@@ -201,7 +208,7 @@ lib/
 - `analysis_options.yaml`: lints Flutter recomendados + regras de ordenação de imports.
 - **Entregável**: `flutter run` abre app vazio no device; `flutter analyze` limpo.
 
-### F0.2 — Tokens de cor Verde & Branco (`app_colors.dart`)
+### F0.2 — Tokens de cor Azul & Branco (`app_colors.dart`)
 - Implementar `AppColorsLight` e `AppColorsDark` com os valores da seção 3 deste plano (mesmos nomes estáticos).
 - Doc-comment mapeando cada token à variável CSS equivalente (`--color-primary` etc.), como pede o PRD.
 - **Entregável**: arquivo único de paleta aprovado; nenhuma outra cor no projeto (checagem por grep).

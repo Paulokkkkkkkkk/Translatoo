@@ -67,10 +67,19 @@ lib/
 
 ## Design system
 
-Verde & Branco, modos light/dark com os mesmos 14 tokens estáticos
+**Azul & Branco**, modos light/dark com os mesmos 14 tokens estáticos
 (`AppColorsLight`/`AppColorsDark`). O tema Material 3 é construído
 exclusivamente dos tokens; alternar o tema do sistema muda o app inteiro
 sem tocar em widget algum.
+
+A primária `#3954FD` foi **amostrada do case de referência** em `docs/design/`.
+A identidade era verde até a extração do design system, que mostrou que branco
+sobre o verde `#16A34A` dava 3,30:1 — abaixo do mínimo AA. A troca inteira não
+tocou em widget algum, só nos 28 valores de `app_colors.dart`.
+
+As regras de forma, layout e componentes estão em
+[`docs/design_system.md`](docs/design_system.md); o contraste de todo par
+texto/fundo é verificado em `test/theme/palette_contrast_test.dart`.
 
 ## Persistência (chaves)
 
@@ -134,6 +143,7 @@ gentileza.
 | F1.1–F1.8 | [#10](../../issues/10)–[#17](../../issues/17) | Motor de tradução offline (M1) | [@Paulokkkkkkkkk](https://github.com/Paulokkkkkkkkk) |
 | F1.9 | [#18](../../issues/18) | Tipografia CJK — subset de Noto Sans SC como `fontFamilyFallback` | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.0 | [#19](../../issues/19) | Spike do motor de STT — decisão por `whisper_ggml` | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F0.10 | [#45](../../issues/45) | Design system extraído do case + troca da paleta para Azul & Branco | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 

@@ -30,7 +30,7 @@ Os agentes e skills instalados em `.agents/` devem ser ativados nas seguintes et
 
 ### A. Planejamento & Arquitetura
 - **`sparc-methodology`** & **`code-architect`**: Para planejar e desenhar interfaces e fluxos complexos antes de codificar.
-- **`design-system`**: Para garantir uso estrito dos tokens de cor Verde & Branco (`app_colors.dart`) e tipografia/espaçamentos.
+- **`design-system`**: Para garantir uso estrito dos tokens de cor Azul & Branco (`app_colors.dart`) e tipografia/espaçamentos.
 
 ### B. Implementação & Testes (TDD)
 - **`dart-flutter-patterns`**: Padrões de composição assíncrona, Provider/ChangeNotifier e rebuilds cirúrgicos (`Selector`).
@@ -63,7 +63,7 @@ Ao concluir qualquer fase, subfase ou módulo do projeto:
 
 ## 5. Regras de Arquitetura Invioláveis
 - **Camadas**: `ui/` → ViewModels (`state/`) → `core/services/` → plugins. A `ui/` nunca importa plugins diretamente.
-- **Tokens de Cor**: 100% das cores devem vir de `app_colors.dart` (Light/Dark Verde & Branco). Proibido `Color(0x…)` em outros arquivos.
+- **Tokens de Cor**: 100% das cores devem vir de `app_colors.dart` (Light/Dark Azul & Branco). Proibido `Color(0x…)` em outros arquivos. Todo par texto/fundo precisa passar em `test/theme/palette_contrast_test.dart` (AA 4,5:1).
 - **Strings de UI**: 100% das strings de interface em `app_strings.dart` (i18n manual pt/en/zh). Proibido strings literais nos widgets.
 - **Erros**: Toda falha deve ser convertida em `AppException(ErrorCode)` com ação acionável (PRD §4.8).
 - **Idiomas**: Enum fechado `Language { pt, en, zh }` (RN-01).
