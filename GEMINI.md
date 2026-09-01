@@ -30,7 +30,7 @@ Os agentes e skills instalados em `.agents/` devem ser ativados nas seguintes et
 
 ### A. Planejamento & Arquitetura
 - **`sparc-methodology`** & **`code-architect`**: Para planejar e desenhar interfaces e fluxos complexos antes de codificar.
-- **`design-system`**: Para garantir uso estrito dos tokens de cor Azul & Branco (`app_colors.dart`) e tipografia/espaçamentos.
+- **`design-system`**: Para garantir uso estrito de [`docs/design_system.md`](docs/design_system.md) — regras de forma, raios, elevação e componentes — além dos tokens de cor Azul & Branco (`app_colors.dart`) e tipografia/espaçamentos.
 
 ### B. Implementação & Testes (TDD)
 - **`dart-flutter-patterns`**: Padrões de composição assíncrona, Provider/ChangeNotifier e rebuilds cirúrgicos (`Selector`).
@@ -66,5 +66,14 @@ Ao concluir qualquer fase, subfase ou módulo do projeto:
 - **Tokens de Cor**: 100% das cores devem vir de `app_colors.dart` (Light/Dark Azul & Branco). Proibido `Color(0x…)` em outros arquivos. Todo par texto/fundo precisa passar em `test/theme/palette_contrast_test.dart` (AA 4,5:1).
 - **Strings de UI**: 100% das strings de interface em `app_strings.dart` (i18n manual pt/en/zh). Proibido strings literais nos widgets.
 - **Erros**: Toda falha deve ser convertida em `AppException(ErrorCode)` com ação acionável (PRD §4.8).
+- **Design (forma, layout e componentes)**: [`docs/design_system.md`](docs/design_system.md) é a **fonte única e obrigatória** das regras visuais — raios, elevação, anatomia de tela, composição de componentes, ícones e movimento. Vale para todo trabalho de UI **sem precisar ser solicitado**. Antes de criar ou alterar qualquer widget, leia o documento; ao criar um componente novo, ele entra lá com sua tabela de estados **antes** de virar código (§11).
+  - ❌ **Raio cru**: nada de `BorderRadius.circular(28)`. Sempre token de `app_spacing.dart`.
+  - ❌ **Borda para separar**: hierarquia se faz mudando a superfície, não com contorno (§P3). Borda de 1 dp só em elemento selecionável não selecionado.
+  - ❌ **`Colors.white` / `Colors.black`**: sempre `colorOnPrimary`, `colorSurface`, `textPrimary` — do contrário o tema escuro quebra.
+  - ❌ **Sombra dura / `elevation` do Material**: está zerado no tema de propósito; use os quatro planos da §3.
+  - ❌ **Ícone preenchido**: ícones são lineares, stroke 2 dp, monocromáticos herdando a cor do contexto. Exceções apenas para favorito (`colorWarning`), gravação (`colorError`) e sucesso (`colorSuccess`) (§6).
+  - ❌ **Texto pequeno sobre `colorPrimary`**: use `colorPrimaryContainer` + `onPrimaryContainer` (§8).
+  - ❌ **Par texto/fundo novo sem entrada em `test/theme/palette_contrast_test.dart`** (§8).
+  - ⚠️ **Duas pendências registradas — não resolva por conta própria**: (a) os tokens de raio da §2 (`radiusSm/Md/Lg/Pill`) **ainda não existem** em `app_spacing.dart`, que tem só `radius = 12` — enquanto não entrarem por issue própria, nenhum widget novo deve usar número cru; (b) o conflito estrutural do rodapé da §10 (`NavigationBar` de 3 abas × pílula de idiomas em largura total) é **decisão de produto em aberto** e precisa de issue antes de virar código.
 - **Idiomas**: Enum fechado `Language { pt, en, zh }` (RN-01).
 - **Privacidade & Offline**: Operação 100% local por padrão. Logs apenas em modo debug.

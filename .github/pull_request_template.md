@@ -11,6 +11,9 @@ Closes #
 - [ ] `flutter test` verde
 - [ ] Critérios de aceite da issue verificados em device/emulador
 - [ ] Nenhuma cor fora de `app_colors.dart`; nenhuma string de UI fora de `app_strings.dart`
+- [ ] **UI conforme [`docs/design_system.md`](../blob/main/docs/design_system.md)** — sem raio cru,
+      sem borda para separar, sem `elevation`, sem `Colors.white`/`Colors.black`, ícones lineares
+      (marque N/A se o PR não toca em UI)
 - [ ] Nenhuma exceção crua na UI (tudo via `AppException`)
 - [ ] Validado em **modo avião** (se aplicável)
 - [ ] Mandarim sem tofu (se a tela exibir `zh`)

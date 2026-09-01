@@ -75,12 +75,20 @@ Estas regras vêm do PRD §2 e §4.3 e valem para **todo** código do projeto:
 4. **Erros**: toda exceção cruza a fronteira de serviço convertida em
    `AppException(ErrorCode)` da tabela única (PRD §4.8). Nenhum stacktrace
    chega à UI.
-5. **Idiomas**: enum fechado `Language { pt, en, zh }` (RN-01).
-6. **Privacidade**: sem telemetria; logs somente em debug; nenhum conteúdo do
+5. **Design**: [`docs/design_system.md`](docs/design_system.md) é a fonte única
+   das regras de forma, raio, elevação, anatomia de tela, componentes, ícones e
+   movimento. **Leia antes de tocar em qualquer widget** — não é preciso pedir
+   autorização nem esperar alguém apontar o documento. Proibido: raio cru
+   (`BorderRadius.circular(28)`), borda para separar, `Colors.white`/`Colors.black`,
+   `elevation` do Material, ícone preenchido e texto pequeno sobre `colorPrimary`.
+   Componente novo entra no documento com sua tabela de estados **antes** de virar
+   widget.
+6. **Idiomas**: enum fechado `Language { pt, en, zh }` (RN-01).
+7. **Privacidade**: sem telemetria; logs somente em debug; nenhum conteúdo do
    usuário sai do aparelho.
-7. **Acessibilidade**: `Semantics` em todo botão de ícone; alvos ≥ 48 dp;
+8. **Acessibilidade**: `Semantics` em todo botão de ícone; alvos ≥ 48 dp;
    contraste AA 4.5:1 (RN-06).
-8. **Imports** ordenados: dart → flutter → packages → projeto.
+9. **Imports** ordenados: dart → flutter → packages → projeto.
 
 ---
 
@@ -92,6 +100,8 @@ Uma issue só é fechada quando **tudo** isto vale (PRD §6.2):
 - [ ] Testes dos ViewModels/serviços envolvidos passando.
 - [ ] Critérios de aceite da issue verificados em Android físico.
 - [ ] Nenhuma cor fora de `app_colors.dart`; nenhuma string de UI fora de `app_strings.dart`.
+- [ ] UI conforme [`docs/design_system.md`](docs/design_system.md): sem raio cru, sem borda
+      para separar, sem `elevation`, sem `Colors.white`/`Colors.black`, ícones lineares.
 - [ ] Funcionamento validado em **modo avião** (quando aplicável).
 - [ ] Erros mapeados para a tabela §4.8 — nenhuma exceção crua na UI.
 - [ ] Mandarim renderizado sem tofu quando a tela exibir `zh`.
