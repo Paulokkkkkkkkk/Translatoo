@@ -7,7 +7,7 @@
 | **Versão do plano** | 1.1 |
 | **Data** | 2026-08-28 |
 | **Documento-fonte** | `prd.md` **v1.1** (requisitos, módulos, critérios de aceite) |
-| **Estado real** | **F0, F1 (com F1.9), a spike F2.0, a F2.1 e a F2.1b concluídas** · F2.2 é o próximo passo |
+| **Estado real** | **F0, F1 (com F1.9), a spike F2.0 e a F2.1–F2.2 concluídas** · F2.3 é o próximo passo |
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
@@ -381,7 +381,9 @@ lib/
 - Documentar os comandos de build de cada flavor no README.
 - **Entregável**: `flutter build apk --flavor lite` < 40 MB e `--flavor full` ≤ 180 MB, ambos medidos e registrados.
 
-### F2.2 — `SttService` (wrapper do motor escolhido na F2.0: `whisper_ggml`)
+### F2.2 — `SttService` (wrapper do motor escolhido na F2.0: `whisper_ggml`) ✅ concluída ([#22](../../issues/22))
+> **Lacuna descoberta aqui:** a F2.0 fechou a lista de dependências com o motor, mas **sem fonte de áudio** — o `whisper_ggml` transcreve um `Stream<Uint8List>` de PCM16 e não abre o microfone. O serviço foi entregue contra a interface `SttAudioSource` (mesmo movimento da F1.1); a implementação real exige reabrir a lista fechada e precisa de issue própria. Até lá o entregável "transcrição real no app de debug" segue aberto.
+>
 > **Depende de F2.0 — concluída.** A interface abaixo é **independente do motor** — é justamente ela que permitiu adiar a decisão sem travar o resto da F2. Toda a F2.4–F2.5 programa contra ela.
 
 - Carregar modelo on-demand pelo idioma de ORIGEM; expor estado `initializing` na primeira carga.
