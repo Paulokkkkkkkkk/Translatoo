@@ -146,10 +146,16 @@ class TtsService {
   /// Fala [text] no idioma [language] — sempre o de DESTINO da tradução.
   ///
   /// Voz ausente lança `AppException(ttsVoiceMissing)` ANTES de qualquer
-  /// chamada ao motor. Uma fala já em curso é interrompida pelo próprio motor
-  /// (nova sessão), sem evento `cancelled` para a sessão velha.
+  /// chamada ao motor.
+  ///
+  /// FILA ÚNICA (AC-M3-3): interrompe explicitamente a fala em curso antes de
+  /// começar a próxima. Delegar isso ao motor não funciona nos dois SOs — o
+  /// Android usa `QUEUE_FLUSH` e substitui, mas o `AVSpeechSynthesizer` do iOS
+  /// **enfileira**, e duas traduções seguidas sairiam uma depois da outra em
+  /// vez de a segunda cancelar a primeira.
   Future<void> speak({required Language language, required String text}) async {
     if (text.trim().isEmpty) return;
+    await stop();
     if (!await ensureVoice(language)) {
       // Cache diz que a voz não existe: erro ANTES de qualquer chamada ao
       // motor, com a ação que a tabela §4.8 prevê para o caso.
