@@ -133,6 +133,15 @@ abstract final class AppStrings {
   String get settingsManageModels;
   String get settingsClearHistory;
   String get settingsPrivacy;
+
+  // Tela Ajustes (F3.3)
+  String get settingsTheme;
+  String get settingsThemeSystem;
+  String get settingsThemeLight;
+  String get settingsThemeDark;
+  String get settingsAppVersion;
+  String get settingsSourceLanguage;
+  String get settingsTargetLanguage;
 }
 
 /// pt-BR — fonte da verdade (PRD).
@@ -309,6 +318,20 @@ final class _PtStrings extends AppStrings {
   String get settingsClearHistory => 'Limpar histórico';
   @override
   String get settingsPrivacy => 'Nenhum dado sai do seu aparelho.';
+  @override
+  String get settingsTheme => 'Tema';
+  @override
+  String get settingsThemeSystem => 'Sistema';
+  @override
+  String get settingsThemeLight => 'Claro';
+  @override
+  String get settingsThemeDark => 'Escuro';
+  @override
+  String get settingsAppVersion => 'Versão';
+  @override
+  String get settingsSourceLanguage => 'Idioma de origem';
+  @override
+  String get settingsTargetLanguage => 'Idioma de destino';
 }
 
 /// en-US
@@ -484,6 +507,20 @@ final class _EnStrings extends AppStrings {
   String get settingsClearHistory => 'Clear history';
   @override
   String get settingsPrivacy => 'No data ever leaves your device.';
+  @override
+  String get settingsTheme => 'Theme';
+  @override
+  String get settingsThemeSystem => 'System';
+  @override
+  String get settingsThemeLight => 'Light';
+  @override
+  String get settingsThemeDark => 'Dark';
+  @override
+  String get settingsAppVersion => 'Version';
+  @override
+  String get settingsSourceLanguage => 'Source language';
+  @override
+  String get settingsTargetLanguage => 'Target language';
 }
 
 /// zh-CN (Mandarim)
@@ -650,6 +687,20 @@ final class _ZhStrings extends AppStrings {
   String get settingsClearHistory => '清除历史记录';
   @override
   String get settingsPrivacy => '任何数据都不会离开您的设备。';
+  @override
+  String get settingsTheme => '主题';
+  @override
+  String get settingsThemeSystem => '跟随系统';
+  @override
+  String get settingsThemeLight => '浅色';
+  @override
+  String get settingsThemeDark => '深色';
+  @override
+  String get settingsAppVersion => '版本';
+  @override
+  String get settingsSourceLanguage => '源语言';
+  @override
+  String get settingsTargetLanguage => '目标语言';
 }
 
 /// Mapeamento ÚNICO `ErrorCode` → mensagem i18n da tabela §4.8 (RN-03/RN-04).
