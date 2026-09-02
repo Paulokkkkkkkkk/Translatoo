@@ -131,6 +131,12 @@ abstract final class AppStrings {
   String get settingsVoicePitch;
   String get settingsWifiOnly;
   String get settingsManageModels;
+
+  // Gerenciador de Modelos (F3.4)
+  String get modelManagerHint;
+  String modelManagerDeleteTitle(String language);
+  String get modelManagerDeleteBody;
+
   String get settingsClearHistory;
   String get settingsPrivacy;
 
@@ -314,6 +320,16 @@ final class _PtStrings extends AppStrings {
   String get settingsWifiOnly => 'Baixar modelos só no Wi-Fi';
   @override
   String get settingsManageModels => 'Gerenciar modelos';
+  @override
+  String get modelManagerHint =>
+      'Baixe os pacotes de idiomas para traduzir 100% offline. Cada pacote tem '
+      '~30 MB e a tradução fica disponível em modo avião.';
+  @override
+  String modelManagerDeleteTitle(String language) =>
+      'Excluir o pacote de $language?';
+  @override
+  String get modelManagerDeleteBody =>
+      'Você precisará baixá-lo de novo para traduzir neste idioma offline.';
   @override
   String get settingsClearHistory => 'Limpar histórico';
   @override
@@ -504,6 +520,17 @@ final class _EnStrings extends AppStrings {
   @override
   String get settingsManageModels => 'Manage models';
   @override
+  String get modelManagerHint =>
+      'Download language packages to translate 100% offline. Each package is '
+      '~30 MB and translation then works in airplane mode.';
+  @override
+  String modelManagerDeleteTitle(String language) =>
+      'Delete the $language package?';
+  @override
+  String get modelManagerDeleteBody =>
+      'You will need to download it again to translate in this language '
+      'offline.';
+  @override
   String get settingsClearHistory => 'Clear history';
   @override
   String get settingsPrivacy => 'No data ever leaves your device.';
@@ -683,6 +710,12 @@ final class _ZhStrings extends AppStrings {
   String get settingsWifiOnly => '仅通过 Wi-Fi 下载模型';
   @override
   String get settingsManageModels => '管理模型';
+  @override
+  String get modelManagerHint => '下载语言包即可 100% 离线翻译。每个语言包约 30 MB，下载后可离线使用。';
+  @override
+  String modelManagerDeleteTitle(String language) => '删除$language语言包？';
+  @override
+  String get modelManagerDeleteBody => '删除后如需离线翻译该语言，需要重新下载。';
   @override
   String get settingsClearHistory => '清除历史记录';
   @override
