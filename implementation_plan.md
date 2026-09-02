@@ -7,7 +7,7 @@
 | **Versão do plano** | 1.1 |
 | **Data** | 2026-08-28 |
 | **Documento-fonte** | `prd.md` **v1.1** (requisitos, módulos, critérios de aceite) |
-| **Estado real** | **F0, F1 (com F1.9) e a spike F2.0 concluídas** · F2.1 é o próximo passo |
+| **Estado real** | **F0, F1 (com F1.9), a spike F2.0 e a F2.1 concluídas** · F2.1b é o próximo passo |
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
@@ -359,8 +359,10 @@ lib/
 - **Plano de contingência** (se nenhum candidato passar nos eliminatórios): aplicar a mesma "limitação honesta" da F1.4 — `SttService` permanece como interface com implementação `Unavailable` atrás de feature-flag desligada, o botão 🎤 fica **oculto** (não desabilitado), **M2 é rebaixado para v1.1** e a v1 sai com M1+M3+M4. Esta decisão exige aprovação explícita do product owner.
 - **Entregável**: decisão registrada, dependência instalada (ou contingência aprovada), F2.1 destravada.
 
-### F2.1 — Aquisição e embutimento dos modelos de STT
+### F2.1 — Aquisição e embutimento dos modelos de STT ✅ concluída ([#20](../../issues/20) · `docs/whisper_models.md`)
 > **Atualizado pela F2.0.** A spike decidiu por `whisper_ggml`: **um único** modelo ggml multilíngue substitui os três modelos por idioma que a v1.0 assumia. A estrutura da subfase não muda.
+>
+> **Pendência aberta:** a medição em Android físico exigida abaixo **não foi feita** — não havia device físico no ambiente. Risco R4 segue aberto para o M2; ver `docs/whisper_models.md`.
 
 - Baixar de `huggingface.co/ggerganov/whisper.cpp`: `ggml-base-q5_1.bin` (56,9 MB, flavor `full`) e `ggml-tiny-q5_1.bin` (30,7 MB, flavor `lite`) para `assets/models/whisper/`.
 - **Medir em Android físico de gama média** (obrigação herdada da F2.0): tempo de carga do modelo, latência do primeiro parcial e latência do final após a pausa de 1,5 s. Se `base-q5_1` não couber no orçamento, recuar para `tiny-q5_1` e, em último caso, para o plano B `sherpa_onnx`.

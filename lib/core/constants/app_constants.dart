@@ -46,6 +46,18 @@ abstract final class AppConstants {
   /// O valor real varia por idioma/plataforma (~30 MB segundo o PRD §3.1).
   static const int estimatedModelSizeMb = 30;
 
+  /// Diretório, dentro dos dados do app, onde o modelo ggml é materializado
+  /// como arquivo real (M2 — o whisper.cpp abre por caminho, não por asset).
+  static const String whisperModelsDirName = 'whisper';
+
+  /// Modelo ggml embutido no flavor `full` (56,9 MB) — spike F2.0.
+  static const String whisperFullModelAsset =
+      'assets/models/whisper/ggml-base-q5_1.bin';
+
+  /// Modelo ggml embutido no flavor `lite` (30,7 MB) — spike F2.0.
+  static const String whisperLiteModelAsset =
+      'assets/models/whisper/ggml-tiny-q5_1.bin';
+
   /// Plano B (F1.4): motor alternativo TFLite p/ devices sem GMS. Enquanto a
   /// spike não embutir um modelo viável (docs/tflite_spike.md), permanece OFF.
   static const bool enableAlternativeEngine = false;
