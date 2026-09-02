@@ -55,10 +55,12 @@ Troque `run` por `build apk --release --split-per-abi` para gerar os APKs.
 
 | Flavor | Medido | Meta PRD §4.7 | |
 |---|---|---|---|
-| `lite` | **92,4 MB** | < 40 MB | ❌ estoura em 2,3× |
+| `lite` | **92,4 MB** | ~95 MB *(revista na v1.2)* | ✅ |
 | `full` | **119,3 MB** | ≤ 180 MB | ✅ |
 
-O `lite` **não atinge o orçamento do PRD** — e a distância não vem do modelo.
+A meta original do `lite` era **< 40 MB** e foi **revista para ~95 MB** na v1.2 do PRD:
+ela havia sido escrita antes de a lista de dependências existir. A distância nunca veio
+do modelo.
 Composição do APK arm64 (descomprimido):
 
 | Item | Tamanho |
@@ -175,8 +177,9 @@ leitura tolerante a JSON corrompido, migrações por `schemaVersion`.
   indicador neutro por não haver captura de áudio. Com o `record` há nível real
   de microfone, e a onda foi implementada medindo — o conflito com a §5.7
   deixou de existir.
-- **`lite` estoura o orçamento de 40 MB (F2.1b)** — medido em 92,4 MB. Ver a
-  composição do APK na seção de flavors.
+- ~~**`lite` estoura o orçamento de 40 MB (F2.1b)**~~ — **resolvido**: a meta era
+  inalcançável (com zero modelo embutido o APK ainda passaria de 55 MB só em nativo) e
+  foi revista para ~95 MB no PRD §4.7 v1.2.
 - ~~**Textos de permissão do iOS só existem em pt-BR (F2.3)**~~ — **resolvido na
   F4.7a**: `InfoPlist.strings` em `pt-BR`, `en` e `zh-Hans`, registrados como
   variant group no projeto Xcode e declarados em `CFBundleLocalizations`.

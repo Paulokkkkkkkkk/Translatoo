@@ -124,7 +124,7 @@ De cima para baixo, quatro faixas:
 
 ```
 ┌─────────────────────────────────────┐
-│ ☰   Título do modo        [ ⬤ ]     │ ← bloco de marca (plano 1)
+│ ☰   Título do modo        [ ⬤ ]    │ ← bloco de marca (plano 1)
 │                                     │    o squircle transborda para baixo
 │ ╭───────────────────────────────╮   │ ← painel sobe cobrindo o bloco
 │ │ ))) Idioma            ✕       │   │   card ORIGEM (radiusLg no topo)

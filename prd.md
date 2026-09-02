@@ -370,8 +370,39 @@ Os dois limites de tamanho só são alcançáveis com **dois flavors de build di
 
 | Flavor | `applicationIdSuffix` | Conteúdo | Limite | Distribuição |
 |---|---|---|---|---|
-| **`lite`** | `.lite` | Sem modelos STT embutidos. Tradução via ML Kit (download sob demanda). Ditado (M2) **indisponível**: o botão 🎤 fica oculto, não desabilitado | **APK < 40 MB** | Play Store (padrão) |
-| **`full`** | *(nenhum)* | Modelos STT dos 3 idiomas + modelo TFLite (quando existir) embutidos em `assets/models/` | **AAB ≤ 180 MB** | Play Store (variante offline garantido) / distribuição direta |
+| **`lite`** | `.lite` | Modelo STT `ggml-tiny-q5_1` (30,7 MB) embutido. Tradução via ML Kit (download sob demanda) | **APK ~95 MB** *(revisto — ver abaixo)* | Play Store (padrão) |
+| **`full`** | *(nenhum)* | Modelo STT `ggml-base-q5_1` (56,9 MB) + modelo TFLite (quando existir) embutidos em `assets/models/` | **AAB ≤ 180 MB** | Play Store (variante offline garantido) / distribuição direta |
+
+> **Revisão v1.2 — a meta de 40 MB do `lite` era inalcançável e foi corrigida.**
+>
+> A v1.1 fixou **< 40 MB** antes de a lista de dependências existir: não foi erro de
+> medição, foi estimativa sem os números. Medido na F2.1b (release, `--split-per-abi`,
+> arm64-v8a), o `lite` dá **92,4 MB** e o `full`, 119,3 MB — este dentro do teto.
+>
+> O modelo é só um terço do peso. Composição do `lite` (descomprimido):
+>
+> | Item | Tamanho |
+> |---|---|
+> | Modelo `ggml-tiny-q5_1` | 30,7 MB |
+> | `libtranslate_jni` (ML Kit) | 15,6 MB |
+> | `libflutter` | 11,0 MB |
+> | **ffmpeg** (dependência dura do `whisper_ggml`) | **~14,2 MB** |
+> | TF Lite (`jni` + `gpu_jni`) | 6,9 MB |
+> | `libwhisper` | 2,8 MB |
+>
+> **Com zero modelo embutido o `lite` ainda passaria de 55 MB** só em código nativo.
+> Somando todas as economias possíveis — remover o Plano B TFLite (~7 MB) e entregar o
+> modelo por *dynamic feature* (~31 MB) — chega-se a ~55 MB. Os 40 MB não existem com
+> ML Kit + whisper + Flutter no mesmo binário.
+>
+> Os ~14 MB de ffmpeg são peso morto: vêm com o `whisper_ggml` para converter arquivos
+> de áudio, e o app alimenta PCM direto (F2.2b).
+>
+> **A segunda correção:** a v1.1 dizia que o `lite` não teria ditado e que o 🎤 ficaria
+> oculto. A F2.1b decidiu embutir o `tiny` (30,7 MB) nele — o `lite` **tem** ditado. O
+> mecanismo de ocultar o 🎤 continua implementado e testado
+> (`SpeechViewModel.canDictate`), pronto para um build sem modelo, mas nenhum flavor da
+> v1 usa esse caminho.
 
 - A seleção do flavor é **compile-time**: `AppConstants.hasEmbeddedSttModels` (via `--dart-define`) controla a exibição de todo o M2. Nenhuma checagem de flavor pode vazar para `ui/` — ela é lida uma única vez e exposta pelos ViewModels.
 - Trade-off documentado e aceito: offline garantido × tamanho do download.
@@ -384,7 +415,7 @@ Os dois limites de tamanho só são alcançáveis com **dois flavors de build di
 - **Problema**: Flutter não embute fontes CJK. Em aparelhos Android **fora do mercado chinês**, muitas ROMs não trazem cobertura de Han, e todo texto em `zh` renderiza como **tofu** (`□□□`) — atingindo a tela Traduzir, o histórico e os seletores.
 - **RF-CJK-01** — O app **DEVE** embutir uma fonte com cobertura de Han simplificado (referência: **Noto Sans SC**), declarada em `pubspec.yaml` e aplicada via `fontFamilyFallback` no `TextTheme` de `app_theme.dart` — nunca widget a widget.
 - **RF-CJK-02** — A fonte entra como **fallback**, não como fonte primária: PT e EN continuam na tipografia padrão da plataforma, preservando a identidade visual e o hinting nativo.
-- **RF-CJK-03** — Para respeitar o limite do flavor `lite` (< 40 MB), a fonte **DEVE** ser um *subset* dos glifos necessários, e não o arquivo completo (~16 MB). Meta: **≤ 5 MB** no APK.
+- **RF-CJK-03** — Para conter o tamanho do flavor `lite` (ver §4.7), a fonte **DEVE** ser um *subset* dos glifos necessários, e não o arquivo completo (~16 MB). Meta: **≤ 5 MB** no APK.
 - **RF-CJK-04** — Verificação obrigatória no DoD: renderizar 中文 em um emulador **sem locale chinês instalado** e confirmar ausência de tofu.
 
 ## 4.10 Identidade Visual e Conformidade de Loja (obrigatório para release)

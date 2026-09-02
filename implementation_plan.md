@@ -65,7 +65,7 @@
 | Cold start | < 2 s |
 | Início da escuta (modelo de STT carregado) | ≤ 500 ms |
 | Animações | 60 fps sem jank |
-| APK base (sem modelos embutidos) | < 40 MB |
+| APK do flavor `lite` | ~95 MB *(revisto na v1.2 — ver PRD §4.7)* |
 | APK completo (modelos embutidos) | ≤ 180 MB |
 | Sucesso de traduções em modo avião | ≥ 95% (QA manual — PRD MS-01) |
 | Estabilidade | Zero crash na bateria de QA (PRD MS-04) |
@@ -318,7 +318,7 @@ lib/
 
 > **Por que está aqui.** Esta subfase deveria ter nascido na F0 (é design system), mas a lacuna só foi identificada na revisão v1.1, com a F0 já fechada. Como a tela Traduzir **já renderiza mandarim** desde a F1.6, o defeito é visível hoje: em Androids sem cobertura de Han, todo `zh` aparece como tofu (□□□). **É bloqueante para a F2** — não faz sentido validar ditado e leitura em chinês numa tela que não exibe chinês.
 
-- Obter **Noto Sans SC** (licença SIL OFL 1.1, compatível com uso comercial) e gerar **subset** dos glifos necessários — o arquivo completo (~16 MB) inviabiliza o flavor `lite` (< 40 MB). Meta: **≤ 5 MB**.
+- Obter **Noto Sans SC** (licença SIL OFL 1.1, compatível com uso comercial) e gerar **subset** dos glifos necessários — o arquivo completo (~16 MB) pesaria demais no flavor `lite`. Meta: **≤ 5 MB**.
 - Declarar a família em `pubspec.yaml` e aplicá-la **exclusivamente** via `fontFamilyFallback` no `TextTheme` de `app_theme.dart`. PT/EN permanecem na tipografia nativa da plataforma (RF-CJK-02). **Proibido** aplicar fonte widget a widget — mesma regra dos tokens de cor (RN-04).
 - Registrar em `docs/` a origem do arquivo, a licença e o comando de geração do subset, para que a fonte seja reproduzível.
 - **Entregável**: 中文 renderizado corretamente em emulador **sem locale chinês instalado**; peso do subset medido e registrado.
@@ -370,7 +370,7 @@ lib/
 - **Entregável**: assets versionados + script/README de atualização dos modelos.
 
 ### F2.1b — Flavors `lite` e `full` (PRD §4.7) 🆕 v1.1 ✅ concluída ([#21](../../issues/21))
-> **Mecanismo entregue, orçamento do `lite` REPROVADO.** Os flavors existem e os assets são condicionais (`flavors:` do pubspec), mas o `lite` mede **92,4 MB** contra a meta de 40 MB — e o modelo é só um terço disso: ffmpeg (dependência dura do `whisper_ggml`), ML Kit e TF Lite somam ~55 MB de código nativo antes de qualquer modelo. Fechar a meta é decisão de produto, não de implementação. Composição medida no README.
+> **Mecanismo entregue; a meta do `lite` foi REVISTA.** Os flavors existem e os assets são condicionais (`flavors:` do pubspec). O `lite` mede **92,4 MB**, e o modelo é só um terço disso: ffmpeg (dependência dura do `whisper_ggml`), ML Kit e TF Lite somam ~55 MB de código nativo antes de qualquer modelo. A meta original de 40 MB foi escrita antes de a lista de dependências existir e era inalcançável; o product owner a revisou para ~95 MB na v1.2 do PRD (§4.7), com a composição medida.
 
 > **Por que virou subfase própria.** A v1.0 citava os flavors numa linha solta dentro da F2.1, sem nenhuma especificação de build — os limites de 40 MB e 180 MB não tinham mecanismo que os produzisse. Hoje o projeto **não tem flavor algum** configurado.
 
@@ -614,7 +614,7 @@ lib/
 | # | Risco | Prob. | Impacto | Mitigação |
 |---|---|---|---|---|
 | R1 | Plano B TFLite: não existir modelo NMT compacto viável p/ os 3 pares | ~~Média~~ **Confirmado** | Alto | **Materializou-se** (spike F1.4 inconclusiva, `docs/tflite_spike.md`). Mitigação aplicada: interface `TranslationBackend` isola o motor, flag desligada, fluxo testável por mock. **Impacto residual**: sem acesso à CDN do Google, o app não traduz — ver R9 |
-| R2 | Modelos de STT estouram o limite de loja (180 MB full) | ~~Baixa~~ **Muito baixa** | Médio | *Atenuado na F2.0*: o modelo escolhido ocupa 56,9 MB no `full` e 30,7 MB no `lite`, contra os ~113–176 MB dos concorrentes. Flavors lite/full mantidos |
+| R2 | Modelos de STT estouram o limite de loja (180 MB full) | ~~Baixa~~ **FECHADO** | Médio | *Atenuado na F2.0* e **medido na F2.1b**: `full` = 119,3 MB contra o teto de 180 MB, com folga de 60 MB. O que reprovou foi a meta do `lite`, e por código NATIVO, não por modelo — revista para ~95 MB no PRD §4.7 v1.2 |
 | R3 | Voz chinesa TTS ausente em muitos aparelhos | Alta | Médio | Fluxo AC-M3-2 já previsto: SnackBar persistente + atalho às configurações do SO |
 | R4 | Latência > 300 ms em devices fracos | Média | Médio | Pré-aquecimento, medição desde F1.2, chunking eficiente |
 | R5 | Incompatibilidade entre versões dos plugins ML Kit/TTS | Média | Alto | Versões travadas no pubspec; upgrade só com regressão completa |
