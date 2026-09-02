@@ -87,6 +87,12 @@ class TranslatorViewModel extends ChangeNotifier {
   /// Flag interna do Plano B (F1.4) — UI exibe apenas badge discreto.
   bool get usesAlternativeEngine => _translation.usesAlternativeEngine;
 
+  /// Modo híbrido (F4.3): a última tradução saiu do aparelho porque a nuvem
+  /// não respondeu. Só vira badge quando o modo está LIGADO — com ele
+  /// desligado, "local" é o normal e informar seria ruído.
+  bool get resultWasLocalFallback =>
+      _translation.cloudActive && _translation.lastResultWasLocal;
+
   /// Este build tem ditado? (F2.1b) A `ui/` pergunta ao ViewModel, nunca ao
   /// flavor. Quando `false`, o 🎤 é OMITIDO da árvore de widgets na F2.5 —
   /// não renderizado desabilitado: um controle permanentemente inerte é pior

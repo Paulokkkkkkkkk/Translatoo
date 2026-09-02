@@ -46,9 +46,15 @@ Future<void> main() async {
   // ── Composição do motor M1 (F1) ───────────────────────────────────────────
   // Plano A ML Kit + Plano B TFLite atrás da MESMA TranslationBackend
   // interface; fallback transparente controlado por flag (F1.4).
+  // O modo híbrido (F4.3) fica DESLIGADO na v1: `cloudBackend` é nulo porque o
+  // provedor de API é decisão comercial ainda não tomada. Com ele nulo, o
+  // caminho é byte a byte o mesmo de antes da F4.3 — ligar a flag nos Ajustes
+  // não muda nada enquanto não houver motor.
   final translationService = TranslationService(
     primary: MlKitTranslationBackend(),
     fallback: TfliteTranslationBackend(),
+    isCloudEnabled: () => storage.settings.cloudEnabled,
+    isOnline: () => connectivity.isOnline.value,
   );
   final modelManager = ModelManagerService(
     api: MlKitModelManagerApi(),

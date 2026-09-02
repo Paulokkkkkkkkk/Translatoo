@@ -90,6 +90,10 @@ abstract final class AppStrings {
   String get modelSizeEstimate;
   String get engineAlternative;
 
+  /// Badge discreto do modo híbrido (F4.3): a nuvem não respondeu e o
+  /// aparelho assumiu.
+  String get engineLocal;
+
   // Tela de debug de pacotes (F1.3 — só visível em builds debug)
   String get debugModelsTitle;
 
@@ -255,6 +259,8 @@ final class _PtStrings extends AppStrings {
   String get modelSizeEstimate => '~30 MB por pacote · via Wi-Fi';
   @override
   String get engineAlternative => 'Motor alternativo';
+  @override
+  String get engineLocal => 'local';
 
   @override
   String get debugModelsTitle => 'Pacotes de idiomas (debug)';
@@ -460,6 +466,8 @@ final class _EnStrings extends AppStrings {
   String get modelSizeEstimate => '~30 MB per package · over Wi-Fi';
   @override
   String get engineAlternative => 'Alternative engine';
+  @override
+  String get engineLocal => 'local';
 
   @override
   String get debugModelsTitle => 'Language packages (debug)';
@@ -657,6 +665,8 @@ final class _ZhStrings extends AppStrings {
   String get modelSizeEstimate => '每个语言包约 30 MB · 通过 Wi-Fi 下载';
   @override
   String get engineAlternative => '备用引擎';
+  @override
+  String get engineLocal => '本机';
 
   @override
   String get debugModelsTitle => '语言包（调试）';
