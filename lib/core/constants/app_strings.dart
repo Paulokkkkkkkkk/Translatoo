@@ -39,6 +39,9 @@ abstract final class AppStrings {
   String get online;
   String get offline;
 
+  /// Tooltip explicativo do badge (F3.5): o que a rede significa para o app.
+  String connectionBadgeInfo(bool online);
+
   // Placeholders da fundação (F0)
   String get translatePlaceholderBody;
   String get historyPlaceholderBody;
@@ -168,7 +171,11 @@ final class _PtStrings extends AppStrings {
   String get online => 'Online';
   @override
   String get offline => 'Offline';
-
+  @override
+  String connectionBadgeInfo(bool online) => online
+      ? 'Você está conectado. Downloads de pacotes de idiomas usam a rede.'
+      : 'Você está offline. Tudo que já está baixado continua funcionando — '
+            'só downloads de pacotes precisam de internet.';
   @override
   String get translatePlaceholderBody => 'A tradução offline aparece aqui.';
   @override
@@ -368,6 +375,11 @@ final class _EnStrings extends AppStrings {
   String get online => 'Online';
   @override
   String get offline => 'Offline';
+  @override
+  String connectionBadgeInfo(bool online) => online
+      ? 'You are online. Language package downloads use the network.'
+      : 'You are offline. Everything already downloaded keeps working — only '
+            'package downloads need internet.';
 
   @override
   String get translatePlaceholderBody => 'Offline translations appear here.';
@@ -565,9 +577,13 @@ final class _ZhStrings extends AppStrings {
   String get tabSettings => '设置';
 
   @override
+  @override
   String get online => '在线';
   @override
   String get offline => '离线';
+  @override
+  String connectionBadgeInfo(bool online) =>
+      online ? '已联网。语言包下载将使用网络。' : '当前离线。已下载的内容仍可正常使用，只有语言包下载需要网络。';
 
   @override
   String get translatePlaceholderBody => '离线翻译将显示在这里。';
