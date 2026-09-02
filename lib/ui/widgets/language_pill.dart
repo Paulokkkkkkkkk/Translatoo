@@ -58,7 +58,7 @@ class LanguagePill extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: scheme.primaryContainer,
-            borderRadius: BorderRadius.circular(AppSpacing.radius),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

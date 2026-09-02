@@ -220,6 +220,7 @@ gentileza.
 | F2.4 | [#24](../../issues/24) | `SpeechViewModel` — máquina de estados, RN-07 e restauração no cancelamento | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.5 | [#25](../../issues/25) | UI do ditado — botão de microfone e folha de escuta | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.2b | [#52](../../issues/52) | Captura de microfone (`record`) + onda com nível real | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| DS | [#53](../../issues/53) | Tokens de raio da §2 (`radiusSm/Md/Lg/Pill`) e migração dos widgets | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 

@@ -80,7 +80,7 @@ class DownloadProgressCard extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.sm),
               ClipRRect(
-                borderRadius: BorderRadius.circular(AppSpacing.radius),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                 child: LinearProgressIndicator(
                   value: percent == null ? null : percent / 100,
                   minHeight: 6,

@@ -40,7 +40,7 @@ class _ShimmerBoxState extends State<ShimmerBox>
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final radius =
-        widget.borderRadius ?? BorderRadius.circular(AppSpacing.radius);
+        widget.borderRadius ?? BorderRadius.circular(AppSpacing.radiusSm);
 
     return AnimatedBuilder(
       animation: _controller,

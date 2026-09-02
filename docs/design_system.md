@@ -53,10 +53,11 @@ O topo é informação; o fundo é ação.
 
 ## 2. Escala de raios
 
-O projeto tem hoje **um** raio (`AppSpacing.radius = 12`) para tudo. O case usa
-três níveis, e a diferença entre eles é o que cria profundidade.
+O case usa três níveis, e a diferença entre eles é o que cria profundidade. Até
+a issue #53 o projeto tinha **um** raio (12) para tudo — o que a §P2 descreve
+como "Material genérico que apaga a identidade".
 
-| Token proposto | Valor | Uso |
+| Token | Valor | Uso |
 |---|---|---|
 | `radiusSm` | **8 dp** | chips, badges, campos pequenos, indicadores |
 | `radiusMd` | **16 dp** | botões, inputs, snackbars, diálogos |
@@ -66,9 +67,9 @@ três níveis, e a diferença entre eles é o que cria profundidade.
 `AppSpacing.radius` permanece como **alias de `radiusMd`** para não quebrar o
 código da F0/F1 num único commit.
 
-> **Pendente de implementação.** Estes tokens ainda não existem em
-> `app_spacing.dart`. Enquanto não entrarem, nenhum widget novo deve usar número
-> cru — a migração é uma issue própria, não um efeito colateral de outra.
+> **Implementados** em `app_spacing.dart` (issue #53). `AppSpacing.radius`
+> permaneceu como alias de `radiusMd`, e `test/architecture/radius_tokens_test.dart`
+> falha se algum raio cru voltar a `lib/`.
 
 **Regra do squircle.** Botões quadrados de ícone (grid de modos, botão de modo no
 topo) usam lado ≥ 96 dp com `radiusLg`. Abaixo de 96 dp o raio grande deforma o

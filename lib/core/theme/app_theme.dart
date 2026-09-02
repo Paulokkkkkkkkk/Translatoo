@@ -122,7 +122,8 @@ abstract final class AppTheme {
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          // Card é painel (§2 · §3, plano 2).
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
           side: BorderSide(color: c.border),
         ),
       ),
@@ -133,7 +134,7 @@ abstract final class AppTheme {
           minimumSize: const Size(64, AppSpacing.minTouchTarget),
           textStyle: text.labelLarge,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.radius),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           ),
         ),
       ),
@@ -144,7 +145,7 @@ abstract final class AppTheme {
           minimumSize: const Size(64, AppSpacing.minTouchTarget),
           textStyle: text.labelLarge,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.radius),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           ),
         ),
       ),
@@ -158,15 +159,15 @@ abstract final class AppTheme {
           vertical: AppSpacing.md,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: BorderSide(color: c.border),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: BorderSide(color: c.border),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: BorderSide(color: c.primary, width: 2),
         ),
       ),
@@ -176,7 +177,7 @@ abstract final class AppTheme {
         contentTextStyle: text.bodyMedium!.copyWith(color: c.background),
         actionTextColor: c.primary,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
@@ -195,10 +196,22 @@ abstract final class AppTheme {
         ),
       ),
       dividerTheme: DividerThemeData(color: c.border),
+      // Sheet é painel (§2): o topo arredondado grande é o que faz a folha
+      // "subir por cima" do conteúdo (§P1).
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: c.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSpacing.radiusLg),
+          ),
+        ),
+      ),
       dialogTheme: DialogThemeData(
         backgroundColor: c.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         ),
       ),
     );
