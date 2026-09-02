@@ -141,14 +141,14 @@ void main() {
     expect(scheme!.primary, AppColorsDark.colorPrimary);
     expect(theme!.scaffoldBackgroundColor, AppColorsDark.colorBackground);
     expect(scheme!.error, AppColorsDark.colorError);
-    // Raio padrão aplicado aos cartões (§3.3).
+    // Card é PAINEL, e painel usa radiusLg (design_system §2, issue #53).
     final card = theme!.cardTheme;
     expect(
       card.shape,
       isA<RoundedRectangleBorder>().having(
         (shape) => shape.borderRadius,
         'borderRadius',
-        BorderRadius.circular(AppSpacing.radius),
+        BorderRadius.circular(AppSpacing.radiusLg),
       ),
     );
   });

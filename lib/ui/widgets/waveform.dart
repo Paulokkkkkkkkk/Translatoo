@@ -111,7 +111,7 @@ class WaveformPlaceholder extends StatelessWidget {
         height: AppSpacing.xs,
         width: AppSpacing.xl,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppSpacing.xs),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
           color: Theme.of(context).colorScheme.outlineVariant,
         ),
       ),
