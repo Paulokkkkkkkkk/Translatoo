@@ -7,7 +7,7 @@
 | **Versão do plano** | 1.1 |
 | **Data** | 2026-08-28 |
 | **Documento-fonte** | `prd.md` **v1.1** (requisitos, módulos, critérios de aceite) |
-| **Estado real** | **F0, F1 (com F1.9), a spike F2.0 e a F2.1–F2.3 concluídas** · F2.4 é o próximo passo |
+| **Estado real** | **F0, F1 (com F1.9), a spike F2.0 e a F2.1–F2.4 concluídas** · F2.5 é o próximo passo |
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
@@ -399,7 +399,8 @@ lib/
 - iOS: `NSMicrophoneUsageDescription` + `NSSpeechRecognitionUsageDescription` no Info.plist.
 - **Entregável**: fluxo completo de permissão testado (conceder/negar/negar permanente).
 
-### F2.4 — `SpeechViewModel`
+### F2.4 — `SpeechViewModel` ✅ concluída ([#24](../../issues/24))
+> Absorveu da **F2.3** a RN-07 e a restauração do texto no cancelamento (AC-M2-4): ambas são comportamento de máquina de estados. O silenciamento do TTS fica exposto como `isDictating` — quem obedece é a F2.8, que ainda não existe.
 - Máquina de estados `SpeechState { idle, initializing, listening, processing, error }` com transições inválidas ignoradas.
 - Campos: `partialText`, `finalText`, `elapsedSeconds`, `errorMessage`.
 - Ao emitir final → chama `TranslatorViewModel.acceptDictatedText(text)` (tradução imediata, ignora debounce).
