@@ -7,7 +7,7 @@
 | **Versão do plano** | 1.1 |
 | **Data** | 2026-08-28 |
 | **Documento-fonte** | `prd.md` **v1.1** (requisitos, módulos, critérios de aceite) |
-| **Estado real** | **F0, F1 (com F1.9), a spike F2.0 e a F2.1–F2.2 concluídas** · F2.3 é o próximo passo |
+| **Estado real** | **F0, F1 (com F1.9), a spike F2.0 e a F2.1–F2.3 concluídas** · F2.4 é o próximo passo |
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
@@ -392,7 +392,8 @@ lib/
 - Erros → `ERR_STT_ENGINE`; nenhum stacktrace à UI.
 - **Entregável**: transcrição real PT/EN/ZH no console do app de debug.
 
-### F2.3 — Permissão de microfone e ciclo de vida
+### F2.3 — Permissão de microfone e ciclo de vida ✅ concluída ([#23](../../issues/23))
+> **Escopo dividido por camada.** O serviço de permissão, as chaves de uso do iOS e as strings dos diálogos entram aqui; a regra **RN-07** (background encerra com o parcial) e a restauração do texto no cancelamento (AC-M2-4) são comportamento de máquina de estados e foram implementadas na **F2.4**, onde o `SpeechViewModel` existe. Os diálogos em si são da **F2.5**.
 - `permission_handler`: solicitar `RECORD_AUDIO` ao tocar no 🎤 com diálogo explicativo prévio; negação permanente → diálogo com "Abrir configurações" (`openAppSettings()`); mapear para `ERR_MIC_PERMISSION`.
 - RN-07: `AppLifecycleListener` — app em background durante escuta → finalizar com último resultado parcial; cancelar descarta e restaura texto anterior.
 - iOS: `NSMicrophoneUsageDescription` + `NSSpeechRecognitionUsageDescription` no Info.plist.
