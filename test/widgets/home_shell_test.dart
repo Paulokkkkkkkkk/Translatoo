@@ -100,14 +100,21 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // Aba inicial Translate: rótulo da NavigationBar + título do placeholder.
-    expect(find.text('Translate'), findsWidgets);
-    expect(find.byType(NavigationBar), findsOneWidget);
-
     // Badge informativo offline no AppBar (mock sem conectividade):
     expect(find.text('Offline'), findsOneWidget);
 
-    // Navegação → History (antes da troca há um único 'History'):
+    // A navegação vive na GAVETA desde a decisão da §10 (opção A): os destinos
+    // só existem depois de abrir o ☰. Enquanto ela está fechada, o rodapé fica
+    // livre para a LanguageBar de largura total (§5.2).
+    expect(find.byType(NavigationBar), findsNothing);
+    expect(find.text('History'), findsNothing);
+
+    final scaffold = tester.firstState<ScaffoldState>(find.byType(Scaffold));
+    scaffold.openDrawer();
+    await tester.pumpAndSettle();
+    expect(find.byType(NavigationDrawer), findsOneWidget);
+
+    // Navegação → History:
     await tester.tap(find.text('History'));
     await tester.pumpAndSettle();
     expect(
@@ -116,6 +123,8 @@ void main() {
     );
 
     // Navegação → Settings:
+    scaffold.openDrawer();
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Settings'));
     await tester.pumpAndSettle();
     expect(find.text('App preferences will appear here.'), findsOneWidget);

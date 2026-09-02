@@ -192,7 +192,9 @@ void main() {
     // Card sobreposto: nome nativo + progresso inicial.
     expect(find.byType(DownloadProgressCard), findsOneWidget);
     expect(find.text('Português'), findsWidgets);
-    expect(find.text('0%'), findsOneWidget);
+    // O aviso ficou compacto (uma linha): o progresso divide o texto com o
+    // tamanho estimado, em vez de ter linha própria.
+    expect(find.textContaining('0%'), findsOneWidget);
 
     api.complete(Language.pt);
     api.complete(Language.en);

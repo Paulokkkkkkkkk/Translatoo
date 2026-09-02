@@ -71,6 +71,26 @@ código da F0/F1 num único commit.
 > permaneceu como alias de `radiusMd`, e `test/architecture/radius_tokens_test.dart`
 > falha se algum raio cru voltar a `lib/`.
 
+**Curva assimétrica em DIAGONAL.** Traçando a silhueta de `docs/design/home.webp`
+pixel a pixel, a junção entre o bloco de marca e o painel usa **duas** curvas em
+cantos opostos, e é o encaixe delas que produz o efeito:
+
+| Elemento | Canto arredondado | Os outros |
+|---|---|---|
+| Bloco de marca | inferior **direito** | retos |
+| Painel | superior **esquerdo** | retos |
+
+O bloco de marca recua da borda direita ~28 px antes de a faixa do painel
+começar; o painel então entra com o canto esquerdo curvo. **Só uma das duas não
+produz o efeito** — foi o erro da primeira implementação, que arredondou só o
+painel e deixou o bloco reto.
+
+> **Divergência registrada.** O case mede ~38–40 dp nesse canto; a tabela acima
+> define `radiusLg` = 28 dp, e a §P2 fala em "24–32 dp". A implementação usa
+> `radiusLg`, ficando dentro da faixa que o próprio documento declara. Subir a
+> escala para 40 dp é decisão de produto — mexeria em todo painel, sheet e
+> squircle do app.
+
 **Regra do squircle.** Botões quadrados de ícone (grid de modos, botão de modo no
 topo) usam lado ≥ 96 dp com `radiusLg`. Abaixo de 96 dp o raio grande deforma o
 quadrado em círculo; use `radiusMd`.
@@ -122,16 +142,27 @@ De cima para baixo, quatro faixas:
 └─────────────────────────────────────┘
 ```
 
-**Proporções observadas** (base 100% da altura útil):
+**Proporções medidas** em `docs/design/home.webp` (prancha do modo voz):
 
 | Faixa | Altura |
 |---|---|
-| Bloco de marca | 12–15% (modo texto) · até 45% (modo voz, com waveform) |
+| Bloco de marca | **40%** medidos no modo voz · 12–15% no modo texto |
 | Cards | o que sobrar, com o card de destino crescendo mais |
 | Pílula de idiomas | 64 dp fixos + safe area |
 
 **Margens.** `AppSpacing.md` (16) nas laterais do conteúdo dos cards. Os painéis
 em si sangram até a borda da tela — **não** têm margem lateral.
+
+**Duas divergências do desenho, registradas na implementação:**
+
+1. **O botão de modo (§5.3) não existe ainda.** A v1 tem dois modos, mas "Voz"
+   não é um modo de tela — é o 🎤 dentro do painel de origem (§5.8). Construir o
+   seletor exige antes transformar o ditado em modo próprio, que é
+   funcionalidade nova, não redesenho. Fica para issue própria.
+2. **Existe um botão TRADUZIR** entre os painéis e a barra de idiomas, que o
+   case não tem. A tradução é automática por debounce (RF-M1-03), mas o botão
+   manual é requisito coberto por teste. Some se o produto decidir que o
+   debounce basta.
 
 ---
 
@@ -141,6 +172,10 @@ Formato das tabelas: uma linha por propriedade, uma coluna por estado. Estados
 não listados herdam o default.
 
 ### 5.1 Card de tradução
+
+> **Implementado** em `lib/ui/widgets/translation_panel.dart` (`TranslationPanel`
+> + `PanelHeader`). Substituiu o `TranslationCard` da F1.7, que era um `Card` do
+> Material com borda e margem lateral.
 
 Composição fixa, de cima para baixo: **linha de cabeçalho** → **texto** →
 **contador**. O contador é sempre a última linha, alinhado à direita, e fica
@@ -182,8 +217,9 @@ botão circular de troca que **cavalga a junção**.
 - Os três alvos (origem, troca, destino) têm ≥ 48 dp — o botão de troca não pode
   encolher para caber texto longo; o texto trunca com reticências.
 
-> Substitui o par de `LanguagePill` isoladas da F1.7. O widget atual não é
-> descartado: vira o **conteúdo do menu** que cada metade abre.
+> **Implementada** em `lib/ui/widgets/language_bar.dart`. Substituiu o par de
+> `LanguagePill` isoladas da F1.7 e o botão ⇄ circular que vivia solto entre os
+> cards; o seletor dos 3 idiomas virou bottom sheet aberto por cada metade.
 
 ### 5.3 Botão de modo (canto superior direito)
 
@@ -481,8 +517,15 @@ na zona do polegar dentro da tela onde ela faz sentido, e não força uma gaveta
 que no case existe porque aquele app tem 6 modos e muitas telas, e o Translatoo
 tem 3.
 
-> Esta decisão **não está tomada**. Ela muda a F0.8 e influencia F2.5, F3.2 e
-> F3.3, então é do product owner e deve virar issue antes de qualquer código.
+> **DECIDIDA — opção A** (2026-09-02, product owner). A `NavigationBar` saiu; os
+> três destinos vivem numa **gaveta** aberta pelo ☰ do canto superior esquerdo,
+> como no case. O rodapé fica inteiro para a `LanguageBar` de largura total.
+>
+> A opção C chegou a ser decidida e implementada horas antes, e foi **revertida**
+> na mesma sessão ao confrontar o case: a gaveta é o que o desenho pede. O custo
+> previsto na tabela se confirmou — `HomeScreen` e `home_shell_test.dart` foram
+> reescritos, e **Histórico e Ajustes perderam descoberta**: agora exigem dois
+> toques e não têm affordance permanente na tela.
 
 ---
 
