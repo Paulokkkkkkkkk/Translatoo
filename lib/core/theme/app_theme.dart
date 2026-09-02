@@ -23,6 +23,43 @@ typedef _Tokens = ({
   Color overlay,
 });
 
+/// Cores semânticas que o `ColorScheme` do Material não tem slot próprio para
+/// guardar.
+///
+/// A §6 do design system nomeia TRÊS exceções cromáticas: favorito
+/// (`colorWarning`), gravação (`colorError`) e sucesso (`colorSuccess`). Só o
+/// erro existe no `ColorScheme`; as outras duas ficavam presas dentro do
+/// builder do tema, inalcançáveis pelos widgets — e a saída fácil seria um
+/// widget importar `app_colors.dart`, que a RN-04 proíbe.
+class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
+  const AppSemanticColors({required this.success, required this.warning});
+
+  final Color success;
+  final Color warning;
+
+  static Color success_(BuildContext context) =>
+      Theme.of(context).extension<AppSemanticColors>()!.success;
+
+  static Color warning_(BuildContext context) =>
+      Theme.of(context).extension<AppSemanticColors>()!.warning;
+
+  @override
+  AppSemanticColors copyWith({Color? success, Color? warning}) =>
+      AppSemanticColors(
+        success: success ?? this.success,
+        warning: warning ?? this.warning,
+      );
+
+  @override
+  AppSemanticColors lerp(AppSemanticColors? other, double t) {
+    if (other == null) return this;
+    return AppSemanticColors(
+      success: Color.lerp(success, other.success, t)!,
+      warning: Color.lerp(warning, other.warning, t)!,
+    );
+  }
+}
+
 /// Dois `ThemeData` Material 3 construídos EXCLUSIVAMENTE a partir dos
 /// tokens de `app_colors.dart` (plano §3.3 / RN-04).
 ///
@@ -110,6 +147,9 @@ abstract final class AppTheme {
       useMaterial3: true,
       brightness: brightness,
       colorScheme: scheme,
+      extensions: <ThemeExtension<dynamic>>[
+        AppSemanticColors(success: c.success, warning: c.warning),
+      ],
       scaffoldBackgroundColor: c.background,
       textTheme: text,
       // BLOCO DE MARCA (§3 plano 1 · §4 primeira faixa): a barra superior é a
@@ -121,7 +161,12 @@ abstract final class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: text.titleLarge!.copyWith(color: c.textPrimary),
+        // §8 regra 1: NADA de texto de superfície sobre o bloco de marca. O
+        // título herdava `textPrimary` de quando a barra era neutra, o que
+        // virou texto quase invisível assim que o fundo ficou azul.
+        titleTextStyle: text.titleLarge!.copyWith(color: c.onPrimary),
+        iconTheme: IconThemeData(color: c.onPrimary),
+        actionsIconTheme: IconThemeData(color: c.onPrimary),
       ),
       cardTheme: CardThemeData(
         color: c.surface,

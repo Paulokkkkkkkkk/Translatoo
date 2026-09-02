@@ -316,9 +316,17 @@ class _OriginPanel extends StatelessWidget {
         maxLines: null,
         minLines: 3,
         keyboardType: TextInputType.multiline,
+        // §P3 — dentro do painel, o campo É o painel: sem contorno nenhum. Só
+        // `border: none` não bastava, porque `enabledBorder` do tema tem
+        // precedência e continuava desenhando a caixa do Material.
         decoration: InputDecoration(
           border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
           filled: false,
+          isDense: true,
+          contentPadding: EdgeInsets.zero,
           hintText: t.sourceHint,
         ),
       ),
