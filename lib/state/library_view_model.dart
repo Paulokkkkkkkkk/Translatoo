@@ -210,8 +210,9 @@ class LibraryViewModel extends ChangeNotifier {
   void _onTranslationCompleted() {
     final vm = _translator!;
     if (vm.status != TranslatorStatus.done) return;
-    if (vm.sourceText.trim().isEmpty || vm.translatedText.trim().isEmpty)
+    if (vm.sourceText.trim().isEmpty || vm.translatedText.trim().isEmpty) {
       return;
+    }
 
     final signature =
         '${vm.sourceLang.name}|${vm.targetLang.name}|'
@@ -249,7 +250,9 @@ class LibraryViewModel extends ChangeNotifier {
     if (_history.length <= AppConstants.historyLimit) return;
     for (var i = _history.length - 1; i >= 0; i--) {
       if (_history.length <= AppConstants.historyLimit) break;
-      if (!_history[i].isFavorite) _history.removeAt(i);
+      if (!_history[i].isFavorite) {
+        _history.removeAt(i);
+      }
     }
   }
 
