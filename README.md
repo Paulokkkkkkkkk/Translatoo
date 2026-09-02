@@ -10,7 +10,7 @@ download de pacotes de idiomas e, no futuro, modo híbrido (P2).
 |---|---|---|
 | **F0** | Fundação e design system (tokens, tema, i18n, storage, conectividade, shell responsivo, pipeline de qualidade) | ✅ **concluída** |
 | **F1** | Motor de tradução offline (ML Kit + Plano B TFLite) | ✅ **concluída** (F1.1–F1.9, tipografia CJK incluída) |
-| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 spike **F2.0 concluída** (motor: `whisper_ggml`) · ⬜ F2.1–F2.9 |
+| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **F2.0–F2.1 concluídas** (motor `whisper_ggml`, modelos embutidos) · ⬜ F2.1b–F2.9 |
 | F3 | Histórico, favoritos, ajustes, gerenciador de modelos | ⬜ — pode ser antecipada (depende de F1, não de F2) |
 | F4 | Polimento, modo híbrido, performance, release v1 | ⬜ |
 
@@ -97,10 +97,11 @@ leitura tolerante a JSON corrompido, migrações por `schemaVersion`.
   ~2 anos) e ~176 MB do `sherpa-onnx` (sem modelo streaming de português). A
   lista fechada de dependências voltou a estar fechada. Risco R5b encerrado;
   medições e ressalvas em `docs/stt_spike.md`.
-- **Latência do STT não medida (F2.1)** — whisper.cpp é mais pesado em CPU que
-  um zipformer streaming e a spike não teve Android físico disponível. A F2.1
-  deve medir carga do modelo e latência dos parciais em gama média; a escada de
-  recuo (`tiny-q5_1` → `sherpa_onnx`) está registrada na nota da spike.
+- **Latência do STT ainda não medida (herdada da F2.0, aberta na F2.1)** —
+  whisper.cpp é mais pesado em CPU que um zipformer streaming, e nem a spike nem
+  a F2.1 tiveram Android físico disponível (o emulador roda a CPU do host e não
+  representa gama média). Falta medir carga do modelo e latência dos parciais; a
+  escada de recuo (`tiny-q5_1` → `sherpa_onnx`) está em `docs/whisper_models.md`.
 - **Parciais de STT são refinados, não incrementais** — whisper.cpp reescreve o
   texto parcial a cada emissão. O overlay de escuta da F2.5 deve tratá-lo como
   bloco substituível, nunca concatenar emissões.
@@ -144,6 +145,7 @@ gentileza.
 | F1.9 | [#18](../../issues/18) | Tipografia CJK — subset de Noto Sans SC como `fontFamilyFallback` | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.0 | [#19](../../issues/19) | Spike do motor de STT — decisão por `whisper_ggml` | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F0.10 | [#45](../../issues/45) | Design system extraído do case + troca da paleta para Azul & Branco | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F2.1 | [#20](../../issues/20) | Modelos ggml de STT embutidos + instalador para o diretório de dados | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 
