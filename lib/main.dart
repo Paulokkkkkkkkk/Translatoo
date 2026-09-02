@@ -13,6 +13,7 @@ import 'core/services/mic_permission_service.dart';
 import 'core/services/mlkit_translation_backend.dart';
 import 'core/services/model_manager_service.dart';
 import 'core/services/record_audio_source.dart';
+import 'core/services/share_service.dart';
 import 'core/services/storage_service.dart';
 import 'core/services/stt_service.dart';
 import 'core/services/tflite_translation_backend.dart';
@@ -113,6 +114,8 @@ class TranslatooApp extends StatelessWidget {
         Provider<ConnectivityService>.value(value: connectivity),
         Provider<TranslationService>.value(value: translationService),
         Provider<ModelManagerService>.value(value: modelManager),
+        // Compartilhamento (F4.1): sem estado, sem rede — const basta.
+        Provider<ShareService>.value(value: const ShareService()),
         ChangeNotifierProvider<ConnectionViewModel>(
           create: (_) => ConnectionViewModel(connectivity),
         ),
