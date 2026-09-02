@@ -48,11 +48,17 @@ class SpeechViewModel extends ChangeNotifier {
     required SttService sttService,
     required MicPermissionService permissionService,
     required TranslatorViewModel translatorViewModel,
-  }) : _stt = sttService,
+    bool? dictationAvailable,
+  }) : _canDictate = dictationAvailable ?? AppConstants.hasEmbeddedSttModels,
+       _stt = sttService,
        _permissions = permissionService,
        _translator = translatorViewModel {
     _resultsSub = _stt.results.listen(_onResult, onError: _onEngineError);
   }
+
+  /// Costura de teste: o valor de produção vem do flavor (F2.1b), mas o
+  /// caminho "build sem ditado" precisa ser exercitável sem recompilar.
+  final bool _canDictate;
 
   final SttService _stt;
   final MicPermissionService _permissions;
@@ -94,7 +100,7 @@ class SpeechViewModel extends ChangeNotifier {
       _state == SpeechState.listening || _state == SpeechState.processing;
 
   /// Este build tem ditado? Espelha o flavor sem expor a constante à `ui/`.
-  bool get canDictate => AppConstants.hasEmbeddedSttModels;
+  bool get canDictate => _canDictate;
 
   /// Segundos restantes até o auto-stop de 60 s (RF-M2-06).
   int get remainingSeconds =>
@@ -275,6 +281,10 @@ class SpeechViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _stopElapsedTimer();
+    // O serviço é injetado (não é nosso para descartar), mas a SESSÃO em curso
+    // é: morrer deixando o microfone aberto e o teto de 60 s armado vazaria
+    // recurso nativo e um timer.
+    if (isDictating) unawaited(_stt.cancel());
     unawaited(_resultsSub?.cancel() ?? Future<void>.value());
     _resultsSub = null;
     super.dispose();

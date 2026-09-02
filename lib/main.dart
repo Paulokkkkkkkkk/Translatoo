@@ -5,15 +5,22 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/constants/app_constants.dart';
 import 'core/constants/app_strings.dart';
 import 'core/services/connectivity_service.dart';
+import 'core/services/mic_permission_service.dart';
 import 'core/services/mlkit_translation_backend.dart';
 import 'core/services/model_manager_service.dart';
 import 'core/services/storage_service.dart';
+import 'core/services/stt_service.dart';
 import 'core/services/tflite_translation_backend.dart';
 import 'core/services/translation_service.dart';
+import 'core/services/unavailable_audio_source.dart';
+import 'core/services/whisper_model_installer.dart';
+import 'core/services/whisper_stt_engine.dart';
 import 'core/theme/app_theme.dart';
 import 'state/connection_view_model.dart';
+import 'state/speech_view_model.dart';
 import 'state/translator_view_model.dart';
 import 'ui/screens/home_screen.dart';
 
@@ -43,12 +50,22 @@ Future<void> main() async {
   );
   unawaited(modelManager.refreshAll());
 
+  // ── Composição do ditado M2 (F2) ─────────────────────────────────────────
+  // O motor real (whisper.cpp) já entra aqui; a FONTE de áudio ainda não
+  // existe — ver UnavailableAudioSource e o desvio da F2.2 no README.
+  final sttService = SttService(
+    sttEngine: WhisperSttEngine(),
+    audioSource: const UnavailableAudioSource(),
+    modelInstaller: WhisperModelInstaller(assetKey: AppConstants.sttModelAsset),
+  );
+
   runApp(
     TranslatooApp(
       storage: storage,
       connectivity: connectivity,
       translationService: translationService,
       modelManager: modelManager,
+      sttService: sttService,
     ),
   );
 }
@@ -63,12 +80,14 @@ class TranslatooApp extends StatelessWidget {
     required this.connectivity,
     required this.translationService,
     required this.modelManager,
+    required this.sttService,
   });
 
   final StorageService storage;
   final ConnectivityService connectivity;
   final TranslationService translationService;
   final ModelManagerService modelManager;
+  final SttService sttService;
 
   @override
   Widget build(BuildContext context) {
@@ -81,11 +100,22 @@ class TranslatooApp extends StatelessWidget {
         ChangeNotifierProvider<ConnectionViewModel>(
           create: (_) => ConnectionViewModel(connectivity),
         ),
+        Provider<SttService>.value(value: sttService),
         ChangeNotifierProvider<TranslatorViewModel>(
           create: (_) => TranslatorViewModel(
             translationService: translationService,
             modelManager: modelManager,
           ),
+        ),
+        // Depende do TranslatorViewModel para entregar o texto ditado: só
+        // existe depois dele na lista de providers.
+        ChangeNotifierProxyProvider<TranslatorViewModel, SpeechViewModel>(
+          create: (context) => SpeechViewModel(
+            sttService: sttService,
+            permissionService: MicPermissionService(),
+            translatorViewModel: context.read<TranslatorViewModel>(),
+          ),
+          update: (_, _, speech) => speech!,
         ),
       ],
       child: MaterialApp(

@@ -11,9 +11,12 @@ import '../../core/services/app_exception.dart';
 import '../../core/services/model_manager_service.dart';
 import '../../models/language.dart';
 import '../../models/model_state.dart';
+import '../../state/speech_view_model.dart';
 import '../../state/translator_view_model.dart';
 import '../widgets/download_progress_card.dart';
 import '../widgets/language_pill.dart';
+import '../widgets/listening_sheet.dart';
+import '../widgets/mic_button.dart';
 import '../widgets/shimmer_box.dart';
 import '../widgets/translation_card.dart';
 
@@ -35,9 +38,17 @@ class _TranslateScreenState extends State<TranslateScreen> {
   TranslatorViewModel? _observed;
   AppException? _lastShownError;
 
+  /// RN-07: sair para segundo plano durante a escuta ENCERRA com o parcial.
+  /// O listener vive aqui, e não no ViewModel, porque `AppLifecycleListener`
+  /// é API de widget — a `state/` não conhece Flutter de UI.
+  late final AppLifecycleListener _lifecycle = AppLifecycleListener(
+    onInactive: () => context.read<SpeechViewModel>().onAppBackgrounded(),
+  );
+
   @override
   void initState() {
     super.initState();
+    _lifecycle; // instancia o listener
     _controller.addListener(() {
       context.read<TranslatorViewModel>().onTextChanged(_controller.text);
     });
@@ -61,6 +72,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
 
   @override
   void dispose() {
+    _lifecycle.dispose();
     _observed?.removeListener(_onViewModelChanged);
     _controller.dispose();
     super.dispose();
@@ -196,6 +208,11 @@ class _TranslateScreenState extends State<TranslateScreen> {
             footer: _OriginFooter(onPaste: _pasteFromClipboard),
             child: TextField(
               controller: _controller,
+              // RF-M2-07: digitar durante a escuta disputaria o mesmo campo
+              // que o ditado vai preencher.
+              enabled: !context.select<SpeechViewModel, bool>(
+                (vm) => vm.isDictating,
+              ),
               maxLines: null,
               minLines: 3,
               keyboardType: TextInputType.multiline,
@@ -280,6 +297,86 @@ class _OriginFooter extends StatelessWidget {
 
   final Future<void> Function() onPaste;
 
+  /// Toque no 🎤 (F2.5). O que fazer depende do estado, e não do que a UI
+  /// acha que está acontecendo — a máquina de estados é a fonte da verdade.
+  Future<void> _onMicPressed(BuildContext context) async {
+    final speech = context.read<SpeechViewModel>();
+
+    switch (speech.state) {
+      case SpeechState.listening:
+        await speech.stop();
+      case SpeechState.initializing || SpeechState.processing:
+        return; // toque sem efeito durante a carga
+      case SpeechState.error:
+        final blocked = speech.errorAction == SuggestedAction.openSettings;
+        speech.acknowledgeError();
+        if (blocked && context.mounted) await _showBlockedDialog(context);
+      case SpeechState.idle:
+        await speech.start(
+          onPermissionNeeded: () async =>
+              context.mounted && await _showRationaleDialog(context),
+        );
+        if (!context.mounted) return;
+        if (speech.state == SpeechState.listening) {
+          await ListeningSheet.show(context);
+        } else if (speech.errorAction == SuggestedAction.openSettings) {
+          speech.acknowledgeError();
+          if (context.mounted) await _showBlockedDialog(context);
+        }
+    }
+  }
+
+  /// Diálogo explicativo PRÉVIO (PRD §4.5): a única chance de o usuário
+  /// entender o pedido antes do diálogo seco do sistema.
+  Future<bool> _showRationaleDialog(BuildContext context) async {
+    final t = AppStrings.of(context);
+    final proceed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(t.micRationaleTitle),
+        content: Text(t.micRationaleBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(t.actionCancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(t.actionDictate),
+          ),
+        ],
+      ),
+    );
+    return proceed ?? false;
+  }
+
+  /// Negação permanente (AC-M2-2): explica e oferece as configurações; o app
+  /// segue utilizável de qualquer forma.
+  Future<void> _showBlockedDialog(BuildContext context) async {
+    final t = AppStrings.of(context);
+    final speech = context.read<SpeechViewModel>();
+    await showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(t.errMicPermission),
+        content: Text(t.micBlockedBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(t.actionCancel),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              unawaited(speech.openAppSettings());
+            },
+            child: Text(t.actionOpenSettings),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppStrings.of(context);
@@ -303,10 +400,11 @@ class _OriginFooter extends StatelessWidget {
               ),
             Row(
               children: [
-                IconButton(
-                  tooltip: '${t.actionDictate} · ${t.comingSoon}',
-                  onPressed: null, // placeholder F2 (gancho acceptDictatedText)
-                  icon: const Icon(Icons.mic_none_outlined),
+                // Ausente — não desabilitado — em builds sem modelo de STT
+                // (F2.1b). `maybe` devolve null e o botão não entra na árvore.
+                ?MicButton.maybe(
+                  context,
+                  onPressed: () => unawaited(_onMicPressed(context)),
                 ),
                 IconButton(
                   tooltip: t.actionPaste,

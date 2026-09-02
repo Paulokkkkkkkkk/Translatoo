@@ -10,7 +10,7 @@ download de pacotes de idiomas e, no futuro, modo híbrido (P2).
 |---|---|---|
 | **F0** | Fundação e design system (tokens, tema, i18n, storage, conectividade, shell responsivo, pipeline de qualidade) | ✅ **concluída** |
 | **F1** | Motor de tradução offline (ML Kit + Plano B TFLite) | ✅ **concluída** (F1.1–F1.9, tipografia CJK incluída) |
-| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **F2.0–F2.4 concluídas** (motor, modelos, flavors, serviços e `SpeechViewModel`) · ⬜ F2.5–F2.9 |
+| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **F2.0–F2.5 concluídas** (ditado completo, menos a captura de áudio) · ⬜ F2.6–F2.9 (TTS) |
 | F3 | Histórico, favoritos, ajustes, gerenciador de modelos | ⬜ — pode ser antecipada (depende de F1, não de F2) |
 | F4 | Polimento, modo híbrido, performance, release v1 | ⬜ |
 
@@ -173,7 +173,15 @@ leitura tolerante a JSON corrompido, migrações por `schemaVersion`.
   1,5 s, teto de 60 s, `ERR_STT_ENGINE`) estão implementadas e testadas. Falta
   **uma implementação real de `SttAudioSource`**, que exige reabrir a lista
   fechada; enquanto isso o entregável "transcrição real no app de debug" da
-  F2.2 permanece em aberto.
+  F2.2 permanece em aberto. Na F2.5 isso virou visível: o app monta uma
+  `UnavailableAudioSource`, e tocar no 🎤 leva ao estado de erro `ERR_STT_ENGINE`
+  em vez de escutar. Falha alto de propósito — esconder o botão faria
+  `canDictate` mentir sobre o flavor, já que o modelo **está** embutido.
+- **Waveform do ditado não foi implementada (F2.5)** — a issue #25 pede onda
+  animada, mas a §5.7 do design system proíbe onda sem amplitude real
+  ("onda falsa em app de ditado é mentira de interface") e não há captura de
+  áudio de onde tirar nível. Ficou o indicador de escuta neutro que a própria
+  §5.7 manda usar; a onda entra junto com a fonte de áudio.
 - **`lite` estoura o orçamento de 40 MB (F2.1b)** — medido em 92,4 MB. Ver a
   composição do APK na seção de flavors.
 - **Textos de permissão do iOS só existem em pt-BR (F2.3)** — o
@@ -217,6 +225,7 @@ gentileza.
 | F2.2 | [#22](../../issues/22) | `SttService` — parciais refinados, pausa de 1,5 s e teto de 60 s | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.3 | [#23](../../issues/23) | Permissão de microfone nos três caminhos + chaves de uso do iOS | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.4 | [#24](../../issues/24) | `SpeechViewModel` — máquina de estados, RN-07 e restauração no cancelamento | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F2.5 | [#25](../../issues/25) | UI do ditado — botão de microfone e folha de escuta | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 
