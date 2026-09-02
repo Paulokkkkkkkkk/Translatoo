@@ -281,8 +281,48 @@
       "_origin": "ast"
     },
     {
-      "id": "lib_core_constants_app_constants_enablealternativeengine",
-      "label": "enableAlternativeEngine",
+      "id": "lib_core_constants_app_constants_whispermodelsdirname",
+      "label": "whisperModelsDirName",
+      "file_type": "code",
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "static_const_string",
+      "label": "static const String",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_constants_app_constants_whisperfullmodelasset",
+      "label": "whisperFullModelAsset",
+      "file_type": "code",
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_constants_app_constants_whisperlitemodelasset",
+      "label": "whisperLiteModelAsset",
+      "file_type": "code",
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_constants_app_constants_sttmodelasset",
+      "label": "sttModelAsset",
+      "file_type": "code",
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_constants_app_constants_hasembeddedsttmodels",
+      "label": "hasEmbeddedSttModels",
       "file_type": "code",
       "source_file": "lib/core/constants/app_constants.dart",
       "source_location": null,
@@ -293,6 +333,14 @@
       "label": "static const bool",
       "file_type": "code",
       "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_constants_app_constants_enablealternativeengine",
+      "label": "enableAlternativeEngine",
+      "file_type": "code",
+      "source_file": "lib/core/constants/app_constants.dart",
       "source_location": null,
       "_origin": "ast"
     },
@@ -325,14 +373,6 @@
       "label": "history",
       "file_type": "code",
       "source_file": "lib/core/constants/app_constants.dart",
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "static_const_string",
-      "label": "static const String",
-      "file_type": "code",
-      "source_file": null,
       "source_location": null,
       "_origin": "ast"
     },
@@ -2129,6 +2169,406 @@
       "_origin": "ast"
     },
     {
+      "id": "lib_core_services_stt_service",
+      "label": "stt_service.dart",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_sttresult",
+      "label": "SttResult",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_sttaudiosource",
+      "label": "SttAudioSource",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_sttenginesession",
+      "label": "SttEngineSession",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_sttengine",
+      "label": "SttEngine",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_sttphase",
+      "label": "SttPhase",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_sttservice",
+      "label": "SttService",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_text",
+      "label": "text",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_isfinal",
+      "label": "isFinal",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_operator",
+      "label": "operator",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_hashcode",
+      "label": "hashCode",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "int_get",
+      "label": "int get",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_partials",
+      "label": "partials",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "stream",
+      "label": "Stream",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_engine",
+      "label": "_engine",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_audio",
+      "label": "_audio",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_installer",
+      "label": "_installer",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_results",
+      "label": "_results",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "streamcontroller",
+      "label": "StreamController",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_phase",
+      "label": "_phase",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "sttphase_get",
+      "label": "SttPhase get",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_session",
+      "label": "_session",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_audiosub",
+      "label": "_audioSub",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "streamsubscription",
+      "label": "StreamSubscription",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_partialsub",
+      "label": "_partialSub",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_pausetimer",
+      "label": "_pauseTimer",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "timer",
+      "label": "Timer?",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_maxdurationtimer",
+      "label": "_maxDurationTimer",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_lasttext",
+      "label": "_lastText",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_token",
+      "label": "_token",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_islistening",
+      "label": "isListening",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "bool_get",
+      "label": "bool get",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_tostring",
+      "label": "toString",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_start",
+      "label": "start",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_stop",
+      "label": "stop",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_feed",
+      "label": "feed",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_startsession",
+      "label": "startSession",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_cancel",
+      "label": "cancel",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_iscurrent",
+      "label": "_isCurrent",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_armpausetimer",
+      "label": "_armPauseTimer",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_finish",
+      "label": "_finish",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_failsession",
+      "label": "_failSession",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_teardown",
+      "label": "_teardown",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_dispose",
+      "label": "dispose",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_async",
+      "label": "dart:async",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_typed_data",
+      "label": "dart:typed_data",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "models_language_dart",
+      "label": "../../models/language.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "constants_app_constants_dart",
+      "label": "../constants/app_constants.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_exception_dart",
+      "label": "app_exception.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "whisper_model_installer_dart",
+      "label": "whisper_model_installer.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "lib_core_services_text_chunker",
       "label": "text_chunker.dart",
       "file_type": "code",
@@ -2595,6 +3035,334 @@
     {
       "id": "translation_backend_dart",
       "label": "translation_backend.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer",
+      "label": "whisper_model_installer.dart",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_whisperassetstorage",
+      "label": "WhisperAssetStorage",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_platformwhisperassetstorage",
+      "label": "PlatformWhisperAssetStorage",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_whispermodelinstaller",
+      "label": "WhisperModelInstaller",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_assetkey",
+      "label": "assetKey",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_storage",
+      "label": "_storage",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_installation",
+      "label": "_installation",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "future",
+      "label": "Future",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_filename",
+      "label": "fileName",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "string_get",
+      "label": "String get",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_readasset",
+      "label": "readAsset",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_modelsdirectory",
+      "label": "modelsDirectory",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_filesizebytes",
+      "label": "fileSizeBytes",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_writefile",
+      "label": "writeFile",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_ensureinstalled",
+      "label": "ensureInstalled",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_model_installer_install",
+      "label": "_install",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_io",
+      "label": "dart:io",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_typed_data",
+      "label": "dart:typed_data",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_flutter_services_dart",
+      "label": "package:flutter/services.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_path_provider_path_provider_dart",
+      "label": "package:path_provider/path_provider.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "constants_app_constants_dart",
+      "label": "../constants/app_constants.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_exception_dart",
+      "label": "app_exception.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_stt_engine",
+      "label": "whisper_stt_engine.dart",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_stt_engine_whispersttengine",
+      "label": "WhisperSttEngine",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_stt_engine_whispersession",
+      "label": "_WhisperSession",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_stt_engine_controller",
+      "label": "_controller",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "whispercontroller",
+      "label": "WhisperController",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_stt_engine_noaudio",
+      "label": "_noAudio",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "static_const_stream",
+      "label": "static const Stream",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_stt_engine_session",
+      "label": "_session",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "whisperlivesession",
+      "label": "WhisperLiveSession",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_stt_engine_partials",
+      "label": "partials",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "stream",
+      "label": "Stream",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_stt_engine_startsession",
+      "label": "startSession",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_stt_engine_feed",
+      "label": "feed",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_whisper_stt_engine_stop",
+      "label": "stop",
+      "file_type": "code",
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_async",
+      "label": "dart:async",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_typed_data",
+      "label": "dart:typed_data",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_whisper_ggml_whisper_ggml_dart",
+      "label": "package:whisper_ggml/whisper_ggml.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_exception_dart",
+      "label": "app_exception.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "stt_service_dart",
+      "label": "stt_service.dart",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -3755,6 +4523,14 @@
     {
       "id": "lib_state_translator_view_model_usesalternativeengine",
       "label": "usesAlternativeEngine",
+      "file_type": "code",
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_state_translator_view_model_candictate",
+      "label": "canDictate",
       "file_type": "code",
       "source_file": "lib/state/translator_view_model.dart",
       "source_location": null,
@@ -5305,6 +6081,38 @@
       "_origin": "ast"
     },
     {
+      "id": "test_architecture_flavor_isolation_test",
+      "label": "flavor_isolation_test.dart",
+      "file_type": "code",
+      "source_file": "test/architecture/flavor_isolation_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_architecture_flavor_isolation_test_main",
+      "label": "main",
+      "file_type": "code",
+      "source_file": "test/architecture/flavor_isolation_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_io",
+      "label": "dart:io",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_flutter_test_flutter_test_dart",
+      "label": "package:flutter_test/flutter_test.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_i18n_app_strings_test",
       "label": "app_strings_test.dart",
       "file_type": "code",
@@ -5969,6 +6777,438 @@
       "_origin": "ast"
     },
     {
+      "id": "test_services_stt_service_test",
+      "label": "stt_service_test.dart",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_fakeengine",
+      "label": "_FakeEngine",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_fakesession",
+      "label": "_FakeSession",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "partial",
+      "label": "Partial",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_fakeaudio",
+      "label": "_FakeAudio",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_installedstorage",
+      "label": "_InstalledStorage",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_session",
+      "label": "session",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_lastmodelpath",
+      "label": "lastModelPath",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "string",
+      "label": "String?",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_lastlanguagecode",
+      "label": "lastLanguageCode",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_starterror",
+      "label": "startError",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "object",
+      "label": "Object?",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_partials",
+      "label": "_partials",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "streamcontroller",
+      "label": "StreamController",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_fed",
+      "label": "fed",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "list",
+      "label": "List",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_finaltext",
+      "label": "finalText",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_stopped",
+      "label": "stopped",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_stoperror",
+      "label": "stopError",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "stream",
+      "label": "Stream",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_pcm",
+      "label": "_pcm",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_startcount",
+      "label": "startCount",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_stopcount",
+      "label": "stopCount",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_bytes",
+      "label": "_bytes",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "static_final_uint8list",
+      "label": "static final Uint8List",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_engine",
+      "label": "engine",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_audio",
+      "label": "audio",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_service",
+      "label": "service",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_results",
+      "label": "results",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_errors",
+      "label": "errors",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_startsession",
+      "label": "startSession",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_emitpartial",
+      "label": "emitPartial",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_feed",
+      "label": "feed",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_stop",
+      "label": "stop",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_emit",
+      "label": "emit",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_fail",
+      "label": "fail",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_close",
+      "label": "close",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_start",
+      "label": "start",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_readasset",
+      "label": "readAsset",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_modelsdirectory",
+      "label": "modelsDirectory",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_filesizebytes",
+      "label": "fileSizeBytes",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_writefile",
+      "label": "writeFile",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_main",
+      "label": "main",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_startlistening",
+      "label": "startListening",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_async",
+      "label": "dart:async",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_typed_data",
+      "label": "dart:typed_data",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_fake_async_fake_async_dart",
+      "label": "package:fake_async/fake_async.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_flutter_test_flutter_test_dart",
+      "label": "package:flutter_test/flutter_test.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_translatoo_core_constants_app_constants_dart",
+      "label": "package:translatoo/core/constants/app_constants.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_translatoo_core_services_app_exception_dart",
+      "label": "package:translatoo/core/services/app_exception.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_translatoo_core_services_stt_service_dart",
+      "label": "package:translatoo/core/services/stt_service.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_translatoo_core_services_whisper_model_installer_dart",
+      "label": "package:translatoo/core/services/whisper_model_installer.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_translatoo_models_language_dart",
+      "label": "package:translatoo/models/language.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "uint8list",
+      "label": "Uint8List",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_services_text_chunker_test",
       "label": "text_chunker_test.dart",
       "file_type": "code",
@@ -6187,6 +7427,198 @@
     {
       "id": "package_translatoo_models_language_pair_dart",
       "label": "package:translatoo/models/language_pair.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test",
+      "label": "whisper_model_installer_test.dart",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_fakestorage",
+      "label": "_FakeStorage",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_assetbytes",
+      "label": "assetBytes",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "uint8list",
+      "label": "Uint8List",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_files",
+      "label": "files",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "map",
+      "label": "Map",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_writecount",
+      "label": "writeCount",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_readassetcount",
+      "label": "readAssetCount",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_asseterror",
+      "label": "assetError",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "object",
+      "label": "Object?",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_writeerror",
+      "label": "writeError",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_assetkey",
+      "label": "assetKey",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_expectedpath",
+      "label": "expectedPath",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_readasset",
+      "label": "readAsset",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_modelsdirectory",
+      "label": "modelsDirectory",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_filesizebytes",
+      "label": "fileSizeBytes",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_writefile",
+      "label": "writeFile",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_main",
+      "label": "main",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_whisper_model_installer_test_bytes",
+      "label": "bytes",
+      "file_type": "code",
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_io",
+      "label": "dart:io",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_typed_data",
+      "label": "dart:typed_data",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_flutter_test_flutter_test_dart",
+      "label": "package:flutter_test/flutter_test.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_translatoo_core_services_app_exception_dart",
+      "label": "package:translatoo/core/services/app_exception.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_translatoo_core_services_whisper_model_installer_dart",
+      "label": "package:translatoo/core/services/whisper_model_installer.dart",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -6435,6 +7867,14 @@
     {
       "id": "package_flutter_test_flutter_test_dart",
       "label": "package:flutter_test/flutter_test.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_translatoo_core_constants_app_constants_dart",
+      "label": "package:translatoo/core/constants/app_constants.dart",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -8130,6 +9570,121 @@
     {
       "source": "lib_core_constants_app_constants",
       "target": "static_const_int",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_constants_app_constants",
+      "target": "lib_core_constants_app_constants_whispermodelsdirname",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_constants_app_constants",
+      "target": "static_const_string",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_constants_app_constants",
+      "target": "lib_core_constants_app_constants_whisperfullmodelasset",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_constants_app_constants",
+      "target": "static_const_string",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_constants_app_constants",
+      "target": "lib_core_constants_app_constants_whisperlitemodelasset",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_constants_app_constants",
+      "target": "static_const_string",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_constants_app_constants",
+      "target": "lib_core_constants_app_constants_sttmodelasset",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_constants_app_constants",
+      "target": "static_const_string",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_constants_app_constants",
+      "target": "lib_core_constants_app_constants_hasembeddedsttmodels",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/constants/app_constants.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_constants_app_constants",
+      "target": "static_const_bool",
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -15480,6 +17035,703 @@
       "_origin": "ast"
     },
     {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_sttresult",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_sttaudiosource",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_sttenginesession",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_sttengine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_sttphase",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_sttservice",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_text",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_isfinal",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_operator",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_hashcode",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "int_get",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_partials",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "stream",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_engine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_sttengine",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_audio",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_sttaudiosource",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_installer",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_whisper_model_installer_whispermodelinstaller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_results",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "streamcontroller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_results",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "stream",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_phase",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_sttphase",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_phase",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "sttphase_get",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_session",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_sttenginesession",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_audiosub",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "streamsubscription",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_partialsub",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "streamsubscription",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_pausetimer",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "timer",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_maxdurationtimer",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "timer",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_lasttext",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_token",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_islistening",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "bool_get",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_tostring",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_start",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_stop",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_feed",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_stop",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_startsession",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_start",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_stop",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_cancel",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_iscurrent",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_armpausetimer",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_finish",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_failsession",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_teardown",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_dispose",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "dart_async",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "dart_typed_data",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "models_language_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "constants_app_constants_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "app_exception_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "whisper_model_installer_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
       "source": "lib_core_services_text_chunker",
       "target": "lib_core_services_text_chunker_max",
       "relation": "defines",
@@ -16155,6 +18407,530 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/core/services/translation_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_whisperassetstorage",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_platformwhisperassetstorage",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer_platformwhisperassetstorage",
+      "target": "lib_core_services_whisper_model_installer_whisperassetstorage",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_whispermodelinstaller",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_assetkey",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_storage",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_whisperassetstorage",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_installation",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "future",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_filename",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "string_get",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_readasset",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_modelsdirectory",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_filesizebytes",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_writefile",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_readasset",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_modelsdirectory",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_filesizebytes",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_writefile",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_ensureinstalled",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "lib_core_services_whisper_model_installer_install",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "dart_io",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "dart_typed_data",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "package_flutter_services_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "package_path_provider_path_provider_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "constants_app_constants_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_model_installer",
+      "target": "app_exception_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_model_installer.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "lib_core_services_whisper_stt_engine_whispersttengine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine_whispersttengine",
+      "target": "lib_core_services_stt_service_sttengine",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "lib_core_services_whisper_stt_engine_whispersession",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine_whispersession",
+      "target": "lib_core_services_stt_service_sttenginesession",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "lib_core_services_whisper_stt_engine_controller",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "whispercontroller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "lib_core_services_whisper_stt_engine_noaudio",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "static_const_stream",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "lib_core_services_whisper_stt_engine_session",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "whisperlivesession",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "lib_core_services_whisper_stt_engine_partials",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "stream",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "lib_core_services_whisper_stt_engine_startsession",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "lib_core_services_whisper_stt_engine_feed",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "lib_core_services_whisper_stt_engine_stop",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "dart_async",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "dart_typed_data",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "package_whisper_ggml_whisper_ggml_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "app_exception_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_whisper_stt_engine",
+      "target": "stt_service_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/whisper_stt_engine.dart",
       "source_location": null,
       "weight": 1.0,
       "_origin": "ast"
@@ -18185,6 +20961,29 @@
     {
       "source": "lib_state_translator_view_model",
       "target": "lib_state_translator_view_model_usesalternativeengine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_translator_view_model",
+      "target": "bool_get",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_translator_view_model",
+      "target": "lib_state_translator_view_model_candictate",
       "relation": "defines",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -20882,6 +23681,39 @@
       "_origin": "ast"
     },
     {
+      "source": "test_architecture_flavor_isolation_test",
+      "target": "test_architecture_flavor_isolation_test_main",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/architecture/flavor_isolation_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_architecture_flavor_isolation_test",
+      "target": "dart_io",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/architecture/flavor_isolation_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_architecture_flavor_isolation_test",
+      "target": "package_flutter_test_flutter_test_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/architecture/flavor_isolation_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
       "source": "test_i18n_app_strings_test",
       "target": "test_i18n_app_strings_test_main",
       "relation": "defines",
@@ -21737,6 +24569,806 @@
       "_origin": "ast"
     },
     {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_fakeengine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test_fakeengine",
+      "target": "lib_core_services_stt_service_sttengine",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_fakesession",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test_fakesession",
+      "target": "lib_core_services_stt_service_sttenginesession",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test_fakesession",
+      "target": "partial",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "emit_state",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_fakeaudio",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test_fakeaudio",
+      "target": "lib_core_services_stt_service_sttaudiosource",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_installedstorage",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test_installedstorage",
+      "target": "lib_core_services_whisper_model_installer_whisperassetstorage",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_session",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_fakesession",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_lastmodelpath",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "string",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_lastlanguagecode",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "string",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_starterror",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "object",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_partials",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "streamcontroller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_fed",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_finaltext",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_stopped",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_stoperror",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "object",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_partials",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "stream",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_pcm",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "streamcontroller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_startcount",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_stopcount",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_starterror",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "object",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_bytes",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "static_final_uint8list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_engine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_fakeengine",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_audio",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_fakeaudio",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_service",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "lib_core_services_stt_service_sttservice",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_results",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_errors",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_startsession",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_emitpartial",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_feed",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_stop",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_emit",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_fail",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_close",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_start",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_stop",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_readasset",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_modelsdirectory",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_filesizebytes",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_writefile",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_main",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_startlistening",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "dart_async",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "dart_typed_data",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "package_fake_async_fake_async_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "package_flutter_test_flutter_test_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "package_translatoo_core_constants_app_constants_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "package_translatoo_core_services_app_exception_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "package_translatoo_core_services_stt_service_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "package_translatoo_core_services_whisper_model_installer_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "package_translatoo_models_language_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "uint8list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "type_lookup",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "lib_core_services_app_exception_appexception",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "type_lookup",
+      "_origin": "ast"
+    },
+    {
       "source": "test_services_text_chunker_test",
       "target": "test_services_text_chunker_test_main",
       "relation": "defines",
@@ -22078,6 +25710,309 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "test/services/translation_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "type_lookup",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_fakestorage",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test_fakestorage",
+      "target": "lib_core_services_whisper_model_installer_whisperassetstorage",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_assetbytes",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "uint8list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_files",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "map",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_writecount",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_readassetcount",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_asseterror",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "object",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_writeerror",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "object",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_assetkey",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_expectedpath",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_readasset",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_modelsdirectory",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_filesizebytes",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_writefile",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_main",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "test_services_whisper_model_installer_test_bytes",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "dart_io",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "dart_typed_data",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "package_flutter_test_flutter_test_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "package_translatoo_core_services_app_exception_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "package_translatoo_core_services_whisper_model_installer_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "lib_core_services_app_exception_appexception",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "type_lookup",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_whisper_model_installer_test",
+      "target": "lib_core_services_app_exception_appexception",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/whisper_model_installer_test.dart",
       "source_location": null,
       "weight": 1.0,
       "context": "type_lookup",
@@ -22469,6 +26404,17 @@
     {
       "source": "test_state_translator_view_model_test",
       "target": "package_flutter_test_flutter_test_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/state/translator_view_model_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_state_translator_view_model_test",
+      "target": "package_translatoo_core_constants_app_constants_dart",
       "relation": "imports",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
