@@ -33,60 +33,69 @@ class HistoryCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        // Reusar é mais comum que reler: o toque devolve a tradução ao
-        // Tradutor, com texto E par de idiomas.
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  _PairChip(record: record),
-                  const Spacer(),
-                  IconButton(
-                    tooltip: t.actionFavorite,
-                    onPressed: onToggleFavorite,
-                    visualDensity: VisualDensity.compact,
-                    icon: Icon(
-                      // ★ preenchido é uma das três exceções cromáticas da §6 —
-                      // a única do app que usa ícone sólido.
-                      record.isFavorite ? Icons.star : Icons.star_border,
-                      color: record.isFavorite
-                          ? AppSemanticColors.warning_(context)
-                          : theme.colorScheme.onSurfaceVariant,
+      // Sem isto o leitor de tela lê os quatro textos do card e não anuncia
+      // que ele é tocável — a ação principal do item ficaria invisível para
+      // quem navega por voz (RN-06).
+      child: Semantics(
+        button: true,
+        label:
+            '${record.sourceLang.displayName} → '
+            '${record.targetLang.displayName}: ${record.translatedText}',
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          // Reusar é mais comum que reler: o toque devolve a tradução ao
+          // Tradutor, com texto E par de idiomas.
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    _PairChip(record: record),
+                    const Spacer(),
+                    IconButton(
+                      tooltip: t.actionFavorite,
+                      onPressed: onToggleFavorite,
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(
+                        // ★ preenchido é uma das três exceções cromáticas da §6 —
+                        // a única do app que usa ícone sólido.
+                        record.isFavorite ? Icons.star : Icons.star_border,
+                        color: record.isFavorite
+                            ? AppSemanticColors.warning_(context)
+                            : theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
+                  ],
+                ),
+                Text(
+                  record.sourceText,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
-                ],
-              ),
-              Text(
-                record.sourceText,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
                 ),
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                record.translatedText,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyLarge,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              // Horário RELATIVO: a data absoluta não ajuda a reencontrar algo
-              // traduzido há pouco, que é o uso real desta tela.
-              Text(
-                t.relativeTime(minutes),
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  record.translatedText,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodyLarge,
                 ),
-              ),
-            ],
+                const SizedBox(height: AppSpacing.sm),
+                // Horário RELATIVO: a data absoluta não ajuda a reencontrar algo
+                // traduzido há pouco, que é o uso real desta tela.
+                Text(
+                  t.relativeTime(minutes),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
