@@ -177,11 +177,9 @@ leitura tolerante a JSON corrompido, migrações por `schemaVersion`.
   deixou de existir.
 - **`lite` estoura o orçamento de 40 MB (F2.1b)** — medido em 92,4 MB. Ver a
   composição do APK na seção de flavors.
-- **Textos de permissão do iOS só existem em pt-BR (F2.3)** — o
-  `NSMicrophoneUsageDescription` e o `NSSpeechRecognitionUsageDescription` vivem
-  no `Info.plist`, fora do alcance do `app_strings.dart`. Traduzi-los exige
-  `InfoPlist.strings` por locale registrados no projeto Xcode; enquanto isso o
-  usuário en/zh lê o texto em português no diálogo do sistema.
+- ~~**Textos de permissão do iOS só existem em pt-BR (F2.3)**~~ — **resolvido na
+  F4.7a**: `InfoPlist.strings` em `pt-BR`, `en` e `zh-Hans`, registrados como
+  variant group no projeto Xcode e declarados em `CFBundleLocalizations`.
 
 ## Nota de ambiente (risco R6)
 
@@ -221,6 +219,7 @@ gentileza.
 | F2.5 | [#25](../../issues/25) | UI do ditado — botão de microfone e folha de escuta | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.2b | [#52](../../issues/52) | Captura de microfone (`record`) + onda com nível real | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | DS | [#53](../../issues/53) | Tokens de raio da §2 (`radiusSm/Md/Lg/Pill`) e migração dos widgets | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F4.7a | [#54](../../issues/54) | Identidade do app: bundle id, nome e textos de permissão do iOS | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 

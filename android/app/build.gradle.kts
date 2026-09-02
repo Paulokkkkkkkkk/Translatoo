@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.flutter_application_1"
+    namespace = "com.translatoo.app"
     compileSdk = flutter.compileSdkVersion
     // whisper_ggml exige NDK 29.0.13113456, acima do padrao do Flutter.
     // NDKs sao retrocompativeis: fixamos o maior exigido pelos plugins.
@@ -17,8 +17,7 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.flutter_application_1"
+        applicationId = "com.translatoo.app"
         // PRD §4: Android 6.0+ (requisito dos plugins ML Kit / Vosk / TFLite).
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
