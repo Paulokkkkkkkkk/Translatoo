@@ -14,6 +14,7 @@ import 'package:translatoo/core/services/storage_service.dart';
 import 'package:translatoo/core/services/stt_service.dart';
 import 'package:translatoo/core/services/translation_backend.dart';
 import 'package:translatoo/core/services/translation_service.dart';
+import 'package:translatoo/core/services/tts_service.dart';
 import 'package:translatoo/core/services/whisper_model_installer.dart';
 import 'package:translatoo/core/services/whisper_stt_engine.dart';
 import 'package:translatoo/core/theme/app_theme.dart';
@@ -48,6 +49,32 @@ class _SilentAudio implements SttAudioSource {
 
   @override
   Stream<double> get amplitude => const Stream<double>.empty();
+}
+
+/// Voz que nunca fala: estes testes não acionam o 🔊, e o flutter_tts real
+/// exigiria canal de plataforma.
+class _SilentTtsEngine implements TtsEngine {
+  @override
+  Stream<TtsEvent> get events => const Stream<TtsEvent>.empty();
+
+  @override
+  Future<bool> isLanguageAvailable(String ttsCode) async => true;
+
+  @override
+  Future<void> configure({
+    required String languageCode,
+    required double rate,
+    required double pitch,
+  }) async {}
+
+  @override
+  Future<void> speak(String text) async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
 }
 
 void main() {
@@ -96,6 +123,9 @@ void main() {
             assetKey: AppConstants.whisperFullModelAsset,
           ),
         ),
+        // Composição do M3 (F2.6): idem — existe para a shell não quebrar; a
+        // reprodução em si é coberta por tts_view_model_test.dart.
+        ttsService: TtsService(engine: _SilentTtsEngine()),
       ),
     );
     await tester.pumpAndSettle();

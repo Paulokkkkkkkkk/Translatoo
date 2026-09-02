@@ -44,6 +44,13 @@ class TranslatorViewModel extends ChangeNotifier {
   String? _blockedLanguageLabel;
   bool _isTruncated = false;
   bool _pendingAutoTranslate = false;
+
+  /// A próxima conclusão de tradução nasceu de um ditado (F2.7 / RF-M3-06)?
+  ///
+  /// Traduções vindas do microfone SEMPRE são lidas em voz alta, mesmo com o
+  /// autoplay desligado. O sinal é de consumo único: o `TtsViewModel` o lê
+  /// quando a tradução conclui e o limpa imediatamente.
+  bool _fromDictation = false;
   Timer? _debounce;
 
   // ── Estado observável ────────────────────────────────────────────────────
@@ -82,6 +89,9 @@ class TranslatorViewModel extends ChangeNotifier {
   /// Chamado a cada tecla. Aplica truncamento (RF-M1-04) e agenda tradução
   /// automática com debounce de 800 ms (RF-M1-03).
   void onTextChanged(String raw) {
+    // Digitação é gesto manual: apaga o sinal de ditado pendente (o
+    // `acceptDictatedText` o religa DEPOIS deste método, se for o caso).
+    _fromDictation = false;
     var value = raw;
     if (value.length > AppConstants.maxInputChars) {
       value = _truncateToLimit(value);
@@ -236,6 +246,7 @@ class TranslatorViewModel extends ChangeNotifier {
   void swapLanguages() {
     if (_status == TranslatorStatus.translating) return;
     _cancelDebounce();
+    _fromDictation = false;
     final language = _sourceLang;
     _sourceLang = _targetLang;
     _targetLang = language;
@@ -262,6 +273,7 @@ class TranslatorViewModel extends ChangeNotifier {
     }
     _sourceLang = language;
     _error = null;
+    _fromDictation = false;
     notifyListeners();
     if (_sourceText.trim().isNotEmpty) unawaited(_translate());
   }
@@ -276,6 +288,7 @@ class TranslatorViewModel extends ChangeNotifier {
     }
     _targetLang = language;
     _error = null;
+    _fromDictation = false;
     notifyListeners();
     if (_sourceText.trim().isNotEmpty) unawaited(_translate());
   }
@@ -289,6 +302,7 @@ class TranslatorViewModel extends ChangeNotifier {
     _translatedText = '';
     _isTruncated = false;
     _error = null;
+    _fromDictation = false;
     _status = TranslatorStatus.idle;
     notifyListeners();
   }
@@ -297,7 +311,21 @@ class TranslatorViewModel extends ChangeNotifier {
   /// imediata — nenhum ajuste na UI quando o STT entrar.
   void acceptDictatedText(String text) {
     onTextChanged(text);
+    // Sinal p/ o TTS (F2.7): o sinal é limpo por quem o consome (a conclusão
+    // da tradução), não aqui — um `onTextChanged` em seguida não pode apagá-lo.
+    _fromDictation = true;
     unawaited(translateNow());
+  }
+
+  /// Lê e LIMPA o sinal "esta tradução veio de um ditado" (consulta única).
+  ///
+  /// O consumo acontece na conclusão (`status == done`): se a tradução falhou,
+  /// o sinal morre no próximo gesto manual (digitar troca o texto e limpa em
+  /// [onTextChanged]), sem nunca virar fala fantasma de uma ação do usuário.
+  bool consumeDictatedFlag() {
+    final dictated = _fromDictation;
+    _fromDictation = false;
+    return dictated;
   }
 
   /// Devolve o campo de origem ao estado anterior a um ditado cancelado
