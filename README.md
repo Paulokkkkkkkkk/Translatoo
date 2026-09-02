@@ -10,7 +10,7 @@ download de pacotes de idiomas e, no futuro, modo híbrido (P2).
 |---|---|---|
 | **F0** | Fundação e design system (tokens, tema, i18n, storage, conectividade, shell responsivo, pipeline de qualidade) | ✅ **concluída** |
 | **F1** | Motor de tradução offline (ML Kit + Plano B TFLite) | ✅ **concluída** (F1.1–F1.9, tipografia CJK incluída) |
-| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **F2.0–F2.3 concluídas** (motor, modelos, flavors, `SttService`, permissão) · ⬜ F2.4–F2.9 |
+| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **F2.0–F2.4 concluídas** (motor, modelos, flavors, serviços e `SpeechViewModel`) · ⬜ F2.5–F2.9 |
 | F3 | Histórico, favoritos, ajustes, gerenciador de modelos | ⬜ — pode ser antecipada (depende de F1, não de F2) |
 | F4 | Polimento, modo híbrido, performance, release v1 | ⬜ |
 
@@ -216,6 +216,7 @@ gentileza.
 | F2.1b | [#21](../../issues/21) | Flavors `lite`/`full` com assets condicionais por flavor | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.2 | [#22](../../issues/22) | `SttService` — parciais refinados, pausa de 1,5 s e teto de 60 s | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.3 | [#23](../../issues/23) | Permissão de microfone nos três caminhos + chaves de uso do iOS | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F2.4 | [#24](../../issues/24) | `SpeechViewModel` — máquina de estados, RN-07 e restauração no cancelamento | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 

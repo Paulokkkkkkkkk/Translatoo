@@ -300,6 +300,16 @@ class TranslatorViewModel extends ChangeNotifier {
     unawaited(translateNow());
   }
 
+  /// Devolve o campo de origem ao estado anterior a um ditado cancelado
+  /// (AC-M2-4, F2.4). Ao contrário de [onTextChanged], NÃO agenda tradução:
+  /// desistir de falar não pode disparar trabalho nenhum.
+  void restoreSourceText(String text) {
+    _cancelDebounce();
+    _sourceText = text;
+    _isTruncated = false;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _cancelDebounce();
