@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -327,7 +328,12 @@ class _TranslateScreenState extends State<TranslateScreen> {
         // Botão de modo (§5.3): metade sobre o bloco de marca, metade sobre o
         // painel. Em modo voz o limite desce junto com o bloco.
         Positioned(
-          top: (voice ? voiceHeight : 0) - ModeButton.size / 2,
+          // O transbordo da §P4 só é possível quando o limite está DENTRO do
+          // corpo da tela — no modo voz ele está, e o botão cavalga a fronteira
+          // como o case desenha. No modo texto o limite é a própria borda do
+          // `body`, que recorta: `Clip.none` no Stack não vence o recorte do
+          // ancestral. Aí o botão encosta no topo em vez de ser cortado ao meio.
+          top: math.max(0.0, (voice ? voiceHeight : 0) - ModeButton.size / 2),
           right: AppSpacing.md,
           child: ModeButton(mode: _mode, onToggle: _toggleMode),
         ),
