@@ -58,6 +58,24 @@ abstract final class AppConstants {
   static const String whisperLiteModelAsset =
       'assets/models/whisper/ggml-tiny-q5_1.bin';
 
+  /// Modelo ggml REALMENTE presente neste binário (F2.1b).
+  ///
+  /// Ponto ÚNICO em que o flavor entra no código Dart: os `flavors:` do
+  /// pubspec decidem qual `.bin` é empacotado, e este `--dart-define` diz ao
+  /// app qual deles procurar. Vazio = build sem modelo embutido, e então o
+  /// ditado inteiro é omitido da UI (ver [hasEmbeddedSttModels]).
+  ///
+  /// Os comandos de build que definem cada valor estão no README.
+  static const String sttModelAsset = String.fromEnvironment(
+    'STT_MODEL_ASSET',
+    defaultValue: whisperFullModelAsset,
+  );
+
+  /// Este binário tem modelo de ditado? Lido uma única vez, em tempo de
+  /// compilação — a `ui/` NUNCA consulta flavor, só o ViewModel que expõe
+  /// esta capacidade (regra de camadas §4).
+  static const bool hasEmbeddedSttModels = sttModelAsset != '';
+
   /// Plano B (F1.4): motor alternativo TFLite p/ devices sem GMS. Enquanto a
   /// spike não embutir um modelo viável (docs/tflite_spike.md), permanece OFF.
   static const bool enableAlternativeEngine = false;

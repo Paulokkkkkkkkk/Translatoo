@@ -30,11 +30,30 @@ android {
         versionName = flutter.versionName
     }
 
+    // F2.1b - PRD 4.7: duas variantes de tamanho. O modelo ggml embarcado em
+    // cada uma e selecionado pelos `flavors:` do pubspec; aqui fica so a
+    // dimensao de build e o sufixo que permite as duas lado a lado no device.
+    flavorDimensions += "models"
+    productFlavors {
+        create("lite") {
+            dimension = "models"
+            applicationIdSuffix = ".lite"
+            versionNameSuffix = "-lite"
+        }
+        create("full") {
+            dimension = "models"
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }

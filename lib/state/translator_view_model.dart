@@ -65,6 +65,12 @@ class TranslatorViewModel extends ChangeNotifier {
   /// Flag interna do Plano B (F1.4) — UI exibe apenas badge discreto.
   bool get usesAlternativeEngine => _translation.usesAlternativeEngine;
 
+  /// Este build tem ditado? (F2.1b) A `ui/` pergunta ao ViewModel, nunca ao
+  /// flavor. Quando `false`, o 🎤 é OMITIDO da árvore de widgets na F2.5 —
+  /// não renderizado desabilitado: um controle permanentemente inerte é pior
+  /// que sua ausência.
+  bool get canDictate => AppConstants.hasEmbeddedSttModels;
+
   ModelState stateFor(Language language) => _models.stateFor(language);
 
   bool isPairReady() =>
