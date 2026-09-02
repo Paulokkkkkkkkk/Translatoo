@@ -22,6 +22,7 @@ import 'core/services/whisper_model_installer.dart';
 import 'core/services/whisper_stt_engine.dart';
 import 'core/theme/app_theme.dart';
 import 'state/connection_view_model.dart';
+import 'state/library_view_model.dart';
 import 'state/speech_view_model.dart';
 import 'state/translator_view_model.dart';
 import 'state/tts_view_model.dart';
@@ -129,6 +130,15 @@ class TranslatooApp extends StatelessWidget {
             pitch: context.read<StorageService>().settings.ttsPitch,
           ),
           update: (_, _, tts) => tts!,
+        ),
+        // Grava toda tradução concluída no histórico (M4). Como o TtsViewModel,
+        // observa o tradutor em vez de a UI ter de lembrar de chamar.
+        ChangeNotifierProxyProvider<TranslatorViewModel, LibraryViewModel>(
+          create: (context) => LibraryViewModel(
+            storageService: storage,
+            translatorViewModel: context.read<TranslatorViewModel>(),
+          ),
+          update: (_, _, library) => library!,
         ),
         // Depende do TranslatorViewModel para entregar o texto ditado: só
         // existe depois dele na lista de providers.
