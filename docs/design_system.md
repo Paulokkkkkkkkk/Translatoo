@@ -71,6 +71,18 @@ código da F0/F1 num único commit.
 > permaneceu como alias de `radiusMd`, e `test/architecture/radius_tokens_test.dart`
 > falha se algum raio cru voltar a `lib/`.
 
+**Curva assimétrica dos painéis.** Medindo `docs/design/home.webp`, os painéis
+têm **apenas o canto superior esquerdo arredondado** — o direito é reto. Não é
+descuido do case: os dois painéis medem igual (raio esquerdo ~38–40 dp, direito
+0). É a assimetria que faz o painel parecer deslizar por baixo do bloco de marca
+em vez de ser um cartão simétrico pousado na tela.
+
+> **Divergência registrada.** O case mede ~38–40 dp nesse canto; a tabela acima
+> define `radiusLg` = 28 dp, e a §P2 fala em "24–32 dp". A implementação usa
+> `radiusLg`, ficando dentro da faixa que o próprio documento declara. Subir a
+> escala para 40 dp é decisão de produto — mexeria em todo painel, sheet e
+> squircle do app.
+
 **Regra do squircle.** Botões quadrados de ícone (grid de modos, botão de modo no
 topo) usam lado ≥ 96 dp com `radiusLg`. Abaixo de 96 dp o raio grande deforma o
 quadrado em círculo; use `radiusMd`.
@@ -122,11 +134,11 @@ De cima para baixo, quatro faixas:
 └─────────────────────────────────────┘
 ```
 
-**Proporções observadas** (base 100% da altura útil):
+**Proporções medidas** em `docs/design/home.webp` (prancha do modo voz):
 
 | Faixa | Altura |
 |---|---|
-| Bloco de marca | 12–15% (modo texto) · até 45% (modo voz, com waveform) |
+| Bloco de marca | **40%** medidos no modo voz · 12–15% no modo texto |
 | Cards | o que sobrar, com o card de destino crescendo mais |
 | Pílula de idiomas | 64 dp fixos + safe area |
 
@@ -497,11 +509,15 @@ na zona do polegar dentro da tela onde ela faz sentido, e não força uma gaveta
 que no case existe porque aquele app tem 6 modos e muitas telas, e o Translatoo
 tem 3.
 
-> **DECIDIDA — opção C** (2026-09-02, product owner). A `LanguageBar` é conteúdo
-> da tela Traduzir: aparece nela e some em Histórico e Ajustes. A `HomeScreen` e
-> o `home_shell_test.dart` da F0.8 seguem intactos, e a barra permanece na zona
-> do polegar dentro da tela onde faz sentido. Implementada em
-> `lib/ui/widgets/language_bar.dart`.
+> **DECIDIDA — opção A** (2026-09-02, product owner). A `NavigationBar` saiu; os
+> três destinos vivem numa **gaveta** aberta pelo ☰ do canto superior esquerdo,
+> como no case. O rodapé fica inteiro para a `LanguageBar` de largura total.
+>
+> A opção C chegou a ser decidida e implementada horas antes, e foi **revertida**
+> na mesma sessão ao confrontar o case: a gaveta é o que o desenho pede. O custo
+> previsto na tabela se confirmou — `HomeScreen` e `home_shell_test.dart` foram
+> reescritos, e **Histórico e Ajustes perderam descoberta**: agora exigem dois
+> toques e não têm affordance permanente na tela.
 
 ---
 

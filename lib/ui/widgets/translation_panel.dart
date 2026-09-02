@@ -21,9 +21,10 @@ enum PanelRole {
 ///
 /// - **Sangra até a borda** da tela. Painel não tem margem lateral; só o
 ///   conteúdo tem padding (§4).
-/// - **Topo arredondado, base reta.** Empilhados sem gap, o painel seguinte
-///   cobre a borda inferior do anterior — é isso que produz a "pilha de
-///   painéis" da §P1 sem nenhum offset negativo.
+/// - **Canto superior esquerdo arredondado, os outros três retos.** Empilhados
+///   sem gap, o painel seguinte cobre a borda inferior do anterior — é isso que
+///   produz a "pilha de painéis" da §P1 sem nenhum offset negativo. A
+///   assimetria foi medida no case, não estimada.
 /// - **Sem borda.** Hierarquia vem da superfície e da sombra difusa, nunca de
 ///   contorno (§P3).
 ///
@@ -65,8 +66,12 @@ class TranslationPanel extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: surface,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(AppSpacing.radiusLg),
+        // CURVA ASSIMÉTRICA — medida no case (`docs/design/home.webp`): canto
+        // superior ESQUERDO arredondado, direito RETO. É essa assimetria que
+        // faz o painel parecer deslizar por baixo do bloco de marca, em vez de
+        // um cartão simétrico pousado na tela. Simetrizar mata o efeito.
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(AppSpacing.radiusLg),
         ),
         // Plano 2 (§3): difusa, y+2, blur 16, ~6% preto. A sombra existe para
         // descolar o painel do fundo, não para ser vista.
