@@ -8,7 +8,7 @@ import '../../models/app_settings.dart';
 import '../../models/language.dart';
 import '../../state/library_view_model.dart';
 import '../../state/settings_view_model.dart';
-import 'debug_models_screen.dart';
+import 'model_manager_screen.dart';
 
 /// Tela Ajustes (F3.3 · PRD §3.5).
 ///
@@ -81,9 +81,11 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             title: Text(t.settingsManageModels),
             trailing: const Icon(Icons.chevron_right),
+            // F3.4: o Gerenciador de Modelos de produto substitui a tela de
+            // debug da F1.3 neste destino.
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => const DebugModelsScreen(),
+                builder: (_) => const ModelManagerScreen(),
               ),
             ),
           ),
