@@ -2,8 +2,9 @@
     <!-- INTERNET: somente para download de pacotes de idiomas (F1) e modo
          híbrido (P2). Nenhuma funcionalidade P0 depende de rede (RN-02). -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- RECORD_AUDIO: ditado offline Vosk (M2). Declarado desde a fundação
-         conforme plano F0.1; só é solicitado ao usuário a partir da F2. -->
+    <!-- RECORD_AUDIO: ditado offline via whisper.cpp (M2; o Vosk citado aqui
+         até a F2.0 foi descartado pela spike). Declarado desde a fundação
+         conforme plano F0.1; solicitado ao usuário a partir da F2.3. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application

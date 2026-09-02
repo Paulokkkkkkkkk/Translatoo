@@ -64,6 +64,12 @@ abstract final class AppStrings {
   String get buttonTranslate;
   String get actionDictate;
   String get actionListen;
+
+  // Permissão de microfone (F2.3 — diálogo explicativo antes de pedir ao SO)
+  String get micRationaleTitle;
+  String get micRationaleBody;
+  String get micBlockedBody;
+
   String get comingSoon;
   String get feedbackCopied;
   String get modelSizeEstimate;
@@ -167,6 +173,16 @@ final class _PtStrings extends AppStrings {
   String get buttonTranslate => 'Traduzir';
   @override
   String get actionDictate => 'Ditar';
+  @override
+  String get micRationaleTitle => 'Usar o microfone?';
+  @override
+  String get micRationaleBody =>
+      'Sua fala é transcrita no próprio aparelho. Nenhum áudio é gravado nem '
+      'enviado para lugar nenhum.';
+  @override
+  String get micBlockedBody =>
+      'O acesso ao microfone está bloqueado nas configurações do sistema. '
+      'Você pode liberá-lo por lá e voltar — o resto do app segue funcionando.';
   @override
   String get actionListen => 'Ouvir tradução';
   @override
@@ -295,6 +311,16 @@ final class _EnStrings extends AppStrings {
   @override
   String get actionDictate => 'Dictate';
   @override
+  String get micRationaleTitle => 'Use the microphone?';
+  @override
+  String get micRationaleBody =>
+      'Your speech is transcribed on this device. No audio is recorded or '
+      'sent anywhere.';
+  @override
+  String get micBlockedBody =>
+      'Microphone access is blocked in system settings. You can allow it there '
+      'and come back — the rest of the app keeps working.';
+  @override
   String get actionListen => 'Listen to translation';
   @override
   String get comingSoon => 'coming in the next phase';
@@ -419,6 +445,12 @@ final class _ZhStrings extends AppStrings {
   String get buttonTranslate => '翻译';
   @override
   String get actionDictate => '语音输入';
+  @override
+  String get micRationaleTitle => '使用麦克风？';
+  @override
+  String get micRationaleBody => '语音在本机转写，不录音，也不会上传到任何地方。';
+  @override
+  String get micBlockedBody => '系统设置中已禁止访问麦克风。您可以在设置中开启后返回，应用的其余功能不受影响。';
   @override
   String get actionListen => '朗读译文';
   @override

@@ -26,6 +26,10 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>O Translatoo usa o microfone para transcrever sua fala. O áudio é processado no aparelho e nunca sai dele.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>A transcrição da sua fala acontece localmente, no próprio aparelho.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
