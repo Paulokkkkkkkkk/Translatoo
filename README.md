@@ -10,7 +10,7 @@ download de pacotes de idiomas e, no futuro, modo híbrido (P2).
 |---|---|---|
 | **F0** | Fundação e design system (tokens, tema, i18n, storage, conectividade, shell responsivo, pipeline de qualidade) | ✅ **concluída** |
 | **F1** | Motor de tradução offline (ML Kit + Plano B TFLite) | ✅ **concluída** (F1.1–F1.9, tipografia CJK incluída) |
-| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **F2.0–F2.1b concluídas** (motor `whisper_ggml`, modelos e flavors) · ⬜ F2.2–F2.9 |
+| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **F2.0–F2.2 concluídas** (motor, modelos, flavors, `SttService`) · ⬜ F2.3–F2.9 |
 | F3 | Histórico, favoritos, ajustes, gerenciador de modelos | ⬜ — pode ser antecipada (depende de F1, não de F2) |
 | F4 | Polimento, modo híbrido, performance, release v1 | ⬜ |
 
@@ -164,6 +164,18 @@ leitura tolerante a JSON corrompido, migrações por `schemaVersion`.
   Mandarim renderiza sem tofu em Androids sem pacote de idioma chinês
   (risco R8 fechado). Origem, licença e comando de regeração em
   `docs/cjk_font.md`; regenerar com `bash scripts/build_cjk_subset.sh`.
+- **Captura de microfone ausente da lista fechada (F2.2)** — a spike F2.0
+  escolheu o motor (`whisper_ggml`) mas não a **fonte de áudio**: o pacote
+  transcreve um `Stream<Uint8List>` de PCM16 16 kHz e não abre o microfone. Não
+  há `record`/`flutter_sound` entre as dependências. O `SttService` foi
+  entregue programando contra a interface `SttAudioSource`, do mesmo jeito que
+  a F1.1 isolou o motor de tradução — todas as regras (parciais, pausa de
+  1,5 s, teto de 60 s, `ERR_STT_ENGINE`) estão implementadas e testadas. Falta
+  **uma implementação real de `SttAudioSource`**, que exige reabrir a lista
+  fechada; enquanto isso o entregável "transcrição real no app de debug" da
+  F2.2 permanece em aberto.
+- **`lite` estoura o orçamento de 40 MB (F2.1b)** — medido em 92,4 MB. Ver a
+  composição do APK na seção de flavors.
 
 ## Nota de ambiente (risco R6)
 
@@ -197,6 +209,7 @@ gentileza.
 | F0.10 | [#45](../../issues/45) | Design system extraído do case + troca da paleta para Azul & Branco | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.1 | [#20](../../issues/20) | Modelos ggml de STT embutidos + instalador para o diretório de dados | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.1b | [#21](../../issues/21) | Flavors `lite`/`full` com assets condicionais por flavor | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F2.2 | [#22](../../issues/22) | `SttService` — parciais refinados, pausa de 1,5 s e teto de 60 s | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 
