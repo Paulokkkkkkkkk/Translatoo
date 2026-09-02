@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_strings.dart';
 import '../../state/speech_view_model.dart';
+import 'waveform.dart';
 
 /// Folha de escuta (F2.5 · `docs/design_system.md` §5.9).
 ///
@@ -13,9 +14,9 @@ import '../../state/speech_view_model.dart';
 /// Assim o auto-stop de 60 s e a pausa de 1,5 s fecham a folha sem que a UI
 /// precise saber que existem (AC-M2-1 e AC-M2-3).
 ///
-/// **Não desenha waveform.** A §5.7 proíbe onda sem amplitude real, e o projeto
-/// não tem captura de áudio; o indicador de escuta é neutro, como a própria
-/// §5.7 determina.
+/// A onda usa **nível real** de microfone (F2.2b): quando a fonte não sabe
+/// medir, `hasAudioLevel` fica falso e nada é desenhado — a §5.7 proíbe suprir
+/// a falta com movimento aleatório.
 class ListeningSheet extends StatelessWidget {
   const ListeningSheet._();
 
@@ -61,7 +62,12 @@ class ListeningSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _Header(listening: listening, elapsed: vm.elapsedSeconds),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.md),
+                if (vm.hasAudioLevel)
+                  Waveform(levels: vm.waveformLevels)
+                else
+                  const WaveformPlaceholder(),
+                const SizedBox(height: AppSpacing.md),
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxHeight: MediaQuery.sizeOf(context).height * 0.3,

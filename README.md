@@ -10,7 +10,7 @@ download de pacotes de idiomas e, no futuro, modo híbrido (P2).
 |---|---|---|
 | **F0** | Fundação e design system (tokens, tema, i18n, storage, conectividade, shell responsivo, pipeline de qualidade) | ✅ **concluída** |
 | **F1** | Motor de tradução offline (ML Kit + Plano B TFLite) | ✅ **concluída** (F1.1–F1.9, tipografia CJK incluída) |
-| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **F2.0–F2.5 concluídas** (ditado completo, menos a captura de áudio) · ⬜ F2.6–F2.9 (TTS) |
+| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **ditado completo** (F2.0–F2.5 + F2.2b) · ⬜ F2.6–F2.9 (TTS) |
 | F3 | Histórico, favoritos, ajustes, gerenciador de modelos | ⬜ — pode ser antecipada (depende de F1, não de F2) |
 | F4 | Polimento, modo híbrido, performance, release v1 | ⬜ |
 
@@ -164,24 +164,17 @@ leitura tolerante a JSON corrompido, migrações por `schemaVersion`.
   Mandarim renderiza sem tofu em Androids sem pacote de idioma chinês
   (risco R8 fechado). Origem, licença e comando de regeração em
   `docs/cjk_font.md`; regenerar com `bash scripts/build_cjk_subset.sh`.
-- **Captura de microfone ausente da lista fechada (F2.2)** — a spike F2.0
-  escolheu o motor (`whisper_ggml`) mas não a **fonte de áudio**: o pacote
-  transcreve um `Stream<Uint8List>` de PCM16 16 kHz e não abre o microfone. Não
-  há `record`/`flutter_sound` entre as dependências. O `SttService` foi
-  entregue programando contra a interface `SttAudioSource`, do mesmo jeito que
-  a F1.1 isolou o motor de tradução — todas as regras (parciais, pausa de
-  1,5 s, teto de 60 s, `ERR_STT_ENGINE`) estão implementadas e testadas. Falta
-  **uma implementação real de `SttAudioSource`**, que exige reabrir a lista
-  fechada; enquanto isso o entregável "transcrição real no app de debug" da
-  F2.2 permanece em aberto. Na F2.5 isso virou visível: o app monta uma
-  `UnavailableAudioSource`, e tocar no 🎤 leva ao estado de erro `ERR_STT_ENGINE`
-  em vez de escutar. Falha alto de propósito — esconder o botão faria
-  `canDictate` mentir sobre o flavor, já que o modelo **está** embutido.
-- **Waveform do ditado não foi implementada (F2.5)** — a issue #25 pede onda
-  animada, mas a §5.7 do design system proíbe onda sem amplitude real
-  ("onda falsa em app de ditado é mentira de interface") e não há captura de
-  áudio de onde tirar nível. Ficou o indicador de escuta neutro que a própria
-  §5.7 manda usar; a onda entra junto com a fonte de áudio.
+- ~~**Captura de microfone ausente da lista fechada (F2.2)**~~ — **resolvido na
+  F2.2b**: a spike F2.0 escolheu o motor e não a fonte de áudio, e o
+  `SttService` ficou programando contra a interface `SttAudioSource` sem
+  implementação real. `record` 7.1.1 entrou na lista fechada — sem colidir com
+  o `permission_handler`, que foi o que matou o `vosk_flutter`. Critérios e
+  decisão em `docs/audio_source.md`.
+- ~~**Waveform do ditado não foi implementada (F2.5)**~~ — **resolvido na
+  F2.2b**: a §5.7 proíbe onda sem amplitude real, e a F2.5 entregou um
+  indicador neutro por não haver captura de áudio. Com o `record` há nível real
+  de microfone, e a onda foi implementada medindo — o conflito com a §5.7
+  deixou de existir.
 - **`lite` estoura o orçamento de 40 MB (F2.1b)** — medido em 92,4 MB. Ver a
   composição do APK na seção de flavors.
 - **Textos de permissão do iOS só existem em pt-BR (F2.3)** — o
@@ -226,6 +219,7 @@ gentileza.
 | F2.3 | [#23](../../issues/23) | Permissão de microfone nos três caminhos + chaves de uso do iOS | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.4 | [#24](../../issues/24) | `SpeechViewModel` — máquina de estados, RN-07 e restauração no cancelamento | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.5 | [#25](../../issues/25) | UI do ditado — botão de microfone e folha de escuta | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F2.2b | [#52](../../issues/52) | Captura de microfone (`record`) + onda com nível real | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 

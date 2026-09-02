@@ -2057,6 +2057,198 @@
       "_origin": "ast"
     },
     {
+      "id": "lib_core_services_record_audio_source",
+      "label": "record_audio_source.dart",
+      "file_type": "code",
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_record_audio_source_recordaudiosource",
+      "label": "RecordAudioSource",
+      "file_type": "code",
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_record_audio_source_recorder",
+      "label": "_recorder",
+      "file_type": "code",
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "audiorecorder",
+      "label": "AudioRecorder",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_record_audio_source_amplitude",
+      "label": "_amplitude",
+      "file_type": "code",
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "streamcontroller",
+      "label": "StreamController",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_record_audio_source_amplitudesub",
+      "label": "_amplitudeSub",
+      "file_type": "code",
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "streamsubscription",
+      "label": "StreamSubscription",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_record_audio_source_floordb",
+      "label": "_floorDb",
+      "file_type": "code",
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "static_const_double",
+      "label": "static const double",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_record_audio_source_amplitudeinterval",
+      "label": "_amplitudeInterval",
+      "file_type": "code",
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "static_const_duration",
+      "label": "static const Duration",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "stream",
+      "label": "Stream",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_record_audio_source_start",
+      "label": "start",
+      "file_type": "code",
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_record_audio_source_stop",
+      "label": "stop",
+      "file_type": "code",
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_record_audio_source_listentoamplitude",
+      "label": "_listenToAmplitude",
+      "file_type": "code",
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_record_audio_source_normalize",
+      "label": "normalize",
+      "file_type": "code",
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_record_audio_source_dispose",
+      "label": "dispose",
+      "file_type": "code",
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_async",
+      "label": "dart:async",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_math",
+      "label": "dart:math",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_typed_data",
+      "label": "dart:typed_data",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_record_record_dart",
+      "label": "package:record/record.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_exception_dart",
+      "label": "app_exception.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "stt_service_dart",
+      "label": "stt_service.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "lib_core_services_storage_service",
       "label": "storage_service.dart",
       "file_type": "code",
@@ -2441,8 +2633,8 @@
       "_origin": "ast"
     },
     {
-      "id": "lib_core_services_stt_service_partials",
-      "label": "partials",
+      "id": "lib_core_services_stt_service_amplitude",
+      "label": "amplitude",
       "file_type": "code",
       "source_file": "lib/core/services/stt_service.dart",
       "source_location": null,
@@ -2453,6 +2645,14 @@
       "label": "Stream",
       "file_type": "code",
       "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_stt_service_partials",
+      "label": "partials",
+      "file_type": "code",
+      "source_file": "lib/core/services/stt_service.dart",
       "source_location": null,
       "_origin": "ast"
     },
@@ -3217,62 +3417,6 @@
       "_origin": "ast"
     },
     {
-      "id": "lib_core_services_unavailable_audio_source",
-      "label": "unavailable_audio_source.dart",
-      "file_type": "code",
-      "source_file": "lib/core/services/unavailable_audio_source.dart",
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "lib_core_services_unavailable_audio_source_unavailableaudiosource",
-      "label": "UnavailableAudioSource",
-      "file_type": "code",
-      "source_file": "lib/core/services/unavailable_audio_source.dart",
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "lib_core_services_unavailable_audio_source_start",
-      "label": "start",
-      "file_type": "code",
-      "source_file": "lib/core/services/unavailable_audio_source.dart",
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "lib_core_services_unavailable_audio_source_stop",
-      "label": "stop",
-      "file_type": "code",
-      "source_file": "lib/core/services/unavailable_audio_source.dart",
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "dart_typed_data",
-      "label": "dart:typed_data",
-      "file_type": "code",
-      "source_file": null,
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "app_exception_dart",
-      "label": "app_exception.dart",
-      "file_type": "code",
-      "source_file": null,
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "stt_service_dart",
-      "label": "stt_service.dart",
-      "file_type": "code",
-      "source_file": null,
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
       "id": "lib_core_services_whisper_model_installer",
       "label": "whisper_model_installer.dart",
       "file_type": "code",
@@ -3889,6 +4033,14 @@
       "_origin": "ast"
     },
     {
+      "id": "core_services_record_audio_source_dart",
+      "label": "core/services/record_audio_source.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "core_services_storage_service_dart",
       "label": "core/services/storage_service.dart",
       "file_type": "code",
@@ -3915,14 +4067,6 @@
     {
       "id": "core_services_translation_service_dart",
       "label": "core/services/translation_service.dart",
-      "file_type": "code",
-      "source_file": null,
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "core_services_unavailable_audio_source_dart",
-      "label": "core/services/unavailable_audio_source.dart",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -4705,6 +4849,14 @@
       "_origin": "ast"
     },
     {
+      "id": "lib_state_speech_view_model_amplitudesub",
+      "label": "_amplitudeSub",
+      "file_type": "code",
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "lib_state_speech_view_model_elapsedtimer",
       "label": "_elapsedTimer",
       "file_type": "code",
@@ -4777,6 +4929,38 @@
       "_origin": "ast"
     },
     {
+      "id": "lib_state_speech_view_model_waveformbars",
+      "label": "_waveformBars",
+      "file_type": "code",
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "static_const_int",
+      "label": "static const int",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_state_speech_view_model_levels",
+      "label": "_levels",
+      "file_type": "code",
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "list",
+      "label": "List",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "speechstate_get",
       "label": "SpeechState get",
       "file_type": "code",
@@ -4809,6 +4993,30 @@
       "_origin": "ast"
     },
     {
+      "id": "lib_state_speech_view_model_waveformlevels",
+      "label": "waveformLevels",
+      "file_type": "code",
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_state_speech_view_model_hasaudiolevel",
+      "label": "hasAudioLevel",
+      "file_type": "code",
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "bool_get",
+      "label": "bool get",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "suggestedaction_get",
       "label": "SuggestedAction get",
       "file_type": "code",
@@ -4821,14 +5029,6 @@
       "label": "isDictating",
       "file_type": "code",
       "source_file": "lib/state/speech_view_model.dart",
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "bool_get",
-      "label": "bool get",
-      "file_type": "code",
-      "source_file": null,
       "source_location": null,
       "_origin": "ast"
     },
@@ -4899,6 +5099,22 @@
     {
       "id": "lib_state_speech_view_model_onresult",
       "label": "_onResult",
+      "file_type": "code",
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_state_speech_view_model_onamplitude",
+      "label": "_onAmplitude",
+      "file_type": "code",
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_state_speech_view_model_resetlevels",
+      "label": "_resetLevels",
       "file_type": "code",
       "source_file": "lib/state/speech_view_model.dart",
       "source_location": null,
@@ -6641,6 +6857,14 @@
       "_origin": "ast"
     },
     {
+      "id": "waveform_dart",
+      "label": "waveform.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "lib_ui_widgets_mic_button",
       "label": "mic_button.dart",
       "file_type": "code",
@@ -7165,6 +7389,166 @@
       "label": "build",
       "file_type": "code",
       "source_file": "lib/ui/widgets/translation_card.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_flutter_material_dart",
+      "label": "package:flutter/material.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "core_constants_app_spacing_dart",
+      "label": "../../core/constants/app_spacing.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform",
+      "label": "waveform.dart",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform_waveform",
+      "label": "Waveform",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "statelesswidget",
+      "label": "StatelessWidget",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform_waveformpainter",
+      "label": "_WaveformPainter",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "custompainter",
+      "label": "CustomPainter",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform_waveformplaceholder",
+      "label": "WaveformPlaceholder",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform_levels",
+      "label": "levels",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "list",
+      "label": "List",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform_height",
+      "label": "height",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform_color",
+      "label": "color",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "color",
+      "label": "Color",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform_barwidth",
+      "label": "_barWidth",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "static_const_double",
+      "label": "static const double",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform_gap",
+      "label": "_gap",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform_build",
+      "label": "build",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform_paint",
+      "label": "paint",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform_shouldrepaint",
+      "label": "shouldRepaint",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_ui_widgets_waveform_samelevels",
+      "label": "_sameLevels",
+      "file_type": "code",
+      "source_file": "lib/ui/widgets/waveform.dart",
       "source_location": null,
       "_origin": "ast"
     },
@@ -7889,6 +8273,38 @@
       "_origin": "ast"
     },
     {
+      "id": "test_services_record_audio_source_test",
+      "label": "record_audio_source_test.dart",
+      "file_type": "code",
+      "source_file": "test/services/record_audio_source_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_record_audio_source_test_main",
+      "label": "main",
+      "file_type": "code",
+      "source_file": "test/services/record_audio_source_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_flutter_test_flutter_test_dart",
+      "label": "package:flutter_test/flutter_test.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_translatoo_core_services_record_audio_source_dart",
+      "label": "package:translatoo/core/services/record_audio_source.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_services_storage_service_test",
       "label": "storage_service_test.dart",
       "file_type": "code",
@@ -8057,6 +8473,14 @@
       "_origin": "ast"
     },
     {
+      "id": "level",
+      "label": "Level",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_services_stt_service_test_installedstorage",
       "label": "_InstalledStorage",
       "file_type": "code",
@@ -8193,6 +8617,14 @@
       "_origin": "ast"
     },
     {
+      "id": "test_services_stt_service_test_amplitude",
+      "label": "_amplitude",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_services_stt_service_test_startcount",
       "label": "startCount",
       "file_type": "code",
@@ -8307,6 +8739,14 @@
     {
       "id": "test_services_stt_service_test_stop",
       "label": "stop",
+      "file_type": "code",
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_stt_service_test_emitlevel",
+      "label": "emitLevel",
       "file_type": "code",
       "source_file": "test/services/stt_service_test.dart",
       "source_location": null,
@@ -8929,6 +9369,14 @@
       "_origin": "ast"
     },
     {
+      "id": "level",
+      "label": "Level",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_state_speech_view_model_test_installedstorage",
       "label": "_InstalledStorage",
       "file_type": "code",
@@ -9027,6 +9475,14 @@
     {
       "id": "test_state_speech_view_model_test_pcm",
       "label": "_pcm",
+      "file_type": "code",
+      "source_file": "test/state/speech_view_model_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_state_speech_view_model_test_amplitude",
+      "label": "_amplitude",
       "file_type": "code",
       "source_file": "test/state/speech_view_model_test.dart",
       "source_location": null,
@@ -9185,6 +9641,22 @@
       "_origin": "ast"
     },
     {
+      "id": "test_state_speech_view_model_test_audio",
+      "label": "audio",
+      "file_type": "code",
+      "source_file": "test/state/speech_view_model_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "fakeaudio",
+      "label": "_FakeAudio",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_state_speech_view_model_test_startsession",
       "label": "startSession",
       "file_type": "code",
@@ -9211,6 +9683,14 @@
     {
       "id": "test_state_speech_view_model_test_stop",
       "label": "stop",
+      "file_type": "code",
+      "source_file": "test/state/speech_view_model_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_state_speech_view_model_test_emitlevel",
+      "label": "emitLevel",
       "file_type": "code",
       "source_file": "test/state/speech_view_model_test.dart",
       "source_location": null,
@@ -9961,6 +10441,14 @@
       "_origin": "ast"
     },
     {
+      "id": "test_widgets_home_shell_test_silentaudio",
+      "label": "_SilentAudio",
+      "file_type": "code",
+      "source_file": "test/widgets/home_shell_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_widgets_home_shell_test_stubbackend",
       "label": "_StubBackend",
       "file_type": "code",
@@ -10025,6 +10513,14 @@
       "_origin": "ast"
     },
     {
+      "id": "test_widgets_home_shell_test_amplitude",
+      "label": "amplitude",
+      "file_type": "code",
+      "source_file": "test/widgets/home_shell_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_widgets_home_shell_test_id",
       "label": "id",
       "file_type": "code",
@@ -10043,6 +10539,22 @@
     {
       "id": "test_widgets_home_shell_test_checkconnectivity",
       "label": "checkConnectivity",
+      "file_type": "code",
+      "source_file": "test/widgets/home_shell_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_widgets_home_shell_test_start",
+      "label": "start",
+      "file_type": "code",
+      "source_file": "test/widgets/home_shell_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_widgets_home_shell_test_stop",
+      "label": "stop",
       "file_type": "code",
       "source_file": "test/widgets/home_shell_test.dart",
       "source_location": null,
@@ -10107,6 +10619,14 @@
     {
       "id": "dart_async",
       "label": "dart:async",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_typed_data",
+      "label": "dart:typed_data",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -10217,14 +10737,6 @@
       "_origin": "ast"
     },
     {
-      "id": "package_translatoo_core_services_unavailable_audio_source_dart",
-      "label": "package:translatoo/core/services/unavailable_audio_source.dart",
-      "file_type": "code",
-      "source_file": null,
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
       "id": "package_translatoo_core_services_whisper_model_installer_dart",
       "label": "package:translatoo/core/services/whisper_model_installer.dart",
       "file_type": "code",
@@ -10321,6 +10833,14 @@
       "_origin": "ast"
     },
     {
+      "id": "level",
+      "label": "Level",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_widgets_mic_button_test_grantedpermissionapi",
       "label": "_GrantedPermissionApi",
       "file_type": "code",
@@ -10409,6 +10929,14 @@
       "_origin": "ast"
     },
     {
+      "id": "test_widgets_mic_button_test_amplitude",
+      "label": "_amplitude",
+      "file_type": "code",
+      "source_file": "test/widgets/mic_button_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_widgets_mic_button_test_bytes",
       "label": "_bytes",
       "file_type": "code",
@@ -10489,6 +11017,22 @@
       "_origin": "ast"
     },
     {
+      "id": "test_widgets_mic_button_test_audio",
+      "label": "audio",
+      "file_type": "code",
+      "source_file": "test/widgets/mic_button_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "fakeaudio",
+      "label": "_FakeAudio",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_widgets_mic_button_test_startsession",
       "label": "startSession",
       "file_type": "code",
@@ -10515,6 +11059,14 @@
     {
       "id": "test_widgets_mic_button_test_stop",
       "label": "stop",
+      "file_type": "code",
+      "source_file": "test/widgets/mic_button_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_widgets_mic_button_test_emitlevel",
+      "label": "emitLevel",
       "file_type": "code",
       "source_file": "test/widgets/mic_button_test.dart",
       "source_location": null,
@@ -10833,6 +11385,14 @@
       "_origin": "ast"
     },
     {
+      "id": "package_translatoo_ui_widgets_waveform_dart",
+      "label": "package:translatoo/ui/widgets/waveform.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "uint8list",
       "label": "Uint8List",
       "file_type": "code",
@@ -10867,6 +11427,14 @@
     {
       "id": "test_widgets_translate_screen_test_gateapi",
       "label": "_GateApi",
+      "file_type": "code",
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_widgets_translate_screen_test_silentaudio",
+      "label": "_SilentAudio",
       "file_type": "code",
       "source_file": "test/widgets/translate_screen_test.dart",
       "source_location": null,
@@ -10915,6 +11483,22 @@
     {
       "id": "map",
       "label": "Map",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_widgets_translate_screen_test_amplitude",
+      "label": "amplitude",
+      "file_type": "code",
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "stream",
+      "label": "Stream",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -11009,6 +11593,22 @@
       "_origin": "ast"
     },
     {
+      "id": "test_widgets_translate_screen_test_start",
+      "label": "start",
+      "file_type": "code",
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_widgets_translate_screen_test_stop",
+      "label": "stop",
+      "file_type": "code",
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_widgets_translate_screen_test_main",
       "label": "main",
       "file_type": "code",
@@ -11019,6 +11619,14 @@
     {
       "id": "dart_async",
       "label": "dart:async",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "dart_typed_data",
+      "label": "dart:typed_data",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -11091,14 +11699,6 @@
     {
       "id": "package_translatoo_core_services_translation_service_dart",
       "label": "package:translatoo/core/services/translation_service.dart",
-      "file_type": "code",
-      "source_file": null,
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "package_translatoo_core_services_unavailable_audio_source_dart",
-      "label": "package:translatoo/core/services/unavailable_audio_source.dart",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -19959,6 +20559,287 @@
       "_origin": "ast"
     },
     {
+      "source": "lib_core_services_record_audio_source",
+      "target": "lib_core_services_record_audio_source_recordaudiosource",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source_recordaudiosource",
+      "target": "lib_core_services_stt_service_sttaudiosource",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "lib_core_services_record_audio_source_recorder",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "audiorecorder",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "lib_core_services_record_audio_source_amplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "streamcontroller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "lib_core_services_record_audio_source_amplitudesub",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "streamsubscription",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "lib_core_services_record_audio_source_floordb",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "static_const_double",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "lib_core_services_record_audio_source_amplitudeinterval",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "static_const_duration",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "lib_core_services_record_audio_source_amplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "stream",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "lib_core_services_record_audio_source_start",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "lib_core_services_record_audio_source_stop",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "lib_core_services_record_audio_source_listentoamplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "lib_core_services_record_audio_source_normalize",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "lib_core_services_record_audio_source_dispose",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "dart_async",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "dart_math",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "dart_typed_data",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "package_record_record_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "app_exception_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_record_audio_source",
+      "target": "stt_service_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/record_audio_source.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
       "source": "lib_core_services_storage_service",
       "target": "lib_core_services_storage_service_storageservice",
       "relation": "defines",
@@ -20555,6 +21436,29 @@
     },
     {
       "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_amplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "stream",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
       "target": "lib_core_services_stt_service_partials",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -20671,6 +21575,29 @@
     {
       "source": "lib_core_services_stt_service",
       "target": "lib_core_services_stt_service_results",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "stream",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/stt_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_stt_service",
+      "target": "lib_core_services_stt_service_amplitude",
       "relation": "defines",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -21809,83 +22736,6 @@
       "_origin": "ast"
     },
     {
-      "source": "lib_core_services_unavailable_audio_source",
-      "target": "lib_core_services_unavailable_audio_source_unavailableaudiosource",
-      "relation": "defines",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/services/unavailable_audio_source.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_core_services_unavailable_audio_source_unavailableaudiosource",
-      "target": "lib_core_services_stt_service_sttaudiosource",
-      "relation": "implements",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/services/unavailable_audio_source.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_core_services_unavailable_audio_source",
-      "target": "lib_core_services_unavailable_audio_source_start",
-      "relation": "defines",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/services/unavailable_audio_source.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_core_services_unavailable_audio_source",
-      "target": "lib_core_services_unavailable_audio_source_stop",
-      "relation": "defines",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/services/unavailable_audio_source.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_core_services_unavailable_audio_source",
-      "target": "dart_typed_data",
-      "relation": "imports",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/services/unavailable_audio_source.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_core_services_unavailable_audio_source",
-      "target": "app_exception_dart",
-      "relation": "imports",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/services/unavailable_audio_source.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_core_services_unavailable_audio_source",
-      "target": "stt_service_dart",
-      "relation": "imports",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/services/unavailable_audio_source.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
       "source": "lib_core_services_whisper_model_installer",
       "target": "lib_core_services_whisper_model_installer_whisperassetstorage",
       "relation": "defines",
@@ -22926,6 +23776,17 @@
     },
     {
       "source": "lib_main",
+      "target": "core_services_record_audio_source_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/main.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_main",
       "target": "core_services_storage_service_dart",
       "relation": "imports",
       "confidence": "EXTRACTED",
@@ -22960,17 +23821,6 @@
     {
       "source": "lib_main",
       "target": "core_services_translation_service_dart",
-      "relation": "imports",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/main.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_main",
-      "target": "core_services_unavailable_audio_source_dart",
       "relation": "imports",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -24249,6 +25099,29 @@
     },
     {
       "source": "lib_state_speech_view_model",
+      "target": "lib_state_speech_view_model_amplitudesub",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_speech_view_model",
+      "target": "streamsubscription",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_speech_view_model",
       "target": "lib_state_speech_view_model_elapsedtimer",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -24385,6 +25258,52 @@
     },
     {
       "source": "lib_state_speech_view_model",
+      "target": "lib_state_speech_view_model_waveformbars",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_speech_view_model",
+      "target": "static_const_int",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_speech_view_model",
+      "target": "lib_state_speech_view_model_levels",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_speech_view_model",
+      "target": "list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_speech_view_model",
       "target": "lib_state_speech_view_model_state",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -24489,6 +25408,52 @@
     {
       "source": "lib_state_speech_view_model",
       "target": "errorcode_get",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_speech_view_model",
+      "target": "lib_state_speech_view_model_waveformlevels",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_speech_view_model",
+      "target": "list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_speech_view_model",
+      "target": "lib_state_speech_view_model_hasaudiolevel",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_speech_view_model",
+      "target": "bool_get",
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -24670,6 +25635,28 @@
     {
       "source": "lib_state_speech_view_model",
       "target": "lib_state_speech_view_model_onresult",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_speech_view_model",
+      "target": "lib_state_speech_view_model_onamplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/speech_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_speech_view_model",
+      "target": "lib_state_speech_view_model_resetlevels",
       "relation": "defines",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -27984,6 +28971,17 @@
     },
     {
       "source": "lib_ui_widgets_listening_sheet",
+      "target": "waveform_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/listening_sheet.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_listening_sheet",
       "target": "lib_state_speech_view_model_speechviewmodel",
       "relation": "references",
       "confidence": "EXTRACTED",
@@ -28807,6 +29805,297 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/ui/widgets/translation_card.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_waveform",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform_waveform",
+      "target": "statelesswidget",
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_waveformpainter",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform_waveformpainter",
+      "target": "custompainter",
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_waveformplaceholder",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform_waveformplaceholder",
+      "target": "statelesswidget",
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_levels",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_height",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_levels",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "list",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_color",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "color",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_barwidth",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "static_const_double",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_gap",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "static_const_double",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_height",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_build",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_waveformpainter",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_paint",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_shouldrepaint",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_samelevels",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "lib_ui_widgets_waveform_build",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "package_flutter_material_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_widgets_waveform",
+      "target": "core_constants_app_spacing_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/widgets/waveform.dart",
       "source_location": null,
       "weight": 1.0,
       "_origin": "ast"
@@ -29747,6 +31036,39 @@
       "_origin": "ast"
     },
     {
+      "source": "test_services_record_audio_source_test",
+      "target": "test_services_record_audio_source_test_main",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/record_audio_source_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_record_audio_source_test",
+      "target": "package_flutter_test_flutter_test_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/record_audio_source_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_record_audio_source_test",
+      "target": "package_translatoo_core_services_record_audio_source_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/record_audio_source_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
       "source": "test_services_storage_service_test",
       "target": "test_services_storage_service_test_initial",
       "relation": "defines",
@@ -29988,6 +31310,18 @@
       "source_file": "test/services/stt_service_test.dart",
       "source_location": null,
       "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test_fakeaudio",
+      "target": "level",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "emit_state",
       "_origin": "ast"
     },
     {
@@ -30243,6 +31577,52 @@
     },
     {
       "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_amplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "streamcontroller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_amplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "stream",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
       "target": "test_services_stt_service_test_startcount",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -30460,6 +31840,17 @@
     {
       "source": "test_services_stt_service_test",
       "target": "test_services_stt_service_test_stop",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/stt_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_stt_service_test",
+      "target": "test_services_stt_service_test_emitlevel",
       "relation": "defines",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -31441,6 +32832,18 @@
       "_origin": "ast"
     },
     {
+      "source": "test_state_speech_view_model_test_fakeaudio",
+      "target": "level",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/state/speech_view_model_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "emit_state",
+      "_origin": "ast"
+    },
+    {
       "source": "test_state_speech_view_model_test",
       "target": "test_state_speech_view_model_test_installedstorage",
       "relation": "defines",
@@ -31645,6 +33048,52 @@
     {
       "source": "test_state_speech_view_model_test",
       "target": "streamcontroller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/state/speech_view_model_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_state_speech_view_model_test",
+      "target": "test_state_speech_view_model_test_amplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/state/speech_view_model_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_state_speech_view_model_test",
+      "target": "streamcontroller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/state/speech_view_model_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_state_speech_view_model_test",
+      "target": "test_state_speech_view_model_test_amplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/state/speech_view_model_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_state_speech_view_model_test",
+      "target": "stream",
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -31943,6 +33392,29 @@
     },
     {
       "source": "test_state_speech_view_model_test",
+      "target": "test_state_speech_view_model_test_audio",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/state/speech_view_model_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_state_speech_view_model_test",
+      "target": "fakeaudio",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/state/speech_view_model_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_state_speech_view_model_test",
       "target": "test_state_speech_view_model_test_startsession",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -31977,6 +33449,17 @@
     {
       "source": "test_state_speech_view_model_test",
       "target": "test_state_speech_view_model_test_stop",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/state/speech_view_model_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_state_speech_view_model_test",
+      "target": "test_state_speech_view_model_test_emitlevel",
       "relation": "defines",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -33054,6 +34537,28 @@
     },
     {
       "source": "test_widgets_home_shell_test",
+      "target": "test_widgets_home_shell_test_silentaudio",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/home_shell_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_home_shell_test_silentaudio",
+      "target": "lib_core_services_stt_service_sttaudiosource",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/home_shell_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_home_shell_test",
       "target": "test_widgets_home_shell_test_stubbackend",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -33167,6 +34672,29 @@
     },
     {
       "source": "test_widgets_home_shell_test",
+      "target": "test_widgets_home_shell_test_amplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/home_shell_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_home_shell_test",
+      "target": "stream",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/home_shell_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_home_shell_test",
       "target": "test_widgets_home_shell_test_id",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -33191,6 +34719,39 @@
     {
       "source": "test_widgets_home_shell_test",
       "target": "test_widgets_home_shell_test_checkconnectivity",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/home_shell_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_home_shell_test",
+      "target": "test_widgets_home_shell_test_silentaudio",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/home_shell_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_home_shell_test",
+      "target": "test_widgets_home_shell_test_start",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/home_shell_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_home_shell_test",
+      "target": "test_widgets_home_shell_test_stop",
       "relation": "defines",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -33290,6 +34851,17 @@
     {
       "source": "test_widgets_home_shell_test",
       "target": "dart_async",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/home_shell_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_home_shell_test",
+      "target": "dart_typed_data",
       "relation": "imports",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -33433,17 +35005,6 @@
     {
       "source": "test_widgets_home_shell_test",
       "target": "package_translatoo_core_services_translation_service_dart",
-      "relation": "imports",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "test/widgets/home_shell_test.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "test_widgets_home_shell_test",
-      "target": "package_translatoo_core_services_unavailable_audio_source_dart",
       "relation": "imports",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -33606,6 +35167,18 @@
       "source_file": "test/widgets/mic_button_test.dart",
       "source_location": null,
       "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_mic_button_test_fakeaudio",
+      "target": "level",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/mic_button_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "emit_state",
       "_origin": "ast"
     },
     {
@@ -33801,6 +35374,52 @@
     },
     {
       "source": "test_widgets_mic_button_test",
+      "target": "test_widgets_mic_button_test_amplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/mic_button_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_mic_button_test",
+      "target": "streamcontroller",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/mic_button_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_mic_button_test",
+      "target": "test_widgets_mic_button_test_amplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/mic_button_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_mic_button_test",
+      "target": "stream",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/mic_button_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_mic_button_test",
       "target": "test_widgets_mic_button_test_bytes",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -33962,6 +35581,29 @@
     },
     {
       "source": "test_widgets_mic_button_test",
+      "target": "test_widgets_mic_button_test_audio",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/mic_button_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_mic_button_test",
+      "target": "fakeaudio",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/mic_button_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_mic_button_test",
       "target": "test_widgets_mic_button_test_startsession",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -33996,6 +35638,17 @@
     {
       "source": "test_widgets_mic_button_test",
       "target": "test_widgets_mic_button_test_stop",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/mic_button_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_mic_button_test",
+      "target": "test_widgets_mic_button_test_emitlevel",
       "relation": "defines",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -34490,6 +36143,17 @@
     },
     {
       "source": "test_widgets_mic_button_test",
+      "target": "package_translatoo_ui_widgets_waveform_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/mic_button_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_mic_button_test",
       "target": "uint8list",
       "relation": "references",
       "confidence": "EXTRACTED",
@@ -34570,6 +36234,28 @@
     },
     {
       "source": "test_widgets_translate_screen_test",
+      "target": "test_widgets_translate_screen_test_silentaudio",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test_silentaudio",
+      "target": "lib_core_services_stt_service_sttaudiosource",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test",
       "target": "test_widgets_translate_screen_test_id",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -34628,6 +36314,29 @@
     {
       "source": "test_widgets_translate_screen_test",
       "target": "map",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test",
+      "target": "test_widgets_translate_screen_test_amplitude",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test",
+      "target": "stream",
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -34782,6 +36491,39 @@
     },
     {
       "source": "test_widgets_translate_screen_test",
+      "target": "test_widgets_translate_screen_test_silentaudio",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test",
+      "target": "test_widgets_translate_screen_test_start",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test",
+      "target": "test_widgets_translate_screen_test_stop",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test",
       "target": "test_widgets_translate_screen_test_main",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -34794,6 +36536,17 @@
     {
       "source": "test_widgets_translate_screen_test",
       "target": "dart_async",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test",
+      "target": "dart_typed_data",
       "relation": "imports",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -34893,17 +36646,6 @@
     {
       "source": "test_widgets_translate_screen_test",
       "target": "package_translatoo_core_services_translation_service_dart",
-      "relation": "imports",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "test/widgets/translate_screen_test.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "test_widgets_translate_screen_test",
-      "target": "package_translatoo_core_services_unavailable_audio_source_dart",
       "relation": "imports",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,

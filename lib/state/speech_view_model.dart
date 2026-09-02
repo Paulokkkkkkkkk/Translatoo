@@ -54,6 +54,7 @@ class SpeechViewModel extends ChangeNotifier {
        _permissions = permissionService,
        _translator = translatorViewModel {
     _resultsSub = _stt.results.listen(_onResult, onError: _onEngineError);
+    _amplitudeSub = _stt.amplitude.listen(_onAmplitude);
   }
 
   /// Costura de teste: o valor de produção vem do flavor (F2.1b), mas o
@@ -65,6 +66,7 @@ class SpeechViewModel extends ChangeNotifier {
   final TranslatorViewModel _translator;
 
   StreamSubscription<SttResult>? _resultsSub;
+  StreamSubscription<double>? _amplitudeSub;
   Timer? _elapsedTimer;
 
   SpeechState _state = SpeechState.idle;
@@ -77,6 +79,19 @@ class SpeechViewModel extends ChangeNotifier {
   /// Texto do campo de origem no instante em que a escuta começou — o que o
   /// cancelamento restaura (AC-M2-4).
   String _textBeforeListening = '';
+
+  /// Histórico rolante do nível do microfone (0..1) que alimenta a onda da
+  /// §5.7. Tamanho fixo: a onda tem largura fixa, e uma lista que só cresce
+  /// vazaria memória numa escuta de 60 s.
+  static const int _waveformBars = 32;
+  // `growable: true` é obrigatório: o histórico rola com removeAt/add, e uma
+  // lista de tamanho fixo lançaria UnsupportedError no primeiro nível que
+  // chegasse do microfone.
+  final List<double> _levels = List<double>.filled(
+    _waveformBars,
+    0,
+    growable: true,
+  );
 
   SpeechState get state => _state;
 
@@ -91,6 +106,15 @@ class SpeechViewModel extends ChangeNotifier {
   int get elapsedSeconds => _elapsedSeconds;
 
   ErrorCode? get errorCode => _errorCode;
+
+  /// Níveis do microfone para a onda, do mais antigo ao mais recente.
+  ///
+  /// Todos zerados significa que a fonte de áudio não sabe medir — a UI então
+  /// não desenha onda, em vez de inventar movimento (§5.7).
+  List<double> get waveformLevels => List<double>.unmodifiable(_levels);
+
+  /// A fonte está entregando nível real? Quando `false`, nada de onda.
+  bool get hasAudioLevel => _levels.any((level) => level > 0);
 
   /// Ação que a UI oferece junto do erro (tentar de novo, abrir configurações).
   SuggestedAction get errorAction => _errorAction;
@@ -120,6 +144,7 @@ class SpeechViewModel extends ChangeNotifier {
     _partialText = '';
     _finalText = '';
     _elapsedSeconds = 0;
+    _resetLevels();
     _clearError();
     _setState(SpeechState.initializing);
 
@@ -156,6 +181,7 @@ class SpeechViewModel extends ChangeNotifier {
   Future<void> cancel() async {
     if (_state == SpeechState.idle) return; // transição inválida
     _stopElapsedTimer();
+    _resetLevels();
     _partialText = '';
     _finalText = '';
     _clearError();
@@ -229,6 +255,7 @@ class SpeechViewModel extends ChangeNotifier {
     }
 
     _stopElapsedTimer();
+    _resetLevels();
     _finalText = result.text;
     _partialText = '';
     _setState(SpeechState.idle);
@@ -239,6 +266,17 @@ class SpeechViewModel extends ChangeNotifier {
       _translator.acceptDictatedText(result.text);
     }
   }
+
+  /// Empurra o nível novo para o fim da fila e descarta o mais antigo.
+  void _onAmplitude(double level) {
+    if (_state != SpeechState.listening) return;
+    _levels
+      ..removeAt(0)
+      ..add(level.clamp(0.0, 1.0));
+    notifyListeners();
+  }
+
+  void _resetLevels() => _levels.fillRange(0, _waveformBars, 0);
 
   void _onEngineError(Object error) {
     _stopElapsedTimer();
@@ -287,6 +325,8 @@ class SpeechViewModel extends ChangeNotifier {
     if (isDictating) unawaited(_stt.cancel());
     unawaited(_resultsSub?.cancel() ?? Future<void>.value());
     _resultsSub = null;
+    unawaited(_amplitudeSub?.cancel() ?? Future<void>.value());
+    _amplitudeSub = null;
     super.dispose();
   }
 }

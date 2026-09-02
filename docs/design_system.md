@@ -276,6 +276,7 @@ Bottom sheet modal sobre scrim `colorOverlay`, plano 2, topo arredondado.
 |---|---|---|
 | Texto | parcial em `textSecondary` **itálico**, `headlineSmall`, rolável | último parcial, opacidade 60% |
 | Indicador | ponto `colorError` pulsando + rótulo de escuta | indeterminado |
+| Onda | 32 barras, nível real do microfone (§5.7) | congelada no último nível |
 | Cronômetro | `mm:ss` em `titleMedium`, `textPrimary` | congelado |
 | Botão esquerdo | Cancelar (texto) | desabilitado |
 | Botão direito | Concluir (preenchido) | desabilitado |
@@ -286,12 +287,19 @@ Bottom sheet modal sobre scrim `colorOverlay`, plano 2, topo arredondado.
   a RN-07, que prefere preservar a fala a descartá-la.
 - Um único `AnimationController` alimenta o pulso do ponto e o do anel do botão.
 
-> **Desvio registrado da issue #25.** A issue pede "waveform animada". A §5.7
-> proíbe onda sem amplitude real, e não há captura de áudio no projeto (ver o
-> desvio da F2.2 no README) — nem haveria nível de microfone para desenhar.
-> Fica o **indicador de escuta neutro** que a própria §5.7 manda usar. Quando a
-> fonte de áudio real entrar, a onda da §5.7 substitui o indicador sem mexer no
-> resto da folha.
+**A onda usa nível real** (F2.2b). O `record` entrega amplitude em dBFS; o
+`SpeechViewModel` normaliza para 0..1 e mantém um histórico rolante de 32
+posições. Se a fonte de áudio não souber medir, `hasAudioLevel` fica `false` e a
+onda **não é desenhada** — a §5.7 proíbe suprir a falta com movimento aleatório.
+
+Adaptação da §5.7 para esta superfície: lá as barras são `colorOnPrimary` porque
+vivem sobre o bloco de marca; aqui a folha é `colorSurface`, então as barras usam
+`colorPrimary`. A geometria (2 dp de largura, 2 dp de gap, ancoradas no centro
+vertical) não muda.
+
+> **Histórico.** A F2.5 entregou um indicador neutro no lugar da onda, porque
+> ainda não havia captura de áudio e a §5.7 proíbe onda sem amplitude. A F2.2b
+> trouxe a fonte real e o conflito deixou de existir.
 
 ---
 
