@@ -11,11 +11,11 @@ import 'core/services/connectivity_service.dart';
 import 'core/services/mic_permission_service.dart';
 import 'core/services/mlkit_translation_backend.dart';
 import 'core/services/model_manager_service.dart';
+import 'core/services/record_audio_source.dart';
 import 'core/services/storage_service.dart';
 import 'core/services/stt_service.dart';
 import 'core/services/tflite_translation_backend.dart';
 import 'core/services/translation_service.dart';
-import 'core/services/unavailable_audio_source.dart';
 import 'core/services/whisper_model_installer.dart';
 import 'core/services/whisper_stt_engine.dart';
 import 'core/theme/app_theme.dart';
@@ -51,11 +51,11 @@ Future<void> main() async {
   unawaited(modelManager.refreshAll());
 
   // ── Composição do ditado M2 (F2) ─────────────────────────────────────────
-  // O motor real (whisper.cpp) já entra aqui; a FONTE de áudio ainda não
-  // existe — ver UnavailableAudioSource e o desvio da F2.2 no README.
+  // Motor (whisper.cpp) + fonte de áudio (record), cada um atrás da sua
+  // interface: trocar qualquer um dos dois é trocar esta linha.
   final sttService = SttService(
     sttEngine: WhisperSttEngine(),
-    audioSource: const UnavailableAudioSource(),
+    audioSource: RecordAudioSource(),
     modelInstaller: WhisperModelInstaller(assetKey: AppConstants.sttModelAsset),
   );
 

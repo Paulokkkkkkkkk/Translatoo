@@ -57,6 +57,13 @@ class _FakeSession implements SttEngineSession {
 
 class _FakeAudio implements SttAudioSource {
   final StreamController<Uint8List> _pcm = StreamController<Uint8List>();
+  final StreamController<double> _amplitude =
+      StreamController<double>.broadcast();
+
+  void emitLevel(double level) => _amplitude.add(level);
+
+  @override
+  Stream<double> get amplitude => _amplitude.stream;
 
   int startCount = 0;
   int stopCount = 0;

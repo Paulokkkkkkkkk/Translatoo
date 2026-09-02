@@ -1,4 +1,4 @@
-﻿name: translatoo
+name: translatoo
 description: "Translatoo - Tradutor offline PT <-> EN <-> ZH (Mandarim), 100% on-device."
 publish_to: 'none'
 
@@ -10,7 +10,8 @@ environment:
 # -------------------------------------------------------------------------
 # Lista FECHADA de dependencias (plano Secao 4 - nao substituir sem revisao).
 # Internet e usada APENAS para download de pacotes de idiomas (RN-02).
-# Reaberta e refechada na F2.0 para a entrada do motor de STT (whisper_ggml).
+# Reaberta e refechada na F2.0 para a entrada do motor de STT (whisper_ggml) e
+# de novo na F2.2b para a fonte de audio (record).
 # -------------------------------------------------------------------------
 dependencies:
   flutter:
@@ -51,6 +52,11 @@ dependencies:
 
   # M3 - saida por voz TTS nativa
   flutter_tts: ^4.0.0
+
+  # M2 - captura de microfone (F2.2b). Lacuna da spike F2.0, que escolheu o
+  # motor e nao a fonte. PCM16 16 kHz mono em stream + amplitude para a onda
+  # da §5.7. Nao colide com permission_handler ^11.3.1. Ver docs/audio_source.md.
+  record: ^7.1.1
 
 dev_dependencies:
   flutter_test:

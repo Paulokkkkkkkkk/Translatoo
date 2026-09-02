@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:connectivity_plus_platform_interface/connectivity_plus_platform_interface.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ import 'package:translatoo/core/services/storage_service.dart';
 import 'package:translatoo/core/services/stt_service.dart';
 import 'package:translatoo/core/services/translation_backend.dart';
 import 'package:translatoo/core/services/translation_service.dart';
-import 'package:translatoo/core/services/unavailable_audio_source.dart';
 import 'package:translatoo/core/services/whisper_model_installer.dart';
 import 'package:translatoo/core/services/whisper_stt_engine.dart';
 import 'package:translatoo/core/theme/app_theme.dart';
@@ -33,6 +33,21 @@ class _FakePlatform extends ConnectivityPlatform {
 
   @override
   Stream<List<ConnectivityResult>> get onConnectivityChanged => events.stream;
+}
+
+/// Microfone que nunca abre: estes testes não ditam, e uma captura real
+/// exigiria canal de plataforma.
+class _SilentAudio implements SttAudioSource {
+  const _SilentAudio();
+
+  @override
+  Future<Stream<Uint8List>> start() async => const Stream<Uint8List>.empty();
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Stream<double> get amplitude => const Stream<double>.empty();
 }
 
 void main() {
@@ -76,7 +91,7 @@ void main() {
         // si é coberto por mic_button_test.dart.
         sttService: SttService(
           sttEngine: WhisperSttEngine(),
-          audioSource: const UnavailableAudioSource(),
+          audioSource: const _SilentAudio(),
           modelInstaller: WhisperModelInstaller(
             assetKey: AppConstants.whisperFullModelAsset,
           ),

@@ -18,6 +18,7 @@ import 'package:translatoo/state/speech_view_model.dart';
 import 'package:translatoo/state/translator_view_model.dart';
 import 'package:translatoo/ui/widgets/listening_sheet.dart';
 import 'package:translatoo/ui/widgets/mic_button.dart';
+import 'package:translatoo/ui/widgets/waveform.dart';
 
 class _FakeEngine implements SttEngine {
   _FakeSession? session;
@@ -50,6 +51,13 @@ class _FakeSession implements SttEngineSession {
 
 class _FakeAudio implements SttAudioSource {
   final StreamController<Uint8List> _pcm = StreamController<Uint8List>();
+  final StreamController<double> _amplitude =
+      StreamController<double>.broadcast();
+
+  void emitLevel(double level) => _amplitude.add(level);
+
+  @override
+  Stream<double> get amplitude => _amplitude.stream;
 
   @override
   Future<Stream<Uint8List>> start() async => _pcm.stream;
@@ -144,6 +152,7 @@ void main() {
   late TranslatorViewModel translator;
   late ModelManagerService models;
   late SttService stt;
+  late _FakeAudio audio;
 
   /// Monta apenas o botão dentro de um Scaffold — a integração com a tela
   /// inteira já é coberta por translate_screen_test.dart.
@@ -158,9 +167,10 @@ void main() {
       translationService: TranslationService(primary: _EchoBackend()),
       modelManager: models,
     );
+    audio = _FakeAudio();
     stt = SttService(
       sttEngine: engine,
-      audioSource: _FakeAudio(),
+      audioSource: audio,
       modelInstaller: WhisperModelInstaller(
         assetKey: AppConstants.whisperFullModelAsset,
         storage: _InstalledStorage(),
@@ -288,6 +298,26 @@ void main() {
     expect(find.byType(ListeningSheet), findsNothing);
     expect(speech.state, SpeechState.idle);
     expect(translator.sourceText, 'Bom dia.');
+  });
+
+  testWidgets('onda aparece só quando há nível real de microfone (§5.7)', (
+    tester,
+  ) async {
+    await pumpButton(tester);
+    await tester.tap(find.byType(IconButton).first);
+    await _settleSheet(tester);
+
+    // Sem nível: espaço reservado, nenhuma barra inventada.
+    expect(find.byType(Waveform), findsNothing);
+    expect(find.byType(WaveformPlaceholder), findsOneWidget);
+
+    audio.emitLevel(0.6);
+    await tester.pump();
+
+    expect(find.byType(Waveform), findsOneWidget);
+    expect(find.byType(WaveformPlaceholder), findsNothing);
+
+    await _endSession(tester, speech);
   });
 
   testWidgets('cancelar na folha restaura o texto anterior (AC-M2-4)', (

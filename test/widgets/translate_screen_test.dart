@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,7 +10,6 @@ import 'package:translatoo/core/services/model_manager_service.dart';
 import 'package:translatoo/core/services/stt_service.dart';
 import 'package:translatoo/core/services/translation_backend.dart';
 import 'package:translatoo/core/services/translation_service.dart';
-import 'package:translatoo/core/services/unavailable_audio_source.dart';
 import 'package:translatoo/core/services/whisper_model_installer.dart';
 import 'package:translatoo/core/services/whisper_stt_engine.dart';
 import 'package:translatoo/models/language.dart';
@@ -103,7 +103,7 @@ Future<void> _pump(
           create: (_) => SpeechViewModel(
             sttService: SttService(
               sttEngine: WhisperSttEngine(),
-              audioSource: const UnavailableAudioSource(),
+              audioSource: const _SilentAudio(),
               modelInstaller: WhisperModelInstaller(
                 assetKey: AppConstants.whisperFullModelAsset,
               ),
@@ -129,6 +129,21 @@ TranslatorViewModel _vm(ModelManagerService manager) => TranslatorViewModel(
   translationService: TranslationService(primary: _EchoBackend()),
   modelManager: manager,
 );
+
+/// Microfone que nunca abre: estes testes não ditam, e uma captura real
+/// exigiria canal de plataforma.
+class _SilentAudio implements SttAudioSource {
+  const _SilentAudio();
+
+  @override
+  Future<Stream<Uint8List>> start() async => const Stream<Uint8List>.empty();
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Stream<double> get amplitude => const Stream<double>.empty();
+}
 
 void main() {
   testWidgets('digita → debounce → tradução; contador, ⇄ e limpar', (

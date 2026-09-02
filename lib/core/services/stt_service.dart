@@ -47,6 +47,14 @@ abstract interface class SttAudioSource {
 
   /// Fecha o microfone. Idempotente.
   Future<void> stop();
+
+  /// Nível do microfone **normalizado em 0..1**, para a onda da §5.7 do design
+  /// system.
+  ///
+  /// Fonte que não sabe medir devolve um fluxo vazio — e aí a UI não desenha
+  /// onda nenhuma, em vez de inventar movimento. A §5.7 é explícita: onda falsa
+  /// em app de ditado é mentira de interface.
+  Stream<double> get amplitude;
 }
 
 /// Sessão de transcrição ao vivo do motor — espelha `WhisperLiveSession`.
@@ -120,6 +128,10 @@ class SttService {
 
   /// Parciais e o final da sessão em curso. Ver o contrato de [SttResult].
   Stream<SttResult> get results => _results.stream;
+
+  /// Nível do microfone (0..1) enquanto a sessão está aberta — repassado da
+  /// fonte de áudio para quem desenha a onda, sem o serviço interpretar nada.
+  Stream<double> get amplitude => _audio.amplitude;
 
   SttPhase _phase = SttPhase.idle;
   SttPhase get phase => _phase;

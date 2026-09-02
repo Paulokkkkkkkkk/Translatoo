@@ -53,6 +53,13 @@ class _FakeSession implements SttEngineSession {
 
 class _FakeAudio implements SttAudioSource {
   final StreamController<Uint8List> _pcm = StreamController<Uint8List>();
+  final StreamController<double> _amplitude =
+      StreamController<double>.broadcast();
+
+  void emitLevel(double level) => _amplitude.add(level);
+
+  @override
+  Stream<double> get amplitude => _amplitude.stream;
 
   @override
   Future<Stream<Uint8List>> start() async => _pcm.stream;
@@ -148,6 +155,7 @@ void main() {
   late ModelManagerService models;
   late SttService stt;
   late SpeechViewModel vm;
+  late _FakeAudio audio;
 
   Future<void> build({
     PermissionStatus permission = PermissionStatus.granted,
@@ -162,9 +170,10 @@ void main() {
       translationService: TranslationService(primary: backend),
       modelManager: models,
     );
+    audio = _FakeAudio();
     stt = SttService(
       sttEngine: engine,
-      audioSource: _FakeAudio(),
+      audioSource: audio,
       modelInstaller: WhisperModelInstaller(
         assetKey: AppConstants.whisperFullModelAsset,
         storage: _InstalledStorage(),
@@ -181,6 +190,72 @@ void main() {
     vm.dispose();
     translator.dispose();
     models.dispose();
+  });
+
+  group('onda do ditado (F2.2b · §5.7)', () {
+    test('sem nível de microfone a UI não desenha onda', () async {
+      await build();
+      await vm.start();
+
+      expect(vm.hasAudioLevel, isFalse);
+      expect(vm.waveformLevels.every((level) => level == 0), isTrue);
+    });
+
+    test(
+      'nível real alimenta as barras, do mais antigo ao mais recente',
+      () async {
+        await build();
+        await vm.start();
+
+        audio
+          ..emitLevel(0.2)
+          ..emitLevel(0.9);
+        await pumpEventQueue();
+
+        expect(vm.hasAudioLevel, isTrue);
+        expect(vm.waveformLevels.last, 0.9);
+        expect(vm.waveformLevels[vm.waveformLevels.length - 2], 0.2);
+      },
+    );
+
+    test(
+      'o histórico tem tamanho fixo — 60 s de escuta não vazam memória',
+      () async {
+        await build();
+        await vm.start();
+        final size = vm.waveformLevels.length;
+
+        for (var i = 0; i < size * 3; i++) {
+          audio.emitLevel(0.5);
+        }
+        await pumpEventQueue();
+
+        expect(vm.waveformLevels, hasLength(size));
+      },
+    );
+
+    test('encerrar a escuta zera a onda', () async {
+      await build();
+      await vm.start();
+      audio.emitLevel(0.8);
+      await pumpEventQueue();
+      expect(vm.hasAudioLevel, isTrue);
+
+      engine.session!.finalText = 'pronto';
+      await vm.stop();
+      await pumpEventQueue();
+
+      expect(vm.hasAudioLevel, isFalse);
+    });
+
+    test('nível fora da escuta é ignorado', () async {
+      await build();
+
+      audio.emitLevel(0.7);
+      await pumpEventQueue();
+
+      expect(vm.hasAudioLevel, isFalse);
+    });
   });
 
   test('start leva a listening quando a permissão já está concedida', () async {
