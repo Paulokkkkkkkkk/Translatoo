@@ -1,0 +1,4 @@
+/* Permissões do sistema — F4.7a. Fora do alcance do app_strings.dart:
+   o iOS lê estes textos do bundle, não do Dart. */
+"NSMicrophoneUsageDescription" = "O Translatoo usa o microfone para transcrever sua fala. O áudio é processado no aparelho e nunca sai dele.";
+"NSSpeechRecognitionUsageDescription" = "A transcrição da sua fala acontece localmente, no próprio aparelho.";

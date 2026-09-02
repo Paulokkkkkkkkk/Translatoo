@@ -1,0 +1,4 @@
+/* Permissões do sistema — F4.7a. Fora do alcance do app_strings.dart:
+   o iOS lê estes textos do bundle, não do Dart. */
+"NSMicrophoneUsageDescription" = "Translatoo 使用麦克风转写您的语音。音频在本机处理，绝不外传。";
+"NSSpeechRecognitionUsageDescription" = "语音转写在本机完成，不会离开您的设备。";
