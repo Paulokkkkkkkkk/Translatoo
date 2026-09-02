@@ -70,6 +70,12 @@ abstract final class AppStrings {
   String get micRationaleBody;
   String get micBlockedBody;
 
+  // Ditado (F2.5)
+  String get actionStopDictation;
+  String get actionFinishDictation;
+  String get dictationListening;
+  String get dictationHint;
+
   String get comingSoon;
   String get feedbackCopied;
   String get modelSizeEstimate;
@@ -175,6 +181,14 @@ final class _PtStrings extends AppStrings {
   String get actionDictate => 'Ditar';
   @override
   String get micRationaleTitle => 'Usar o microfone?';
+  @override
+  String get actionStopDictation => 'Parar de ouvir';
+  @override
+  String get actionFinishDictation => 'Concluir';
+  @override
+  String get dictationListening => 'Ouvindo…';
+  @override
+  String get dictationHint => 'Fale — a frase encerra sozinha após uma pausa';
   @override
   String get micRationaleBody =>
       'Sua fala é transcrita no próprio aparelho. Nenhum áudio é gravado nem '
@@ -313,6 +327,15 @@ final class _EnStrings extends AppStrings {
   @override
   String get micRationaleTitle => 'Use the microphone?';
   @override
+  String get actionStopDictation => 'Stop listening';
+  @override
+  String get actionFinishDictation => 'Done';
+  @override
+  String get dictationListening => 'Listening…';
+  @override
+  String get dictationHint =>
+      'Speak — the sentence ends on its own after a pause';
+  @override
   String get micRationaleBody =>
       'Your speech is transcribed on this device. No audio is recorded or '
       'sent anywhere.';
@@ -447,6 +470,14 @@ final class _ZhStrings extends AppStrings {
   String get actionDictate => '语音输入';
   @override
   String get micRationaleTitle => '使用麦克风？';
+  @override
+  String get actionStopDictation => '停止聆听';
+  @override
+  String get actionFinishDictation => '完成';
+  @override
+  String get dictationListening => '正在聆听…';
+  @override
+  String get dictationHint => '请讲话——停顿后会自动结束这句话';
   @override
   String get micRationaleBody => '语音在本机转写，不录音，也不会上传到任何地方。';
   @override

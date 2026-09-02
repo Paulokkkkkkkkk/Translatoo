@@ -7,7 +7,7 @@
 | **Versão do plano** | 1.1 |
 | **Data** | 2026-08-28 |
 | **Documento-fonte** | `prd.md` **v1.1** (requisitos, módulos, critérios de aceite) |
-| **Estado real** | **F0, F1 (com F1.9), a spike F2.0 e a F2.1–F2.4 concluídas** · F2.5 é o próximo passo |
+| **Estado real** | **F0, F1 (com F1.9), a spike F2.0 e a F2.1–F2.5 concluídas** · F2.6 (TTS) é o próximo passo |
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
@@ -407,7 +407,9 @@ lib/
 - Durante escuta: TTS silenciado + campo de digitação desabilitado (RF-M2-07).
 - **Entregável**: VM testada com fake do `SttService` (parciais, timeout 60 s, cancelamento) — **executável mesmo com a F2.0 ainda em curso**, pois depende só da interface.
 
-### F2.5 — UI de ditado
+### F2.5 — UI de ditado ✅ concluída ([#25](../../issues/25) · `docs/design_system.md` §5.8–5.9)
+> **Dois desvios registrados no design system**, ambos por conflito com regra vigente: (a) a issue pede 🎤 ocioso "outline verde" e a paleta Azul & Branco não tem verde de ação — usa `colorPrimary`; (b) a issue pede waveform animada e a §5.7 proíbe onda sem amplitude real, que não existe sem captura de áudio — usa o indicador de escuta neutro.
+
 - `mic_button.dart`: 3 estados — idle (outline verde) · listening (preenchido `colorError` vermelho + anel pulsante + waveform) · error (badge ! + tooltip).
 - Overlay bottom-sheet de escuta: scrim `colorOverlay`, texto parcial grande rolável (estilo itálico/cor secundária enquanto parcial), timer mm:ss, waveform animada, botões **Cancelar** e **Concluir**.
 - Feedback háptico curto ao iniciar/encerrar; `AnimationController` único p/ pulso+waveform (meta 60 fps).

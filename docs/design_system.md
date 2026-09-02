@@ -243,6 +243,58 @@ marca, altura proporcional à amplitude, ancoradas no centro vertical.
 
 ---
 
+### 5.8 Botão de microfone (F2.5)
+
+Ícone linear de 24 dp num alvo de 48 dp, na barra de ações do card de origem.
+**Monocromático**, exceto no estado de escuta — a gravação é uma das três
+exceções cromáticas da §6.
+
+| Propriedade | Ocioso | Preparando | Escutando | Erro |
+|---|---|---|---|---|
+| Ícone | `mic_none` (contorno) | `mic_none` | `mic` | `mic_off` |
+| Cor | `colorPrimary` | `textSecondary` | `colorError` | `colorError` |
+| Fundo | nenhum | nenhum | `colorPrimaryContainer` | nenhum |
+| Anel pulsante | — | — | `colorError` a 24%, 1,2 s | — |
+| Toque | inicia | ignorado | encerra | limpa o erro |
+| Semântica | `actionDictate` | `actionDictate` | `actionStopDictation` | `errMicPermission` |
+
+- **Ausente, não desabilitado**, quando o build não tem modelo de STT: o widget
+  não entra na árvore (`SpeechViewModel.canDictate`). Controle permanentemente
+  inerte é pior que sua ausência.
+- Háptico curto (`HapticFeedback.selectionClick`) ao iniciar e ao encerrar.
+
+> **Desvio registrado da issue #25.** A issue pede "idle (outline verde)". Não
+> existe verde de ação na paleta Azul & Branco (F0.10) — `colorSuccess` é
+> semântico de sucesso, não de ação. O ocioso usa `colorPrimary`, que é a cor
+> de ação do sistema. A issue precede a troca de paleta.
+
+### 5.9 Folha de escuta (F2.5)
+
+Bottom sheet modal sobre scrim `colorOverlay`, plano 2, topo arredondado.
+
+| Propriedade | Escutando | Processando |
+|---|---|---|
+| Texto | parcial em `textSecondary` **itálico**, `headlineSmall`, rolável | último parcial, opacidade 60% |
+| Indicador | ponto `colorError` pulsando + rótulo de escuta | indeterminado |
+| Cronômetro | `mm:ss` em `titleMedium`, `textPrimary` | congelado |
+| Botão esquerdo | Cancelar (texto) | desabilitado |
+| Botão direito | Concluir (preenchido) | desabilitado |
+
+- O parcial **substitui** o bloco inteiro a cada emissão (§5.1, regra do parcial).
+- Rola sozinha para o fim quando o texto passa da altura visível.
+- Fechar por gesto/`back` equivale a **Concluir**, não a Cancelar: coerente com
+  a RN-07, que prefere preservar a fala a descartá-la.
+- Um único `AnimationController` alimenta o pulso do ponto e o do anel do botão.
+
+> **Desvio registrado da issue #25.** A issue pede "waveform animada". A §5.7
+> proíbe onda sem amplitude real, e não há captura de áudio no projeto (ver o
+> desvio da F2.2 no README) — nem haveria nível de microfone para desenhar.
+> Fica o **indicador de escuta neutro** que a própria §5.7 manda usar. Quando a
+> fonte de áudio real entrar, a onda da §5.7 substitui o indicador sem mexer no
+> resto da folha.
+
+---
+
 ## 6. Ícones
 
 - **Lineares**, stroke 2 dp, terminações e junções arredondadas, sem preenchimento.

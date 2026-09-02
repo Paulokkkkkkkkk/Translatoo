@@ -5,12 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translatoo/core/constants/app_colors.dart';
+import 'package:translatoo/core/constants/app_constants.dart';
 import 'package:translatoo/core/constants/app_spacing.dart';
 import 'package:translatoo/core/services/connectivity_service.dart';
 import 'package:translatoo/core/services/model_manager_service.dart';
 import 'package:translatoo/core/services/storage_service.dart';
+import 'package:translatoo/core/services/stt_service.dart';
 import 'package:translatoo/core/services/translation_backend.dart';
 import 'package:translatoo/core/services/translation_service.dart';
+import 'package:translatoo/core/services/unavailable_audio_source.dart';
+import 'package:translatoo/core/services/whisper_model_installer.dart';
+import 'package:translatoo/core/services/whisper_stt_engine.dart';
 import 'package:translatoo/core/theme/app_theme.dart';
 import 'package:translatoo/main.dart';
 import 'package:translatoo/models/language.dart';
@@ -67,6 +72,15 @@ void main() {
         connectivity: connectivity,
         translationService: translationService,
         modelManager: manager,
+        // Composição do M2 (F2.5): a shell só precisa que exista; o ditado em
+        // si é coberto por mic_button_test.dart.
+        sttService: SttService(
+          sttEngine: WhisperSttEngine(),
+          audioSource: const UnavailableAudioSource(),
+          modelInstaller: WhisperModelInstaller(
+            assetKey: AppConstants.whisperFullModelAsset,
+          ),
+        ),
       ),
     );
     await tester.pumpAndSettle();

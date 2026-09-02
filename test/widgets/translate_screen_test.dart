@@ -3,11 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:translatoo/core/constants/app_constants.dart';
+import 'package:translatoo/core/services/mic_permission_service.dart';
 import 'package:translatoo/core/services/model_manager_service.dart';
+import 'package:translatoo/core/services/stt_service.dart';
 import 'package:translatoo/core/services/translation_backend.dart';
 import 'package:translatoo/core/services/translation_service.dart';
+import 'package:translatoo/core/services/unavailable_audio_source.dart';
+import 'package:translatoo/core/services/whisper_model_installer.dart';
+import 'package:translatoo/core/services/whisper_stt_engine.dart';
 import 'package:translatoo/models/language.dart';
 import 'package:translatoo/models/language_pair.dart';
+import 'package:translatoo/state/speech_view_model.dart';
 import 'package:translatoo/state/translator_view_model.dart';
 import 'package:translatoo/ui/screens/translate_screen.dart';
 import 'package:translatoo/ui/widgets/download_progress_card.dart';
@@ -89,6 +96,22 @@ Future<void> _pump(
         ),
         Provider<ModelManagerService>.value(value: manager),
         ChangeNotifierProvider<TranslatorViewModel>.value(value: vm),
+        // A tela lê o SpeechViewModel desde a F2.5 (botão 🎤 e RN-07). Estes
+        // testes são da F1.6 e nunca ditam: a fonte de áudio indisponível
+        // basta, e o ditado em si é coberto por mic_button_test.dart.
+        ChangeNotifierProvider<SpeechViewModel>(
+          create: (_) => SpeechViewModel(
+            sttService: SttService(
+              sttEngine: WhisperSttEngine(),
+              audioSource: const UnavailableAudioSource(),
+              modelInstaller: WhisperModelInstaller(
+                assetKey: AppConstants.whisperFullModelAsset,
+              ),
+            ),
+            permissionService: MicPermissionService(),
+            translatorViewModel: vm,
+          ),
+        ),
       ],
       child: const MaterialApp(
         // Nota (mesma da F0): neste Flutter o MaterialApp ignora `locale` em
