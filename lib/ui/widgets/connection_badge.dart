@@ -26,40 +26,46 @@ class ConnectionBadge extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final label = isOnline ? t.online : t.offline;
 
-    return Semantics(
-      label: '${t.appName}: $label',
-      child: Padding(
-        padding: const EdgeInsets.only(right: AppSpacing.md),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm,
-            vertical: AppSpacing.xs,
-          ),
-          decoration: BoxDecoration(
-            color: scheme.primaryContainer,
-            borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: isOnline
-                      ? AppSemanticColors.success_(context)
-                      : scheme.onSurfaceVariant,
-                  shape: BoxShape.circle,
+    // Tooltip explicativo (F3.5) + live region: a mudança de conectividade é
+    // anunciada ao leitor de tela sem rebuild das telas (RN-06).
+    return Tooltip(
+      message: t.connectionBadgeInfo(isOnline),
+      child: Semantics(
+        label: '${t.appName}: $label',
+        liveRegion: true,
+        child: Padding(
+          padding: const EdgeInsets.only(right: AppSpacing.md),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm,
+              vertical: AppSpacing.xs,
+            ),
+            decoration: BoxDecoration(
+              color: scheme.primaryContainer,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: isOnline
+                        ? AppSemanticColors.success_(context)
+                        : scheme.onSurfaceVariant,
+                    shape: BoxShape.circle,
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              Text(
-                label,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: scheme.onPrimaryContainer,
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  label,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: scheme.onPrimaryContainer,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
