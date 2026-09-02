@@ -167,6 +167,17 @@ abstract final class AppTheme {
         titleTextStyle: text.titleLarge!.copyWith(color: c.onPrimary),
         iconTheme: IconThemeData(color: c.onPrimary),
         actionsIconTheme: IconThemeData(color: c.onPrimary),
+        // A OUTRA METADE DA CURVA. Traçando a silhueta de `home.webp`, o bloco
+        // de marca recua da borda direita ~28 px ANTES de a faixa do painel
+        // começar: o canto inferior DIREITO do bloco é arredondado, e o canto
+        // superior ESQUERDO do painel também. As duas curvas se encaixam em
+        // diagonal — é esse encaixe que faz o painel parecer deslizar por
+        // baixo da marca. Só uma das duas não produz o efeito.
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(AppSpacing.radiusLg),
+          ),
+        ),
       ),
       cardTheme: CardThemeData(
         color: c.surface,

@@ -71,11 +71,19 @@ código da F0/F1 num único commit.
 > permaneceu como alias de `radiusMd`, e `test/architecture/radius_tokens_test.dart`
 > falha se algum raio cru voltar a `lib/`.
 
-**Curva assimétrica dos painéis.** Medindo `docs/design/home.webp`, os painéis
-têm **apenas o canto superior esquerdo arredondado** — o direito é reto. Não é
-descuido do case: os dois painéis medem igual (raio esquerdo ~38–40 dp, direito
-0). É a assimetria que faz o painel parecer deslizar por baixo do bloco de marca
-em vez de ser um cartão simétrico pousado na tela.
+**Curva assimétrica em DIAGONAL.** Traçando a silhueta de `docs/design/home.webp`
+pixel a pixel, a junção entre o bloco de marca e o painel usa **duas** curvas em
+cantos opostos, e é o encaixe delas que produz o efeito:
+
+| Elemento | Canto arredondado | Os outros |
+|---|---|---|
+| Bloco de marca | inferior **direito** | retos |
+| Painel | superior **esquerdo** | retos |
+
+O bloco de marca recua da borda direita ~28 px antes de a faixa do painel
+começar; o painel então entra com o canto esquerdo curvo. **Só uma das duas não
+produz o efeito** — foi o erro da primeira implementação, que arredondou só o
+painel e deixou o bloco reto.
 
 > **Divergência registrada.** O case mede ~38–40 dp nesse canto; a tabela acima
 > define `radiusLg` = 28 dp, e a §P2 fala em "24–32 dp". A implementação usa
