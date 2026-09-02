@@ -374,6 +374,36 @@ mesmo navegando entre destinos; o player acompanha).
   SOs; a barra some e o ▶ recomeça do início.
 - `Semantics(container: true)` com rótulo "Ouvir tradução" (RN-06).
 
+### 5.10 Mini-player de leitura (F2.8)
+
+Barra discreta na shell, **acima da `LanguageBar`**, existente apenas enquanto a
+síntese está em curso. Plano 2, sombra invertida (y−2) porque descola do
+conteúdo que está acima dela, não abaixo.
+
+| Propriedade | Reproduzindo | Ausente |
+|---|---|---|
+| Ícone | equalizador pulsando, `colorPrimary`, 20 dp | — |
+| Texto | trecho falado, `bodyMedium`, **rolagem horizontal** | — |
+| Ação | ⏹ interrompe | — |
+| Visibilidade | `TtsViewModel.isSpeaking` | colapsa para zero |
+
+- **O texto NUNCA trunca com ellipsis.** É o conteúdo que está sendo falado; o
+  usuário rola para acompanhar a frase inteira.
+- Não há estado "pausado" na v1 — o motor nativo não expõe *resume* confiável
+  entre os dois SOs.
+- Vive na shell, e não na tela Traduzir, porque a voz continua enquanto o
+  usuário navega.
+
+> **Divergência do case, decidida em 2026-09-02.** O `home.webp` não desenha
+> mini-player, e a decisão registrada na [#28](../../issues/28) foi não
+> construí-lo — o 🔊 do cabeçalho já comunica o estado. Ele foi implementado
+> mesmo assim, e o product owner optou por **mantê-lo**. Esta seção existe para
+> o componente parar de viver fora do documento, contra a §11.
+>
+> Consequência a vigiar: com a barra visível, o rodapé tem mini-player **e**
+> `LanguageBar`. É o empilhamento que a §10 apontou como problema — mitigado
+> por ser transitório, mas real enquanto a fala dura.
+
 ---
 
 ## 6. Ícones
