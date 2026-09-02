@@ -121,13 +121,21 @@ void main() {
       storage.dispose();
     });
 
-    test('migração não regride schema mais novo', () async {
-      final prefs = await _mockPrefs({StorageKeys.schemaVersion: 99});
-      final storage = StorageService(prefs: prefs);
+    // Política F3.6 (RF-M4-05): app mais novo que o gravado = downgrade —
+    // nunca interpreta formato desconhecido. O detalhamento das 4 rotas vive
+    // em storage_migration_test.dart.
+    test(
+      'migração em downgrade volta ao schema atual e reseta dados',
+      () async {
+        final prefs = await _mockPrefs({StorageKeys.schemaVersion: 99});
+        final storage = StorageService(prefs: prefs);
 
-      await storage.initialize();
-      expect(prefs.getInt(StorageKeys.schemaVersion), 99);
-      storage.dispose();
-    });
+        await storage.initialize();
+        expect(prefs.getInt(StorageKeys.schemaVersion), kSchemaVersion);
+        expect(storage.settings, AppSettings.defaults());
+        expect(storage.history, isEmpty);
+        storage.dispose();
+      },
+    );
   });
 }

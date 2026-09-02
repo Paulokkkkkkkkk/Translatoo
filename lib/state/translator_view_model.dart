@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import '../core/constants/app_constants.dart';
 import '../core/services/app_exception.dart';
 import '../core/services/model_manager_service.dart';
+import '../core/services/storage_service.dart';
 import '../core/services/translation_service.dart';
 import '../models/language.dart';
 import '../models/model_state.dart';
@@ -23,17 +24,31 @@ enum TranslatorStatus { idle, typing, translating, done, error }
 ///   executa sozinha (AC-M1-2);
 /// - `acceptDictatedText` é o gancho estável para o STT da Fase 2;
 /// - nenhuma exceção crua escapa: tudo vira [AppException] em [error].
+/// - F3.6 (RF-M4-05): com [settings] injetado, o par de idiomas nasce do
+///   persistido e toda troca (⇄/seleção) é gravada na hora — o "último par"
+///   sobrevive ao restart (AC-M4-3).
 class TranslatorViewModel extends ChangeNotifier {
   TranslatorViewModel({
     required TranslationService translationService,
     required ModelManagerService modelManager,
+    StorageService? settings,
   }) : _translation = translationService,
-       _models = modelManager {
+       _models = modelManager,
+       _settings = settings {
+    if (settings != null) {
+      // `_readSettings` do StorageService já garante origem ≠ destino (o par
+      // inválido persistido cai no default pt→en) — sem revalidar aqui.
+      _sourceLang = settings.settings.srcLang;
+      _targetLang = settings.settings.tgtLang;
+    }
     _models.states.addListener(_onModelStatesChanged);
   }
 
   final TranslationService _translation;
   final ModelManagerService _models;
+
+  /// Persistência do último par (opcional: os testes de tradução não usam).
+  final StorageService? _settings;
 
   Language _sourceLang = Language.pt;
   Language _targetLang = Language.en;
@@ -255,6 +270,7 @@ class TranslatorViewModel extends ChangeNotifier {
     _translatedText = text;
     _isTruncated = false;
     _error = null;
+    _persistPair();
     if (_sourceText.trim().isEmpty) {
       _status = TranslatorStatus.idle;
       notifyListeners();
@@ -274,6 +290,7 @@ class TranslatorViewModel extends ChangeNotifier {
     _sourceLang = language;
     _error = null;
     _fromDictation = false;
+    _persistPair();
     notifyListeners();
     if (_sourceText.trim().isNotEmpty) unawaited(_translate());
   }
@@ -289,8 +306,19 @@ class TranslatorViewModel extends ChangeNotifier {
     _targetLang = language;
     _error = null;
     _fromDictation = false;
+    _persistPair();
     notifyListeners();
     if (_sourceText.trim().isNotEmpty) unawaited(_translate());
+  }
+
+  /// Grava o par corrente (F3.6) — o debounce de 500 ms do storage agrupa
+  /// trocas rápidas; sem [settings] injetado é no-op.
+  void _persistPair() {
+    final storage = _settings;
+    if (storage == null) return;
+    storage.updateSettings(
+      storage.settings.copyWith(srcLang: _sourceLang, tgtLang: _targetLang),
+    );
   }
 
   // ── Ações auxiliares / ciclo de vida ─────────────────────────────────────

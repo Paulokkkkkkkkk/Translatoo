@@ -53,6 +53,9 @@ Future<void> main() async {
     api: MlKitModelManagerApi(),
     online: connectivity.isOnline,
     onMobileData: connectivity.isOnMobileData,
+    // F3.6: a preferência `wifiOnly` persistida passa a valer no gate de
+    // download (lida na chamada — troca em Ajustes vale já no próximo toque).
+    wifiOnlyPreference: () => storage.settings.wifiOnly,
   );
   unawaited(modelManager.refreshAll());
 
@@ -119,6 +122,8 @@ class TranslatooApp extends StatelessWidget {
           create: (_) => TranslatorViewModel(
             translationService: translationService,
             modelManager: modelManager,
+            // F3.6: nasce com o último par persistido (AC-M4-3) e grava trocas.
+            settings: storage,
           ),
         ),
         // Depende do TranslatorViewModel (autoplay/ditado) e do StorageService

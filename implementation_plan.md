@@ -7,7 +7,7 @@
 | **Versão do plano** | 1.1 |
 | **Data** | 2026-08-28 |
 | **Documento-fonte** | `prd.md` **v1.1** (requisitos, módulos, critérios de aceite) |
-| **Estado real** | **F0, F1 (com F1.9), a spike F2.0 e a F2.1–F2.8 concluídas** · F2.9 (integração M2×M3×M1 e qualidade da Fase 2) é o próximo passo |
+| **Estado real** | **F0–F1 concluídas · F2 concluída (F2.0–F2.9) · F3.1–F3.6 concluídas** · F3.7 (qualidade da Fase 3) é o próximo passo |
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
@@ -465,7 +465,7 @@ lib/
 
 ## Subfases
 
-### F3.1 — `LibraryViewModel` + regras de dados
+### F3.1 — `LibraryViewModel` + regras de dados ✅ concluída ([#30](../../issues/30))
 - `addRecord()`: salva toda tradução concluída com dedupe (mesma origem + mesmo par na última entrada → atualiza timestamp/resultado).
 - Capacidade: histórico FIFO de **200** entradas; favoritos ilimitados e nunca descartados automaticamente.
 - `delete(id)` + `undoDelete()` (restaura posição original); `clearHistory()` NÃO apaga favoritos.
@@ -473,28 +473,28 @@ lib/
 - Erros de persistência → `ERR_STORAGE` ("Não foi possível salvar" → Repetir ação).
 - **Entregável**: VM 100% coberta por testes unitários (dedupe, FIFO, undo, filtros).
 
-### F3.2 — Tela Histórico
+### F3.2 — Tela Histórico ✅ concluída ([#31](../../issues/31))
 - Cards: texto origem (cor secundária), tradução em destaque, pills dos idiomas, horário relativo ("há 5 min"), ⭐ quando favorito; toque reabre no Tradutor (preenche cartões + par).
 - Barra de busca fixa no topo + chips de filtro horizontais scrolláveis.
 - Swipe-to-delete individual + SnackBar "Desfazer" por 5 s; "Limpar tudo" com diálogo de confirmação.
 - Estado vazio ilustrado ("Suas traduções aparecerão aqui").
 - **Entregável**: tela completa conforme PRD §3.4.
 
-### F3.3 — Tela Ajustes
+### F3.3 — Tela Ajustes ✅ concluída ([#32](../../issues/32))
 - Itens RF-M4-09: par de idiomas padrão · autoplay TTS (switch) · sliders velocidade/tom ligados à `TtsViewModel` da F2 · somente Wi-Fi (switch) · link Gerenciar Modelos · limpar histórico (confirmado) · versão do app · declaração "Nenhum dado sai do seu aparelho".
 - **Seletor de tema**: Sistema / Claro / Escuro (persistido) — ativa o override manual sobre o `ThemeMode.system` default da F0.
 - **Entregável**: ajustes funcionais persistindo via `StorageService`.
 
-### F3.4 — Gerenciador de Modelos (`model_manager_screen.dart`)
+### F3.4 — Gerenciador de Modelos (`model_manager_screen.dart`) ✅ concluída ([#33](../../issues/33))
 - Lista dos 3 idiomas com estado real (`Não baixado · Baixando n% · Pronto`), tamanho ~30 MB, ações Baixar/Excluir (usa `ModelManagerService` da F1.3).
 - Bloqueio Wi-Fi-only em dados móveis: aviso explicativo + "Baixar mesmo assim" sem alterar a preferência (RF-M4-06 / AC-M4-4).
 - **Entregável**: gestão completa de pacotes pela UI.
 
-### F3.5 — Conectividade visível
+### F3.5 — Conectividade visível ✅ concluída ([#34](../../issues/34))
 - `ConnectionBadge` real no AppBar (🟢 online / ⚪ offline) alimentado pelo `ConnectivityService` (`ValueListenable`, sem rebuild das telas); tooltip explicativo.
 - Regra crítica verificada em todos os fluxos: **nada é bloqueado offline** (traduzir/ditar/ouvir/histórico funcionam em modo avião).
 
-### F3.6 — Persistência integral
+### F3.6 — Persistência integral ✅ concluída ([#35](../../issues/35))
 - Chaves finais `translatoo.*`: history, favorites, settings.srcLang/tgtLang, ttsRate/ttsPitch/autoPlay, wifiOnly, themeMode, schemaVersion.
 - Restauração no boot: último par de idiomas, preferências de voz, histórico e favoritos exatamente como deixados (AC-M4-3).
 - **Migração de `schemaVersion` (PRD RF-M4-05, 🆕 v1.1)**: implementar as quatro rotas — versão igual (leitura normal), **menor** (migrações encadeadas, com descarte apenas da coleção que falhar), **maior** (downgrade ⇒ descarta coleções e reseta preferências, nunca interpreta formato desconhecido) e **ausente** (tratada como versão 1). Preferências migram campo a campo com default, de modo que **acrescentar uma preferência não exige nova versão**. Cada rota coberta por teste unitário.

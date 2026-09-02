@@ -10,8 +10,8 @@ download de pacotes de idiomas e, no futuro, modo híbrido (P2).
 |---|---|---|
 | **F0** | Fundação e design system (tokens, tema, i18n, storage, conectividade, shell responsivo, pipeline de qualidade) | ✅ **concluída** |
 | **F1** | Motor de tradução offline (ML Kit + Plano B TFLite) | ✅ **concluída** (F1.1–F1.9, tipografia CJK incluída) |
-| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **F2.0–F2.8 concluídas** — ditado completo e TTS (serviço, ViewModel, 🔊 + mini-player) · ⬜ F2.9 (integração e qualidade da fase) |
-| F3 | Histórico, favoritos, ajustes, gerenciador de modelos | ⬜ — pode ser antecipada (depende de F1, não de F2) |
+| F2 | Voz: ditado STT + leitura TTS nativa | ✅ **concluída** (F2.0–F2.9 — ditado, TTS e integração conversacional) |
+| F3 | Histórico, favoritos, ajustes, gerenciador de modelos | 🟡 **F3.1–F3.6 concluídas** · ⬜ F3.7 (qualidade da fase) |
 | F4 | Polimento, modo híbrido, performance, release v1 | ⬜ |
 
 O backlog completo está nas [issues](../../issues) — uma por subfase do
@@ -234,6 +234,13 @@ gentileza.
 | F2.6 | [#26](../../issues/26) | `TtsService` + motor `flutter_tts` — fila única, cache de voz, erros mapeados | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.7 | [#27](../../issues/27) | `TtsViewModel` — autoplay, ditado sempre fala (RF-M3-06), erros observáveis | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.8 | [#28](../../issues/28) | UI de reprodução — 🔊, mini-player e sliders de voz (debug) | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F2.9 | [#29](../../issues/29) | Integração M2×M3×M1 — orquestração conversacional testada | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F3.1 | [#30](../../issues/30) | `LibraryViewModel` — dedupe, FIFO 200, undo, filtros | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F3.2 | [#31](../../issues/31) | Tela Histórico — busca, filtros, exclusão reversível | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F3.3 | [#32](../../issues/32) | Tela Ajustes + `SettingsViewModel` — preferências persistidas e tema manual | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F3.4 | [#33](../../issues/33) | Gerenciador de Modelos — estado real, Wi-Fi gate e confirmação de exclusão | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F3.5 | [#34](../../issues/34) | `ConnectionBadge` real — tooltip explicativo e live region | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F3.6 | [#35](../../issues/35) | Persistência integral — migração de schema, downgrade e último par no boot | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 

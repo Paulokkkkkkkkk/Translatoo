@@ -94,15 +94,24 @@ class ModelManagerService {
     required ModelManagerApi api,
     ValueListenable<bool>? online,
     ValueListenable<bool>? onMobileData,
+    bool Function()? wifiOnlyPreference,
   }) {
     _api = api;
     _online = online;
     _onMobileData = onMobileData;
+    _wifiOnly = wifiOnlyPreference;
   }
 
   late final ModelManagerApi _api;
   late final ValueListenable<bool>? _online;
   late final ValueListenable<bool>? _onMobileData;
+
+  /// Preferência `wifiOnly` do usuário (F3.6). Resolvida NA CHAMADA — lê o
+  /// `StorageService` no momento do download, então uma troca em Ajustes vale
+  /// já no próximo toque, sem reconstruir o serviço.
+  bool Function()? _wifiOnly;
+
+  bool _wifiOnlyValue() => _wifiOnly?.call() ?? true;
 
   final Map<Language, ModelState> _internalStates = <Language, ModelState>{
     for (final language in Language.values)
@@ -157,7 +166,7 @@ class ModelManagerService {
     if (current is ModelDownloading || current is ModelReady) return;
 
     final gate = evaluateDownloadGate(
-      wifiOnlyPreference: true,
+      wifiOnlyPreference: _wifiOnlyValue(),
       online: _online?.value ?? true,
       onMobileData: _onMobileData?.value ?? false,
       force: force,
