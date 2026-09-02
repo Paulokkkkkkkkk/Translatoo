@@ -212,6 +212,9 @@ class _TranslateScreenState extends State<TranslateScreen> {
     final manager = context.read<ModelManagerService>();
 
     final voice = _mode == TranslateMode.voice;
+    // Breakpoint do PRD §4.1: a partir de 600 dp cabe o par de painéis lado a
+    // lado. Abaixo disso eles continuam empilhados.
+    final wide = MediaQuery.sizeOf(context).width >= 600;
     // §4: bloco de marca a ~40% da altura útil no modo voz (medido no case).
     final voiceHeight = MediaQuery.sizeOf(context).height * 0.34;
 
@@ -266,12 +269,37 @@ class _TranslateScreenState extends State<TranslateScreen> {
                         );
                       },
                     ),
-                    _OriginPanel(
-                      controller: _controller,
-                      onPaste: _pasteFromClipboard,
-                      onEnterVoiceMode: _enterVoiceMode,
-                    ),
-                    _DestinationPanel(onCopy: _copyTranslation),
+                    // 600–1024 dp: os painéis viram colunas lado a lado (PRD
+                    // §4.1). Empilhados numa tela larga, cada um ficaria com
+                    // uma linha de texto e metade da tela vazia.
+                    if (wide)
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(
+                              child: _OriginPanel(
+                                controller: _controller,
+                                onPaste: _pasteFromClipboard,
+                                onEnterVoiceMode: _enterVoiceMode,
+                              ),
+                            ),
+                            Expanded(
+                              child: _DestinationPanel(
+                                onCopy: _copyTranslation,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else ...[
+                      _OriginPanel(
+                        controller: _controller,
+                        onPaste: _pasteFromClipboard,
+                        onEnterVoiceMode: _enterVoiceMode,
+                      ),
+                      _DestinationPanel(onCopy: _copyTranslation),
+                    ],
                   ],
                 ),
               ),
