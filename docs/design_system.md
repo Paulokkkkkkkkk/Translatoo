@@ -85,11 +85,17 @@ começar; o painel então entra com o canto esquerdo curvo. **Só uma das duas n
 produz o efeito** — foi o erro da primeira implementação, que arredondou só o
 painel e deixou o bloco reto.
 
-> **Divergência registrada.** O case mede ~38–40 dp nesse canto; a tabela acima
-> define `radiusLg` = 28 dp, e a §P2 fala em "24–32 dp". A implementação usa
-> `radiusLg`, ficando dentro da faixa que o próprio documento declara. Subir a
-> escala para 40 dp é decisão de produto — mexeria em todo painel, sheet e
-> squircle do app.
+> **DECIDIDA — a escala fica em 28 dp** (2026-09-02, product owner · issue #76).
+>
+> O case mede ~38–40 dp nesse canto, contra os 28 dp da tabela acima. A
+> divergência é real e fica registrada, mas a escala **não muda**: 28 dp está
+> dentro da faixa "24–32 dp" que a própria §P2 declara, e o resultado visual foi
+> aprovado depois da correção da curva em diagonal.
+>
+> O que carregava o efeito era a **forma**, não o tamanho — a assimetria e o
+> encaixe das duas curvas. Subir para 40 dp mexeria em todo painel, sheet e
+> squircle do app de uma vez, e obrigaria a corrigir a faixa da §P2 junto, para
+> ganhar 12 dp num canto que ninguém apontou como errado.
 
 **Regra do squircle.** Botões quadrados de ícone (grid de modos, botão de modo no
 topo) usam lado ≥ 96 dp com `radiusLg`. Abaixo de 96 dp o raio grande deforma o
