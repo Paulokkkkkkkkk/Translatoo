@@ -10,7 +10,7 @@ download de pacotes de idiomas e, no futuro, modo híbrido (P2).
 |---|---|---|
 | **F0** | Fundação e design system (tokens, tema, i18n, storage, conectividade, shell responsivo, pipeline de qualidade) | ✅ **concluída** |
 | **F1** | Motor de tradução offline (ML Kit + Plano B TFLite) | ✅ **concluída** (F1.1–F1.9, tipografia CJK incluída) |
-| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **ditado completo** (F2.0–F2.5 + F2.2b) · ⬜ F2.6–F2.9 (TTS) |
+| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **F2.0–F2.8 concluídas** — ditado completo e TTS (serviço, ViewModel, 🔊 + mini-player) · ⬜ F2.9 (integração e qualidade da fase) |
 | F3 | Histórico, favoritos, ajustes, gerenciador de modelos | ⬜ — pode ser antecipada (depende de F1, não de F2) |
 | F4 | Polimento, modo híbrido, performance, release v1 | ⬜ |
 
@@ -180,6 +180,11 @@ leitura tolerante a JSON corrompido, migrações por `schemaVersion`.
 - ~~**Textos de permissão do iOS só existem em pt-BR (F2.3)**~~ — **resolvido na
   F4.7a**: `InfoPlist.strings` em `pt-BR`, `en` e `zh-Hans`, registrados como
   variant group no projeto Xcode e declarados em `CFBundleLocalizations`.
+- **Atalho às configurações de TTS do SO não implementado (F2.6)** — pendência
+  de produto: nenhum plugin da lista fechada expõe o deep-link, e botão que não
+  leva a lugar nenhum é pior que ausência. A SnackBar de voz ausente é
+  persistente e instrui o caminho (AC-M3-2 preservado); a validação manual dos
+  AC-M3-1..3 em Android físico segue pendente (sem device no ambiente).
 
 ## Nota de ambiente (risco R6)
 
@@ -221,6 +226,9 @@ gentileza.
 | DS | [#53](../../issues/53) | Tokens de raio da §2 (`radiusSm/Md/Lg/Pill`) e migração dos widgets | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F4.7a | [#54](../../issues/54) | Identidade do app: bundle id, nome e textos de permissão do iOS | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | DS | — | Redesenho da tela Traduzir para a anatomia da §4 do design system | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F2.6 | [#26](../../issues/26) | `TtsService` + motor `flutter_tts` — fila única, cache de voz, erros mapeados | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F2.7 | [#27](../../issues/27) | `TtsViewModel` — autoplay, ditado sempre fala (RF-M3-06), erros observáveis | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F2.8 | [#28](../../issues/28) | UI de reprodução — 🔊, mini-player e sliders de voz (debug) | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 

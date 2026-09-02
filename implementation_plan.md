@@ -7,7 +7,7 @@
 | **Versão do plano** | 1.1 |
 | **Data** | 2026-08-28 |
 | **Documento-fonte** | `prd.md` **v1.1** (requisitos, módulos, critérios de aceite) |
-| **Estado real** | **F0, F1 (com F1.9), a spike F2.0 e a F2.1–F2.5 concluídas** · F2.6 (TTS) é o próximo passo |
+| **Estado real** | **F0, F1 (com F1.9), a spike F2.0 e a F2.1–F2.8 concluídas** · F2.9 (integração M2×M3×M1 e qualidade da Fase 2) é o próximo passo |
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
@@ -415,20 +415,32 @@ lib/
 - Feedback háptico curto ao iniciar/encerrar; `AnimationController` único p/ pulso+waveform (meta 60 fps).
 - **Entregável**: experiência de ditado fluida conforme PRD §3.2.
 
-### F2.6 — `TtsService` (wrapper flutter_tts)
+### F2.6 — `TtsService` (wrapper flutter_tts) ✅ concluída ([#26](../../issues/26))
+
+> **Pendências registradas (decisão de produto, mesmo padrão do `lite` > 40 MB):**
+> (a) o atalho **deep-link** para as configurações de TTS do SO **não** foi
+> implementado — nenhum plugin da lista fechada expõe o intent, e um botão que
+> não leva a lugar nenhum é pior que sua ausência; a mensagem da snackbar
+> instrui o caminho de instalação (AC-M3-2 preservado). (b) Validação manual
+> dos AC-M3-1..3 em Android físico **pendente** (sem device no ambiente — mesma
+> pendência de medição da F2.1).
 - Fala exclusivamente com motor nativo do SO; idioma = idioma de DESTINO.
 - Checagem prévia: `isLanguageAvailable`/`getVoices` → cache `voiceAvailable[lang]`; ausente → `ERR_TTS_VOICE_MISSING` com instrução explícita de instalação da voz no sistema + atalho p/ configurações do aparelho (SnackBar persistente; app não trava).
 - Fila única: novo `speak()` sempre executa `stop()` antes; handlers `onComplete/onError` devolvem ao estado idle.
 - Parâmetros `rate ∈ [0.5–2.0]` (default 1.0) e `pitch ∈ [0.5–1.5]` (default 1.0).
 - **Entregável**: reprodução audível PT/EN/ZH no device com voz instalada; aviso correto sem voz.
 
-### F2.7 — `TtsViewModel`
+### F2.7 — `TtsViewModel` ✅ concluída ([#27](../../issues/27))
 - Estados `{idle, speaking}`; debounce anti duplo-toque (mesmo texto ≤ 300 ms é idempotente).
 - Autoplay (default OFF): tradução concluída é falada se ativado; traduções originadas de ditado SEMPRE reproduzem automaticamente (fluxo conversacional), independentemente do autoplay (RF-M3-06).
 - Cache `voiceAvailable` atualizado na abertura do app e ao voltar de segundo plano.
 - **Entregável**: VM testada (fila única, autoplay condicional, erro de voz).
 
-### F2.8 — UI de reprodução
+### F2.8 — UI de reprodução ✅ concluída ([#28](../../issues/28))
+
+> Painel de voz com sliders (velocidade/tom) entregue **funcional** na tela de
+> debug (longo-press no título); migra para Ajustes na F3 com a persistência
+> (AC-M3-4). Componentes documentados no design system §5.10–5.11.
 - Botão 🔊 no cartão destino alternando ▶/⏹ conforme estado; desabilitado com resultado vazio.
 - `mini_player_tts.dart`: barra inferior durante reprodução — ícone animado, trecho falado com scroll horizontal, stop.
 - Painel de voz (sliders rotulados velocidade/tom com valor numérico) já funcional em tela de debug; migra para Ajustes na F3.

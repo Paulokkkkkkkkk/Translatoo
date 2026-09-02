@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,7 +7,9 @@ import 'package:provider/provider.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_strings.dart';
 import '../../state/connection_view_model.dart';
+import '../../state/tts_view_model.dart';
 import '../widgets/connection_badge.dart';
+import '../widgets/mini_player_tts.dart';
 import 'debug_models_screen.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
@@ -36,6 +40,24 @@ class _HomeScreenState extends State<HomeScreen> {
     SettingsScreen(),
   ];
 
+  /// F2.7 — a voz pode ter sido instalada no sistema enquanto o app esteve em
+  /// segundo plano: ao voltar, o cache de disponibilidade é invalidado.
+  late final AppLifecycleListener _lifecycle = AppLifecycleListener(
+    onResume: () => context.read<TtsViewModel>().refreshVoices(),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycle; // instancia o listener
+  }
+
+  @override
+  void dispose() {
+    _lifecycle.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppStrings.of(context);
@@ -63,20 +85,40 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final width = constraints.maxWidth;
-            final screen = _screens[_index];
-            if (width >= 1024) {
-              return Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 720),
-                  child: screen,
-                ),
-              );
-            }
-            return screen;
-          },
+        child: Column(
+          children: [
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final width = constraints.maxWidth;
+                  final screen = _screens[_index];
+                  if (width >= 1024) {
+                    return Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 720),
+                        child: screen,
+                      ),
+                    );
+                  }
+                  return screen;
+                },
+              ),
+            ),
+            // Mini-player (F2.8): só existe durante a reprodução; some sozinho
+            // quando a fala termina. Vive na shell porque a voz continua mesmo
+            // com o usuário navegando (RN-07).
+            Selector<TtsViewModel, (bool, String?)>(
+              selector: (_, vm) => (vm.isSpeaking, vm.speakingText),
+              builder: (context, data, _) {
+                final (speaking, text) = data;
+                if (!speaking) return const SizedBox.shrink();
+                return MiniPlayerTts(
+                  text: text ?? '',
+                  onStop: () => unawaited(context.read<TtsViewModel>().stop()),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

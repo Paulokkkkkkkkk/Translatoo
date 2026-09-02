@@ -76,6 +76,9 @@ abstract final class AppStrings {
   String get dictationListening;
   String get dictationHint;
 
+  // Leitura em voz alta (F2.8)
+  String get actionStopPlayback;
+
   String get comingSoon;
   String get feedbackCopied;
   String get modelSizeEstimate;
@@ -83,6 +86,9 @@ abstract final class AppStrings {
 
   // Tela de debug de pacotes (F1.3 — só visível em builds debug)
   String get debugModelsTitle;
+
+  // Painel de voz de debug (F2.8 — sliders; migram para Ajustes na F3)
+  String get debugVoiceTitle;
 
   // Estados de pacote de idioma
   String get modelStateReady;
@@ -200,6 +206,8 @@ final class _PtStrings extends AppStrings {
   @override
   String get actionListen => 'Ouvir tradução';
   @override
+  String get actionStopPlayback => 'Parar reprodução';
+  @override
   String get comingSoon => 'chega na próxima fase';
   @override
   String get feedbackCopied => 'Tradução copiada';
@@ -210,6 +218,8 @@ final class _PtStrings extends AppStrings {
 
   @override
   String get debugModelsTitle => 'Pacotes de idiomas (debug)';
+  @override
+  String get debugVoiceTitle => 'Voz (debug)';
 
   @override
   String get modelStateReady => 'Pronto';
@@ -346,6 +356,8 @@ final class _EnStrings extends AppStrings {
   @override
   String get actionListen => 'Listen to translation';
   @override
+  String get actionStopPlayback => 'Stop playback';
+  @override
   String get comingSoon => 'coming in the next phase';
   @override
   String get feedbackCopied => 'Translation copied';
@@ -356,6 +368,8 @@ final class _EnStrings extends AppStrings {
 
   @override
   String get debugModelsTitle => 'Language packages (debug)';
+  @override
+  String get debugVoiceTitle => 'Voice (debug)';
 
   @override
   String get modelStateReady => 'Ready';
@@ -485,6 +499,8 @@ final class _ZhStrings extends AppStrings {
   @override
   String get actionListen => '朗读译文';
   @override
+  String get actionStopPlayback => '停止播放';
+  @override
   String get comingSoon => '下一阶段推出';
   @override
   String get feedbackCopied => '译文已复制';
@@ -495,6 +511,8 @@ final class _ZhStrings extends AppStrings {
 
   @override
   String get debugModelsTitle => '语言包（调试）';
+  @override
+  String get debugVoiceTitle => '语音（调试）';
 
   @override
   String get modelStateReady => '就绪';
