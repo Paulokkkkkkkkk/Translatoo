@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/app_spacing.dart';
-
 /// Onda do ditado (§5.7 do design system), alimentada por nível REAL de
 /// microfone.
 ///
@@ -14,12 +12,21 @@ import '../../core/constants/app_spacing.dart';
 /// medida. Sem nível, o chamador não deve montar este widget — onda falsa em app
 /// de ditado é mentira de interface (§5.7).
 class Waveform extends StatelessWidget {
-  const Waveform({required this.levels, this.height = 40, super.key});
+  const Waveform({
+    required this.levels,
+    this.height = 40,
+    this.color,
+    super.key,
+  });
 
   /// Níveis normalizados em 0..1, do mais antigo ao mais recente.
   final List<double> levels;
 
   final double height;
+
+  /// Cor das barras. A §5.7 manda `colorOnPrimary` sobre o bloco de marca e
+  /// `colorPrimary` sobre superfície clara — quem sabe onde está é o chamador.
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +36,7 @@ class Waveform extends StatelessWidget {
       child: CustomPaint(
         painter: _WaveformPainter(
           levels: levels,
-          color: Theme.of(context).colorScheme.primary,
+          color: color ?? Theme.of(context).colorScheme.primary,
         ),
         // A onda é decorativa: o estado de escuta já é anunciado pelo rótulo e
         // pelo cronômetro da folha. Duplicar isso só polui o leitor de tela.
@@ -92,29 +99,4 @@ class _WaveformPainter extends CustomPainter {
     }
     return true;
   }
-}
-
-/// Espaço reservado para a onda, usado quando a fonte de áudio não mede nível.
-///
-/// Existe para a folha não "pular" de altura entre um build com onda e outro
-/// sem: o indicador de escuta neutro da §5.7 ocupa o mesmo lugar.
-class WaveformPlaceholder extends StatelessWidget {
-  const WaveformPlaceholder({this.height = 40, super.key});
-
-  final double height;
-
-  @override
-  Widget build(BuildContext context) => SizedBox(
-    height: height,
-    child: Center(
-      child: Container(
-        height: AppSpacing.xs,
-        width: AppSpacing.xl,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-          color: Theme.of(context).colorScheme.outlineVariant,
-        ),
-      ),
-    ),
-  );
 }

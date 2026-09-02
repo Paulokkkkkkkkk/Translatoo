@@ -33,6 +33,33 @@ precisa entender uma parte específica do app.
 
 ---
 
+## ⚠️ `--flavor` é obrigatório para rodar
+
+Desde a F2.1b o projeto tem dois flavors (`lite` e `full`). **Nunca rode
+`flutter run` sem `--flavor`.**
+
+O motivo não é cosmético: sem flavor, o Gradle monta a tarefa agregada
+`assembleDebug` e o instalador pode pegar um APK obsoleto em
+`build/app/outputs/apk/debug/` — um caminho que nenhum build atual sobrescreve.
+O sintoma é traiçoeiro: **o app abre com a versão ANTIGA**, com o design e até o
+`applicationId` de antes, enquanto o build acusa sucesso.
+
+```bash
+# Android
+flutter run --flavor full \
+  --dart-define=STT_MODEL_ASSET=assets/models/whisper/ggml-base-q5_1.bin
+
+# se algo parecer "velho", limpe os artefatos antes de investigar
+flutter clean
+```
+
+**iOS só roda em iPhone físico.** O ML Kit publica fatia `arm64` apenas para
+device, e o simulador do Apple Silicon recusa `x86_64` desde que o Xcode
+removeu a rota Rosetta. Não há contorno; o erro aparece como
+`Unable to find a destination matching`.
+
+---
+
 ## Fluxo de trabalho
 
 1. **Escolha uma issue** que não esteja atribuída e cujas dependências já
@@ -55,7 +82,8 @@ precisa entender uma parte específica do app.
 flutter analyze                          # zero warnings
 dart format --set-exit-if-changed .      # formatação
 flutter test                             # todos verdes
-flutter run --release                    # validação manual no device
+flutter run --release --flavor full \
+  --dart-define=STT_MODEL_ASSET=assets/models/whisper/ggml-base-q5_1.bin
 ```
 
 Um PR com qualquer um destes vermelho não entra em revisão.

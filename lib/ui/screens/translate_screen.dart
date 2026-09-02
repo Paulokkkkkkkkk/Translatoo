@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,10 +17,11 @@ import '../../state/translator_view_model.dart';
 import '../../state/tts_view_model.dart';
 import '../widgets/download_progress_card.dart';
 import '../widgets/language_bar.dart';
-import '../widgets/listening_sheet.dart';
 import '../widgets/mic_button.dart';
+import '../widgets/mode_button.dart';
 import '../widgets/shimmer_box.dart';
 import '../widgets/translation_panel.dart';
+import '../widgets/voice_block.dart';
 
 /// Tela Traduzir (F1.6 — PRD §3.1): cartões duplos origem/destino com ⇄
 /// central, tradução automática por debounce e fluxo de download embutido.
@@ -37,6 +39,10 @@ class TranslateScreen extends StatefulWidget {
 class _TranslateScreenState extends State<TranslateScreen> {
   final TextEditingController _controller = TextEditingController();
   TranslatorViewModel? _observed;
+
+  /// Modo ativo (§9.2). Com 2 modos o botão do canto alterna direto — estado
+  /// local basta: nenhum serviço nem outra tela precisa saber disto.
+  TranslateMode _mode = TranslateMode.text;
   AppException? _lastShownError;
   TtsViewModel? _observedTts;
   ErrorCode? _lastTtsError;
@@ -204,98 +210,157 @@ class _TranslateScreenState extends State<TranslateScreen> {
     final t = AppStrings.of(context);
     final manager = context.read<ModelManagerService>();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // ── Faixas 2 e 3 da §4: pilha de painéis ────────────────────────────
-        // Painéis SANGRAM até a borda (§4) e são empilhados sem gap: o topo
-        // arredondado do painel seguinte cobre a borda reta do anterior, que é
-        // o que produz a "pilha" da §P1 sem nenhum offset negativo.
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Card de download só aparece com o par incompleto; é o único
-                // bloco com margem lateral, porque é aviso, não painel.
-                Selector<TranslatorViewModel, (Language, ModelState)?>(
-                  selector: (_, vm) => _missingModelFor(vm),
-                  builder: (context, missing, _) {
-                    final entry = missing;
-                    if (entry == null) return const SizedBox.shrink();
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                        AppSpacing.md,
-                        AppSpacing.md,
-                        AppSpacing.md,
-                        AppSpacing.sm,
-                      ),
-                      child: DownloadProgressCard(
-                        language: entry.$1,
-                        state: entry.$2,
-                        onDownload: () => _observed?.retryLastAction(),
-                        onCancel: () => manager.cancelDownload(entry.$1),
-                      ),
-                    );
-                  },
-                ),
-                _OriginPanel(
-                  controller: _controller,
-                  onPaste: _pasteFromClipboard,
-                ),
-                _DestinationPanel(onCopy: _copyTranslation),
-              ],
-            ),
-          ),
-        ),
+    final voice = _mode == TranslateMode.voice;
+    // §4: bloco de marca a ~40% da altura útil no modo voz (medido no case).
+    final voiceHeight = MediaQuery.sizeOf(context).height * 0.34;
 
-        // ── Faixa 4 da §4: ação ancorada no polegar (§P5) ───────────────────
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.md,
-            AppSpacing.md,
-            AppSpacing.md,
-            AppSpacing.sm,
-          ),
-          child: Selector<TranslatorViewModel, bool>(
-            selector: (_, vm) =>
-                !vm.isTranslating && vm.sourceText.trim().isNotEmpty,
-            builder: (context, enabled, _) => FilledButton(
-              onPressed: enabled ? () => _observed!.translateNow() : null,
-              child: Text(t.buttonTranslate),
+    return Stack(
+      // §P4: o botão de modo TRANSBORDA o limite entre bloco e painel. Sem
+      // isto ele seria recortado — e é justamente o transbordo que faz dele o
+      // único elemento que quebra a grade.
+      clipBehavior: Clip.none,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // ── Faixa 1 da §4: bloco de marca (só cresce no modo voz) ───────────
+            AnimatedSize(
+              duration: const Duration(milliseconds: 280),
+              curve: Curves.easeOutCubic, // §7: painel subindo
+              alignment: Alignment.topCenter,
+              child: voice
+                  ? VoiceBlock(height: voiceHeight)
+                  : const SizedBox(width: double.infinity, height: 0),
             ),
-          ),
+
+            // ── Faixas 2 e 3 da §4: pilha de painéis ────────────────────────────
+            // Painéis SANGRAM até a borda (§4) e são empilhados sem gap: o topo
+            // arredondado do painel seguinte cobre a borda reta do anterior, que é
+            // o que produz a "pilha" da §P1 sem nenhum offset negativo.
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Card de download só aparece com o par incompleto; é o único
+                    // bloco com margem lateral, porque é aviso, não painel.
+                    Selector<TranslatorViewModel, (Language, ModelState)?>(
+                      selector: (_, vm) => _missingModelFor(vm),
+                      builder: (context, missing, _) {
+                        final entry = missing;
+                        if (entry == null) return const SizedBox.shrink();
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            AppSpacing.md,
+                            AppSpacing.md,
+                            AppSpacing.md,
+                            AppSpacing.sm,
+                          ),
+                          child: DownloadProgressCard(
+                            language: entry.$1,
+                            state: entry.$2,
+                            onDownload: () => _observed?.retryLastAction(),
+                            onCancel: () => manager.cancelDownload(entry.$1),
+                          ),
+                        );
+                      },
+                    ),
+                    _OriginPanel(
+                      controller: _controller,
+                      onPaste: _pasteFromClipboard,
+                      onEnterVoiceMode: _enterVoiceMode,
+                    ),
+                    _DestinationPanel(onCopy: _copyTranslation),
+                  ],
+                ),
+              ),
+            ),
+
+            // ── Faixa 4 da §4: ação ancorada no polegar (§P5) ───────────────────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.md,
+                AppSpacing.md,
+                AppSpacing.sm,
+              ),
+              child: Selector<TranslatorViewModel, bool>(
+                selector: (_, vm) =>
+                    !vm.isTranslating && vm.sourceText.trim().isNotEmpty,
+                builder: (context, enabled, _) => FilledButton(
+                  onPressed: enabled ? () => _observed!.translateNow() : null,
+                  child: Text(t.buttonTranslate),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                0,
+                AppSpacing.md,
+                AppSpacing.md,
+              ),
+              child: Selector<TranslatorViewModel, (Language, Language, bool)>(
+                selector: (_, vm) =>
+                    (vm.sourceLang, vm.targetLang, vm.isTranslating),
+                builder: (context, data, _) {
+                  final (source, target, translating) = data;
+                  return LanguageBar(
+                    source: source,
+                    target: target,
+                    enabled: !translating,
+                    onSelectSource: (language) => context
+                        .read<TranslatorViewModel>()
+                        .selectSource(language),
+                    onSelectTarget: (language) => context
+                        .read<TranslatorViewModel>()
+                        .selectTarget(language),
+                    onSwap: () => _observed!.swapLanguages(),
+                    sourceSemanticLabel: t.originLabel,
+                    targetSemanticLabel: t.destinationLabel,
+                    swapSemanticLabel: t.actionSwapLanguages,
+                  );
+                },
+              ),
+            ),
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.md,
-            0,
-            AppSpacing.md,
-            AppSpacing.md,
-          ),
-          child: Selector<TranslatorViewModel, (Language, Language, bool)>(
-            selector: (_, vm) =>
-                (vm.sourceLang, vm.targetLang, vm.isTranslating),
-            builder: (context, data, _) {
-              final (source, target, translating) = data;
-              return LanguageBar(
-                source: source,
-                target: target,
-                enabled: !translating,
-                onSelectSource: (language) =>
-                    context.read<TranslatorViewModel>().selectSource(language),
-                onSelectTarget: (language) =>
-                    context.read<TranslatorViewModel>().selectTarget(language),
-                onSwap: () => _observed!.swapLanguages(),
-                sourceSemanticLabel: t.originLabel,
-                targetSemanticLabel: t.destinationLabel,
-                swapSemanticLabel: t.actionSwapLanguages,
-              );
-            },
-          ),
+        // Botão de modo (§5.3): metade sobre o bloco de marca, metade sobre o
+        // painel. Em modo voz o limite desce junto com o bloco.
+        Positioned(
+          // O transbordo da §P4 só é possível quando o limite está DENTRO do
+          // corpo da tela — no modo voz ele está, e o botão cavalga a fronteira
+          // como o case desenha. No modo texto o limite é a própria borda do
+          // `body`, que recorta: `Clip.none` no Stack não vence o recorte do
+          // ancestral. Aí o botão encosta no topo em vez de ser cortado ao meio.
+          top: math.max(0.0, (voice ? voiceHeight : 0) - ModeButton.size / 2),
+          right: AppSpacing.md,
+          child: ModeButton(mode: _mode, onToggle: _toggleMode),
         ),
       ],
     );
+  }
+
+  /// Entra no modo voz sem alternar — usado pelo 🎤 do painel de origem.
+  void _enterVoiceMode() {
+    if (_mode != TranslateMode.voice) {
+      setState(() => _mode = TranslateMode.voice);
+    }
+  }
+
+  /// Alterna Texto ↔ Voz. Sair do modo voz durante a escuta CANCELA — trocar de
+  /// modo é desistir do ditado, e finalizar traduziria algo que o usuário
+  /// abandonou.
+  void _toggleMode() {
+    final speech = context.read<SpeechViewModel>();
+    setState(() {
+      _mode = _mode == TranslateMode.text
+          ? TranslateMode.voice
+          : TranslateMode.text;
+    });
+    if (_mode == TranslateMode.text && speech.isDictating) {
+      unawaited(speech.cancel());
+    }
   }
 
   /// Primeiro idioma do par corrente que impede a tradução (download em curso
@@ -318,10 +383,15 @@ class _TranslateScreenState extends State<TranslateScreen> {
 /// Painel de ORIGEM (§4 faixa 2 · §5.1). Superfície `colorBackground` — um
 /// degrau mais escuro que o destino, pela inversão deliberada da §3.
 class _OriginPanel extends StatelessWidget {
-  const _OriginPanel({required this.controller, required this.onPaste});
+  const _OriginPanel({
+    required this.controller,
+    required this.onPaste,
+    required this.onEnterVoiceMode,
+  });
 
   final TextEditingController controller;
   final Future<void> Function() onPaste;
+  final VoidCallback onEnterVoiceMode;
 
   @override
   Widget build(BuildContext context) {
@@ -349,27 +419,52 @@ class _OriginPanel extends StatelessWidget {
           ),
         ],
       ),
-      footer: _OriginFooter(onPaste: onPaste),
-      child: TextField(
-        controller: controller,
-        // RF-M2-07: digitar durante a escuta disputaria o mesmo campo que o
-        // ditado vai preencher.
-        enabled: !context.select<SpeechViewModel, bool>((vm) => vm.isDictating),
-        maxLines: null,
-        minLines: 3,
-        keyboardType: TextInputType.multiline,
-        // §P3 — dentro do painel, o campo É o painel: sem contorno nenhum. Só
-        // `border: none` não bastava, porque `enabledBorder` do tema tem
-        // precedência e continuava desenhando a caixa do Material.
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          disabledBorder: InputBorder.none,
-          filled: false,
-          isDense: true,
-          contentPadding: EdgeInsets.zero,
-          hintText: t.sourceHint,
+      footer: _OriginFooter(
+        onPaste: onPaste,
+        onEnterVoiceMode: onEnterVoiceMode,
+      ),
+      // Durante a escuta o painel mostra o PARCIAL, não o campo de digitação:
+      // é onde o case exibe o texto reconhecido, enquanto a onda fica no bloco
+      // de marca. O parcial é preview — não toca em `sourceText`, e por isso
+      // cancelar continua restaurando o texto anterior (AC-M2-4).
+      child: Selector<SpeechViewModel, (bool, String)>(
+        selector: (_, vm) => (vm.isDictating, vm.partialText),
+        builder: (context, data, child) {
+          final (dictating, partial) = data;
+          if (!dictating) return child!;
+          return Text(
+            partial.isEmpty ? t.dictationHint : partial,
+            // §5.1: parcial é itálico e secundário — sinaliza que o texto ainda
+            // vai ser reescrito pelo motor.
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontStyle: FontStyle.italic,
+            ),
+          );
+        },
+        child: TextField(
+          controller: controller,
+          // RF-M2-07: digitar durante a escuta disputaria o mesmo campo que o
+          // ditado vai preencher.
+          enabled: !context.select<SpeechViewModel, bool>(
+            (vm) => vm.isDictating,
+          ),
+          maxLines: null,
+          minLines: 3,
+          keyboardType: TextInputType.multiline,
+          // §P3 — dentro do painel, o campo É o painel: sem contorno nenhum. Só
+          // `border: none` não bastava, porque `enabledBorder` do tema tem
+          // precedência e continuava desenhando a caixa do Material.
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
+            filled: false,
+            isDense: true,
+            contentPadding: EdgeInsets.zero,
+            hintText: t.sourceHint,
+          ),
         ),
       ),
     );
@@ -399,9 +494,13 @@ class _OriginPanel extends StatelessWidget {
 /// Rodapé do cartão origem (F1.6): 🎤 placeholder F2 · colar · contador n/5000
 /// com aviso de truncamento. Rebuild cirúrgico — só o rodapé reage ao texto.
 class _OriginFooter extends StatelessWidget {
-  const _OriginFooter({required this.onPaste});
+  const _OriginFooter({required this.onPaste, required this.onEnterVoiceMode});
 
   final Future<void> Function() onPaste;
+
+  /// O 🎤 leva ao modo voz (§4): desde a #58 a escuta acontece no bloco de
+  /// marca expandido, e não mais numa folha sobreposta.
+  final VoidCallback onEnterVoiceMode;
 
   /// Toque no 🎤 (F2.5). O que fazer depende do estado, e não do que a UI
   /// acha que está acontecendo — a máquina de estados é a fonte da verdade.
@@ -421,14 +520,16 @@ class _OriginFooter extends StatelessWidget {
         // RF-M2-07: o microfone e a voz não dividem o mesmo instante — se uma
         // tradução está sendo lida, o ditado a interrompe antes de começar.
         unawaited(context.read<TtsViewModel>().stop());
+        // Entra no modo voz ANTES de pedir permissão: o bloco de marca já
+        // cresce, e o diálogo do sistema aparece sobre a tela que vai receber
+        // a fala — não sobre a tela de digitação.
+        onEnterVoiceMode();
         await speech.start(
           onPermissionNeeded: () async =>
               context.mounted && await _showRationaleDialog(context),
         );
         if (!context.mounted) return;
-        if (speech.state == SpeechState.listening) {
-          await ListeningSheet.show(context);
-        } else if (speech.errorAction == SuggestedAction.openSettings) {
+        if (speech.errorAction == SuggestedAction.openSettings) {
           speech.acknowledgeError();
           if (context.mounted) await _showBlockedDialog(context);
         }

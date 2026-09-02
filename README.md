@@ -224,6 +224,7 @@ gentileza.
 | F2.5 | [#25](../../issues/25) | UI do ditado — botão de microfone e folha de escuta | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.2b | [#52](../../issues/52) | Captura de microfone (`record`) + onda com nível real | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | DS | [#53](../../issues/53) | Tokens de raio da §2 (`radiusSm/Md/Lg/Pill`) e migração dos widgets | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| DS | [#58](../../issues/58) | Modo voz do case — bloco de marca expandido, onda no cabeçalho e botão de modo | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F4.7a | [#54](../../issues/54) | Identidade do app: bundle id, nome e textos de permissão do iOS | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | DS | — | Redesenho da tela Traduzir para a anatomia da §4 do design system | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.6 | [#26](../../issues/26) | `TtsService` + motor `flutter_tts` — fila única, cache de voz, erros mapeados | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |

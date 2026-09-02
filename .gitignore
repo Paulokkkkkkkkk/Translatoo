@@ -31,6 +31,11 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+# O `/build/` acima só cobre a raiz; o Gradle também escreve em android/build/
+# e android/app/build/ — foi de lá que um relatório de 132 KB entrou no
+# repositório por engano.
+**/android/build/
+**/android/app/build/
 /coverage/
 
 # Symbolication related

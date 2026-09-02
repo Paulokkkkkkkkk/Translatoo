@@ -20,6 +20,8 @@ import 'package:translatoo/state/translator_view_model.dart';
 import 'package:translatoo/state/tts_view_model.dart';
 import 'package:translatoo/ui/screens/translate_screen.dart';
 import 'package:translatoo/ui/widgets/download_progress_card.dart';
+import 'package:translatoo/ui/widgets/mode_button.dart';
+import 'package:translatoo/ui/widgets/voice_block.dart';
 
 /// Backend de eco determinístico (nunca toca plugin).
 class _EchoBackend implements TranslationBackend {
@@ -310,6 +312,35 @@ void main() {
     expect(vm.status, TranslatorStatus.done);
     expect(find.textContaining('[pten]Oi'), findsOneWidget);
     expect(api.installed, containsAll([Language.pt, Language.en]));
+
+    vm.dispose();
+    manager.dispose();
+  });
+
+  testWidgets('botão de modo alterna Texto ↔ Voz sem overlay (§5.3 · §9.2)', (
+    tester,
+  ) async {
+    final api = _GateApi()..installed.addAll(Language.values);
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    await _pump(tester, vm, manager);
+
+    // Modo texto: o bloco de voz não existe.
+    expect(find.byType(VoiceBlock), findsNothing);
+    expect(find.byType(ModeButton), findsOneWidget);
+
+    await tester.tap(find.byType(ModeButton));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    // Um toque bastou — nenhum overlay de escolha entre dois modos (§9.2).
+    expect(find.byType(VoiceBlock), findsOneWidget);
+
+    await tester.tap(find.byType(ModeButton));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.byType(VoiceBlock), findsNothing);
 
     vm.dispose();
     manager.dispose();

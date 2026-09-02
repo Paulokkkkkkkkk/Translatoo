@@ -305,7 +305,7 @@ exceções cromáticas da §6.
 > semântico de sucesso, não de ação. O ocioso usa `colorPrimary`, que é a cor
 > de ação do sistema. A issue precede a troca de paleta.
 
-### 5.9 Folha de escuta (F2.5)
+### 5.9 Folha de escuta (F2.5) — ⚠️ HISTÓRICA
 
 Bottom sheet modal sobre scrim `colorOverlay`, plano 2, topo arredondado.
 
@@ -334,9 +334,14 @@ vivem sobre o bloco de marca; aqui a folha é `colorSurface`, então as barras u
 `colorPrimary`. A geometria (2 dp de largura, 2 dp de gap, ancoradas no centro
 vertical) não muda.
 
-> **Histórico.** A F2.5 entregou um indicador neutro no lugar da onda, porque
-> ainda não havia captura de áudio e a §5.7 proíbe onda sem amplitude. A F2.2b
-> trouxe a fonte real e o conflito deixou de existir.
+> **HISTÓRICA — substituída pelo modo voz (#58, 2026-09-02).** A folha foi
+> removida do código: a escuta acontece no bloco de marca expandido da §4, como
+> o case desenha. Manter as duas dobraria a superfície de teste do M2 sem ganho
+> para o usuário. A seção fica como registro do caminho percorrido.
+>
+> A F2.5 entregou um indicador neutro no lugar da onda, porque ainda não havia
+> captura de áudio e a §5.7 proíbe onda sem amplitude. A F2.2b trouxe a fonte
+> real e o conflito deixou de existir.
 
 ### 5.10 Botão de leitura — 🔊 (F2.8 · M3)
 
@@ -373,6 +378,60 @@ mesmo navegando entre destinos; o player acompanha).
 - Sem estado "pausado" na v1: o motor nativo não expõe resume confiável entre
   SOs; a barra some e o ▶ recomeça do início.
 - `Semantics(container: true)` com rótulo "Ouvir tradução" (RN-06).
+
+### 5.10 Mini-player de leitura (F2.8)
+
+Barra discreta na shell, **acima da `LanguageBar`**, existente apenas enquanto a
+síntese está em curso. Plano 2, sombra invertida (y−2) porque descola do
+conteúdo que está acima dela, não abaixo.
+
+| Propriedade | Reproduzindo | Ausente |
+|---|---|---|
+| Ícone | equalizador pulsando, `colorPrimary`, 20 dp | — |
+| Texto | trecho falado, `bodyMedium`, **rolagem horizontal** | — |
+| Ação | ⏹ interrompe | — |
+| Visibilidade | `TtsViewModel.isSpeaking` | colapsa para zero |
+
+- **O texto NUNCA trunca com ellipsis.** É o conteúdo que está sendo falado; o
+  usuário rola para acompanhar a frase inteira.
+- Não há estado "pausado" na v1 — o motor nativo não expõe *resume* confiável
+  entre os dois SOs.
+- Vive na shell, e não na tela Traduzir, porque a voz continua enquanto o
+  usuário navega.
+
+> **Divergência do case, decidida em 2026-09-02.** O `home.webp` não desenha
+> mini-player, e a decisão registrada na [#28](../../issues/28) foi não
+> construí-lo — o 🔊 do cabeçalho já comunica o estado. Ele foi implementado
+> mesmo assim, e o product owner optou por **mantê-lo**. Esta seção existe para
+> o componente parar de viver fora do documento, contra a §11.
+>
+> Consequência a vigiar: com a barra visível, o rodapé tem mini-player **e**
+> `LanguageBar`. É o empilhamento que a §10 apontou como problema — mitigado
+> por ser transitório, mas real enquanto a fala dura.
+
+---
+
+### 5.11 Bloco de voz (#58)
+
+Bloco de marca expandido a **~40% da altura útil** (proporção medida na prancha
+de voz do case), continuando visualmente a barra superior: mesma `colorPrimary`,
+sem separador. As duas lidas juntas são o bloco de marca da §4.
+
+| Propriedade | Ocioso | Escutando |
+|---|---|---|
+| Onda | ausente — instrução em `colorOnPrimary` a 80% | barras `colorOnPrimary` (§5.7) |
+| Cronômetro | `00:00`, `titleMedium` | mm:ss corrente |
+| Pílula | "falar agora", ponto a 35% | "ouvindo…", ponto `colorError` a 100% |
+| Toque na pílula | inicia a escuta | encerra e traduz |
+
+- O **parcial não fica aqui**: vai para o painel de origem (§5.1), como no case.
+  O bloco de marca é da onda; o texto é do painel.
+- A pílula é superfície clara sobre a marca — texto pequeno direto sobre
+  `colorPrimary` não passaria em contraste (§8 regra 2).
+- Sair do modo voz durante a escuta **cancela**: trocar de modo é desistir do
+  ditado, e finalizar traduziria algo que o usuário abandonou.
+- Terminar a escuta **não sai do modo**. O bloco é tela, não overlay — quem sai
+  dele é o botão da §5.3.
 
 ---
 
