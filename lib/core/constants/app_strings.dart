@@ -70,7 +70,10 @@ abstract final class AppStrings {
   String get micRationaleBody;
   String get micBlockedBody;
 
-  // Ditado (F2.5)
+  // Modo de tradução (§5.3 · §9.2) e ditado (F2.5)
+  String get modeText;
+  String get modeVoice;
+  String get actionSpeakNow;
   String get actionStopDictation;
   String get actionFinishDictation;
   String get dictationListening;
@@ -187,6 +190,12 @@ final class _PtStrings extends AppStrings {
   String get actionDictate => 'Ditar';
   @override
   String get micRationaleTitle => 'Usar o microfone?';
+  @override
+  String get modeText => 'Modo texto';
+  @override
+  String get modeVoice => 'Modo voz';
+  @override
+  String get actionSpeakNow => 'Falar agora';
   @override
   String get actionStopDictation => 'Parar de ouvir';
   @override
@@ -337,6 +346,12 @@ final class _EnStrings extends AppStrings {
   @override
   String get micRationaleTitle => 'Use the microphone?';
   @override
+  String get modeText => 'Text mode';
+  @override
+  String get modeVoice => 'Voice mode';
+  @override
+  String get actionSpeakNow => 'Speak now';
+  @override
   String get actionStopDictation => 'Stop listening';
   @override
   String get actionFinishDictation => 'Done';
@@ -484,6 +499,12 @@ final class _ZhStrings extends AppStrings {
   String get actionDictate => '语音输入';
   @override
   String get micRationaleTitle => '使用麦克风？';
+  @override
+  String get modeText => '文字模式';
+  @override
+  String get modeVoice => '语音模式';
+  @override
+  String get actionSpeakNow => '开始说话';
   @override
   String get actionStopDictation => '停止聆听';
   @override

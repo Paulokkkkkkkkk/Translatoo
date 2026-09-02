@@ -16,8 +16,8 @@ import 'package:translatoo/models/language.dart';
 import 'package:translatoo/models/language_pair.dart';
 import 'package:translatoo/state/speech_view_model.dart';
 import 'package:translatoo/state/translator_view_model.dart';
-import 'package:translatoo/ui/widgets/listening_sheet.dart';
 import 'package:translatoo/ui/widgets/mic_button.dart';
+import 'package:translatoo/ui/widgets/voice_block.dart';
 import 'package:translatoo/ui/widgets/waveform.dart';
 
 class _FakeEngine implements SttEngine {
@@ -131,8 +131,8 @@ class _ReadyModelApi implements ModelManagerApi {
 /// `pumpAndSettle` é PROIBIDO enquanto a escuta está ativa: o anel pulsante
 /// (§5.8) agenda frames para sempre, e o settle avançaria o relógio até estourar
 /// o teto de 60 s do `SttService`, encerrando a sessão sozinho. Avança-se o
-/// tempo da transição da folha na mão.
-Future<void> _settleSheet(WidgetTester tester) async {
+/// tempo da transição do modo na mão.
+Future<void> _settleMode(WidgetTester tester) async {
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 400));
 }
@@ -153,6 +153,7 @@ void main() {
   late ModelManagerService models;
   late SttService stt;
   late _FakeAudio audio;
+  late bool voiceMode;
 
   /// Monta apenas o botão dentro de um Scaffold — a integração com a tela
   /// inteira já é coberta por translate_screen_test.dart.
@@ -160,6 +161,7 @@ void main() {
     WidgetTester tester, {
     bool dictationAvailable = true,
   }) async {
+    voiceMode = false;
     engine = _FakeEngine();
     models = ModelManagerService(api: _ReadyModelApi());
     await models.refreshAll();
@@ -190,23 +192,27 @@ void main() {
       models.dispose();
     });
 
+    // Réplica mínima da tela: o 🎤 leva ao MODO VOZ (§4), que é onde a escuta
+    // acontece desde a #58 — a folha sobreposta da F2.5 não existe mais.
     await tester.pumpWidget(
       ChangeNotifierProvider<SpeechViewModel>.value(
         value: speech,
         child: MaterialApp(
           home: Scaffold(
-            body: Builder(
-              builder: (context) => Row(
+            body: StatefulBuilder(
+              builder: (context, setState) => Column(
                 children: <Widget>[
-                  ?MicButton.maybe(
-                    context,
-                    onPressed: () => unawaited(
-                      speech.start().then((_) {
-                        if (speech.state == SpeechState.listening) {
-                          unawaited(ListeningSheet.show(context));
-                        }
-                      }),
-                    ),
+                  if (voiceMode) const VoiceBlock(height: 200),
+                  Row(
+                    children: <Widget>[
+                      ?MicButton.maybe(
+                        context,
+                        onPressed: () {
+                          setState(() => voiceMode = true);
+                          unawaited(speech.start());
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -238,52 +244,55 @@ void main() {
     );
   });
 
-  testWidgets('escutando: ícone preenchido em colorError e folha aberta', (
+  testWidgets(
+    'escutando: ícone preenchido em colorError e bloco de voz aberto',
+    (tester) async {
+      await pumpButton(tester);
+
+      await tester.tap(find.byType(IconButton).first);
+      await _settleMode(tester);
+
+      expect(speech.state, SpeechState.listening);
+      expect(find.byType(VoiceBlock), findsOneWidget);
+
+      final icon = tester.widget<Icon>(find.byIcon(Icons.mic));
+      expect(
+        icon.color,
+        Theme.of(tester.element(find.byType(MicButton))).colorScheme.error,
+      );
+
+      await _endSession(tester, speech);
+    },
+  );
+
+  testWidgets('parcial aparece no bloco de voz e é SUBSTITUÍDO a cada emissão', (
     tester,
   ) async {
     await pumpButton(tester);
-
     await tester.tap(find.byType(IconButton).first);
-    await _settleSheet(tester);
+    await _settleMode(tester);
 
-    expect(speech.state, SpeechState.listening);
-    expect(find.byType(ListeningSheet), findsOneWidget);
-
-    final icon = tester.widget<Icon>(find.byIcon(Icons.mic));
-    expect(
-      icon.color,
-      Theme.of(tester.element(find.byType(MicButton))).colorScheme.error,
-    );
-
-    await _endSession(tester, speech);
-  });
-
-  testWidgets('parcial aparece na folha e é SUBSTITUÍDO a cada emissão', (
-    tester,
-  ) async {
-    await pumpButton(tester);
-    await tester.tap(find.byType(IconButton).first);
-    await _settleSheet(tester);
-
+    // O parcial é renderizado no PAINEL DE ORIGEM (§5.1), que não faz parte
+    // desta réplica mínima — aqui basta provar que o ViewModel substitui, e
+    // nunca concatena. A renderização é coberta em translate_screen_test.dart.
     engine.session!.emitPartial('bom');
     await tester.pump();
-    expect(find.text('bom'), findsOneWidget);
+    expect(speech.partialText, 'bom');
 
     engine.session!.emitPartial('bom dia');
     await tester.pump();
-    expect(find.text('bom dia'), findsOneWidget);
-    expect(find.text('bom'), findsNothing); // substituído, não concatenado
+    expect(speech.partialText, 'bom dia');
 
     await _endSession(tester, speech);
   });
 
-  testWidgets('fim da escuta fecha a folha sozinho (AC-M2-1 / AC-M2-3)', (
+  testWidgets('fim da escuta sai do modo voz sozinho (AC-M2-1 / AC-M2-3)', (
     tester,
   ) async {
     await pumpButton(tester);
     await tester.tap(find.byType(IconButton).first);
-    await _settleSheet(tester);
-    expect(find.byType(ListeningSheet), findsOneWidget);
+    await _settleMode(tester);
+    expect(find.byType(VoiceBlock), findsOneWidget);
 
     // A pausa de 1,5 s do SttService encerra a sessão; a folha some sem que
     // ninguém a feche explicitamente.
@@ -292,10 +301,13 @@ void main() {
       ..finalText = 'Bom dia.';
     await tester.pump();
     await tester.pump(sttSentencePause);
-    await _settleSheet(tester);
+    await _settleMode(tester);
     await tester.pump(const Duration(milliseconds: 400));
 
-    expect(find.byType(ListeningSheet), findsNothing);
+    // O MODO permanece — quem sai dele é o botão de modo. O que termina é a
+    // ESCUTA: diferente da folha da F2.5, que se fechava sozinha, o bloco de
+    // voz é uma tela, não um overlay transitório.
+    expect(find.byType(VoiceBlock), findsOneWidget);
     expect(speech.state, SpeechState.idle);
     expect(translator.sourceText, 'Bom dia.');
   });
@@ -305,37 +317,37 @@ void main() {
   ) async {
     await pumpButton(tester);
     await tester.tap(find.byType(IconButton).first);
-    await _settleSheet(tester);
+    await _settleMode(tester);
 
-    // Sem nível: espaço reservado, nenhuma barra inventada.
+    // Sem nível: instrução, nenhuma barra inventada (§5.7).
     expect(find.byType(Waveform), findsNothing);
-    expect(find.byType(WaveformPlaceholder), findsOneWidget);
+    expect(find.textContaining('Speak'), findsWidgets);
 
     audio.emitLevel(0.6);
     await tester.pump();
 
     expect(find.byType(Waveform), findsOneWidget);
-    expect(find.byType(WaveformPlaceholder), findsNothing);
 
     await _endSession(tester, speech);
   });
 
-  testWidgets('cancelar na folha restaura o texto anterior (AC-M2-4)', (
+  testWidgets('a pílula encerra a escuta e dispara a tradução (§5.7)', (
     tester,
   ) async {
     await pumpButton(tester);
-    translator.onTextChanged('rascunho');
     await tester.tap(find.byType(IconButton).first);
-    await _settleSheet(tester);
+    await _settleMode(tester);
 
-    engine.session!.emitPartial('fala descartada');
+    engine.session!
+      ..emitPartial('bom dia')
+      ..finalText = 'Bom dia.';
     await tester.pump();
 
-    await tester.tap(find.text('Cancel'));
-    await _settleSheet(tester);
-    await tester.pump(const Duration(milliseconds: 400));
+    // A pílula troca de rótulo durante a escuta e é o controle de parada.
+    await tester.tap(find.text('Listening…'));
+    await _settleMode(tester);
 
-    expect(find.byType(ListeningSheet), findsNothing);
-    expect(translator.sourceText, 'rascunho');
+    expect(speech.state, SpeechState.idle);
+    expect(translator.sourceText, 'Bom dia.');
   });
 }
