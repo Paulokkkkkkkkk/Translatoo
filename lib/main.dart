@@ -21,8 +21,10 @@ import 'core/services/tts_service.dart';
 import 'core/services/whisper_model_installer.dart';
 import 'core/services/whisper_stt_engine.dart';
 import 'core/theme/app_theme.dart';
+import 'models/app_settings.dart';
 import 'state/connection_view_model.dart';
 import 'state/library_view_model.dart';
+import 'state/settings_view_model.dart';
 import 'state/speech_view_model.dart';
 import 'state/translator_view_model.dart';
 import 'state/tts_view_model.dart';
@@ -131,6 +133,15 @@ class TranslatooApp extends StatelessWidget {
           ),
           update: (_, _, tts) => tts!,
         ),
+        // Preferências: depende do TtsViewModel para espelhar rate/pitch na
+        // reprodução em curso, e não só na próxima.
+        ChangeNotifierProxyProvider<TtsViewModel, SettingsViewModel>(
+          create: (context) => SettingsViewModel(
+            storageService: storage,
+            ttsViewModel: context.read<TtsViewModel>(),
+          ),
+          update: (_, _, settings) => settings!,
+        ),
         // Grava toda tradução concluída no histórico (M4). Como o TtsViewModel,
         // observa o tradutor em vez de a UI ter de lembrar de chamar.
         ChangeNotifierProxyProvider<TranslatorViewModel, LibraryViewModel>(
@@ -151,33 +162,39 @@ class TranslatooApp extends StatelessWidget {
           update: (_, _, speech) => speech!,
         ),
       ],
-      child: MaterialApp(
-        onGenerateTitle: (context) => AppStrings.of(context).appName,
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light(),
-        darkTheme: AppTheme.dark(),
-        // v1 segue o sistema; override manual chega na F3 (Ajustes).
-        themeMode: ThemeMode.system,
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('pt', 'BR'),
-          Locale('en', 'US'),
-          Locale('zh', 'CN'),
-        ],
-        localeResolutionCallback: (locale, supportedLocales) {
-          for (final supported in supportedLocales) {
-            if (supported.languageCode.toLowerCase() ==
-                locale?.languageCode.toLowerCase()) {
-              return supported;
+      child: Consumer<SettingsViewModel>(
+        builder: (context, settings, _) => MaterialApp(
+          onGenerateTitle: (context) => AppStrings.of(context).appName,
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light(),
+          darkTheme: AppTheme.dark(),
+          // Override manual da F3.3 sobre o default `system` da F0 (AC-F3-6).
+          themeMode: switch (settings.themeMode) {
+            SettingsThemeMode.system => ThemeMode.system,
+            SettingsThemeMode.light => ThemeMode.light,
+            SettingsThemeMode.dark => ThemeMode.dark,
+          },
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('pt', 'BR'),
+            Locale('en', 'US'),
+            Locale('zh', 'CN'),
+          ],
+          localeResolutionCallback: (locale, supportedLocales) {
+            for (final supported in supportedLocales) {
+              if (supported.languageCode.toLowerCase() ==
+                  locale?.languageCode.toLowerCase()) {
+                return supported;
+              }
             }
-          }
-          return const Locale('pt', 'BR');
-        },
-        home: const HomeScreen(),
+            return const Locale('pt', 'BR');
+          },
+          home: const HomeScreen(),
+        ),
       ),
     );
   }

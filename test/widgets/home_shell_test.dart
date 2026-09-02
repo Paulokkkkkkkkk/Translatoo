@@ -155,7 +155,9 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Settings'));
     await tester.pumpAndSettle();
-    expect(find.text('App preferences will appear here.'), findsOneWidget);
+    // Desde a F3.3 a aba mostra os Ajustes reais, não o placeholder.
+    expect(find.text('Theme'), findsOneWidget);
+    expect(find.text('Default language pair'), findsOneWidget);
   });
 
   testWidgets('tema dark nasce exclusivamente dos tokens', (tester) async {
