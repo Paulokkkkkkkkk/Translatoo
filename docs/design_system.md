@@ -338,6 +338,42 @@ vertical) não muda.
 > ainda não havia captura de áudio e a §5.7 proíbe onda sem amplitude. A F2.2b
 > trouxe a fonte real e o conflito deixou de existir.
 
+### 5.10 Botão de leitura — 🔊 (F2.8 · M3)
+
+Ação do cabeçalho do painel de DESTINO (§5.1), à esquerda de favoritar: lê o
+resultado da tradução em voz alta (motor nativo do SO). Ícone linear herdando a
+cor do contexto (§6) — sem exceção de cor, pois não é gravação nem favorito.
+
+| Estado | Ícone | Tooltip | Ação |
+|---|---|---|---|
+| sem resultado | `volume_up` 20 dp, opacidade 100% | "Ouvir tradução" | desabilitado (nada a ler) |
+| pronto / ocioso | `volume_up` | "Ouvir tradução" | ▶ fala o resultado |
+| reproduzindo | `stop` | "Parar reprodução" | ⏹ interrompe |
+
+- Rebote cirúrgico: só o ícone reage ao estado (`Selector` no ViewModel).
+- Alvo ≥ 48 dp, `Semantics(button: true)` via `IconButton` (RN-06).
+- Fala sempre no idioma de DESTINO. Ditado em curso interrompe a leitura
+  (RF-M2-07) — microfone e voz não dividem o mesmo instante.
+- Autoplay (Ajustes, F3) e ditado (sempre) acionam a leitura sem este botão.
+
+### 5.11 Mini-player de reprodução (F2.8 · M3)
+
+Barra discreta na base da shell (acima da zona de ação), visível **somente**
+enquanto a síntese está em curso — some sozinha ao concluir (RN-07: a voz segue
+mesmo navegando entre destinos; o player acompanha).
+
+| Propriedade | Reproduzindo |
+|---|---|
+| Superfície | `colorSurface`, plano 2 (sombra difusa y−2, blur 16, ~6%) |
+| Ícone | equalizador `graphic_eq` 20 dp `colorPrimary`, pulso sutil 1,0→1,15 (700 ms, `repeat(reverse)`) |
+| Texto | trecho falado, `bodyMedium`, rolagem horizontal — nunca ellipsis |
+| Ação | ⏹ `stop` (tooltip "Parar reprodução") |
+
+- Único `AnimationController` (700 ms) alimenta o pulso — meta 60 fps.
+- Sem estado "pausado" na v1: o motor nativo não expõe resume confiável entre
+  SOs; a barra some e o ▶ recomeça do início.
+- `Semantics(container: true)` com rótulo "Ouvir tradução" (RN-06).
+
 ---
 
 ## 6. Ícones

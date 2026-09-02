@@ -13,6 +13,7 @@ import '../../models/language.dart';
 import '../../models/model_state.dart';
 import '../../state/speech_view_model.dart';
 import '../../state/translator_view_model.dart';
+import '../../state/tts_view_model.dart';
 import '../widgets/download_progress_card.dart';
 import '../widgets/language_bar.dart';
 import '../widgets/listening_sheet.dart';
@@ -37,6 +38,8 @@ class _TranslateScreenState extends State<TranslateScreen> {
   final TextEditingController _controller = TextEditingController();
   TranslatorViewModel? _observed;
   AppException? _lastShownError;
+  TtsViewModel? _observedTts;
+  ErrorCode? _lastTtsError;
 
   /// RN-07: sair para segundo plano durante a escuta ENCERRA com o parcial.
   /// O listener vive aqui, e não no ViewModel, porque `AppLifecycleListener`
@@ -68,12 +71,18 @@ class _TranslateScreenState extends State<TranslateScreen> {
         );
       }
     }
+    final tts = context.read<TtsViewModel>();
+    if (!identical(_observedTts, tts)) {
+      _observedTts?.removeListener(_onTtsChanged);
+      _observedTts = tts..addListener(_onTtsChanged);
+    }
   }
 
   @override
   void dispose() {
     _lifecycle.dispose();
     _observed?.removeListener(_onViewModelChanged);
+    _observedTts?.removeListener(_onTtsChanged);
     _controller.dispose();
     super.dispose();
   }
@@ -127,6 +136,39 @@ class _TranslateScreenState extends State<TranslateScreen> {
           },
         ),
       );
+  }
+
+  /// Voz ausente (AC-M3-2) também pode nascer do AUTOPLAY (ditado) — o erro é
+  /// observado aqui, e não só no toque do 🔊, para valer nos dois caminhos.
+  void _onTtsChanged() {
+    if (!mounted) return;
+    final tts = _observedTts!;
+    final code = tts.errorCode;
+    if (code == null || code == _lastTtsError) return;
+    _lastTtsError = code;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final t = AppStrings.of(context);
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            // Persistente: instrui instalar a voz nas configurações do sistema.
+            // O deep-link direto às configurações de TTS é pendência registrada
+            // (nenhum plugin da lista fechada o expõe) — sem botão morto.
+            duration: const Duration(seconds: 10),
+            content: Text(
+              errorMessageOf(
+                t,
+                code,
+                missingLanguageLabel: tts.errorLanguage?.displayName,
+              ),
+            ),
+          ),
+        );
+      // O erro já foi exibido: limpa para o próximo ciclo de fala.
+      _observedTts?.acknowledgeError();
+    });
   }
 
   Future<void> _pasteFromClipboard() async {
@@ -376,6 +418,9 @@ class _OriginFooter extends StatelessWidget {
         speech.acknowledgeError();
         if (blocked && context.mounted) await _showBlockedDialog(context);
       case SpeechState.idle:
+        // RF-M2-07: o microfone e a voz não dividem o mesmo instante — se uma
+        // tradução está sendo lida, o ditado a interrompe antes de começar.
+        unawaited(context.read<TtsViewModel>().stop());
         await speech.start(
           onPermissionNeeded: () async =>
               context.mounted && await _showRationaleDialog(context),
@@ -492,8 +537,9 @@ class _OriginFooter extends StatelessWidget {
 /// Painel de DESTINO (§4 faixa 3 · §5.1). Superfície `colorSurface`, mais
 /// clara que a origem: puxa o olho para a tradução, que é o resultado (§3).
 ///
-/// §5.1 põe as ações no CABEÇALHO, não num rodapé: favoritar, copiar e "mais".
-/// Ouvir (M3) e compartilhar (F4) vivem no `⋮` enquanto não existem.
+/// §5.1 põe as ações no CABEÇALHO, não num rodapé. Ouvir (M3) ganhou botão
+/// próprio 🔊 (F2.8); favoritar e copiar ficam à direita; compartilhar (F4)
+/// vive no `⋮` enquanto não existe.
 class _DestinationPanel extends StatelessWidget {
   const _DestinationPanel({required this.onCopy});
 
@@ -527,6 +573,20 @@ class _DestinationPanel extends StatelessWidget {
                     visualDensity: VisualDensity.compact,
                   ),
                 ),
+              // 🔊 (F2.8, M3): alterna ▶/⏹; só com resultado pronto. Rebuild
+              // cirúrgico: o resto do cabeçalho não reage à fala.
+              Selector<TtsViewModel, bool>(
+                selector: (_, vm) => vm.isSpeaking,
+                builder: (context, speaking, _) => IconButton(
+                  tooltip: speaking ? t.actionStopPlayback : t.actionListen,
+                  onPressed: translated.isEmpty
+                      ? null
+                      : () => unawaited(
+                          context.read<TtsViewModel>().togglePlayback(),
+                        ),
+                  icon: Icon(speaking ? Icons.stop : Icons.volume_up_outlined),
+                ),
+              ),
               IconButton(
                 tooltip: '${t.actionFavorite} · ${t.comingSoon}',
                 onPressed: null, // placeholder F3 (favoritos)
@@ -540,10 +600,6 @@ class _DestinationPanel extends StatelessWidget {
               PopupMenuButton<void>(
                 icon: const Icon(Icons.more_vert),
                 itemBuilder: (context) => <PopupMenuItem<void>>[
-                  PopupMenuItem<void>(
-                    enabled: false, // placeholder F3 (TTS)
-                    child: Text('${t.actionListen} · ${t.comingSoon}'),
-                  ),
                   PopupMenuItem<void>(
                     enabled: false, // placeholder F4 (share_plus, P1)
                     child: Text('${t.actionShare} · ${t.comingSoon}'),

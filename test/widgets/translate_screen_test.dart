@@ -10,12 +10,14 @@ import 'package:translatoo/core/services/model_manager_service.dart';
 import 'package:translatoo/core/services/stt_service.dart';
 import 'package:translatoo/core/services/translation_backend.dart';
 import 'package:translatoo/core/services/translation_service.dart';
+import 'package:translatoo/core/services/tts_service.dart';
 import 'package:translatoo/core/services/whisper_model_installer.dart';
 import 'package:translatoo/core/services/whisper_stt_engine.dart';
 import 'package:translatoo/models/language.dart';
 import 'package:translatoo/models/language_pair.dart';
 import 'package:translatoo/state/speech_view_model.dart';
 import 'package:translatoo/state/translator_view_model.dart';
+import 'package:translatoo/state/tts_view_model.dart';
 import 'package:translatoo/ui/screens/translate_screen.dart';
 import 'package:translatoo/ui/widgets/download_progress_card.dart';
 
@@ -73,11 +75,66 @@ class _GateApi implements ModelManagerApi {
       installed.remove(language);
 }
 
+/// Motor de TTS mudo: a tela lê o ViewModel desde a F2.8 (botão 🔊, erros),
+/// mas estes testes nunca acionam a voz — o 🔊 em si é coberto pelos testes de
+/// unidade do TtsViewModel.
+class _SilentTtsEngine implements TtsEngine {
+  @override
+  Stream<TtsEvent> get events => const Stream<TtsEvent>.empty();
+
+  @override
+  Future<bool> isLanguageAvailable(String ttsCode) async => true;
+
+  @override
+  Future<void> configure({
+    required String languageCode,
+    required double rate,
+    required double pitch,
+  }) async {}
+
+  @override
+  Future<void> speak(String text) async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
+}
+
+/// Motor que grava o que falou — para o widget test do 🔊 (F2.8).
+class _RecordingTtsEngine implements TtsEngine {
+  final List<String> spoken = <String>[];
+
+  @override
+  Stream<TtsEvent> get events => const Stream<TtsEvent>.empty();
+
+  @override
+  Future<bool> isLanguageAvailable(String ttsCode) async => true;
+
+  @override
+  Future<void> configure({
+    required String languageCode,
+    required double rate,
+    required double pitch,
+  }) async {}
+
+  @override
+  Future<void> speak(String text) async => spoken.add(text);
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
+}
+
 Future<void> _pump(
   WidgetTester tester,
   TranslatorViewModel vm,
-  ModelManagerService manager,
-) async {
+  ModelManagerService manager, {
+  TtsEngine? ttsEngine,
+}) async {
   // Superfície alta: garante snackbar/botões dentro dos limites do hit-test.
   tester.view.physicalSize = const Size(1080, 2400);
   tester.view.devicePixelRatio = 1.0;
@@ -96,6 +153,14 @@ Future<void> _pump(
         ),
         Provider<ModelManagerService>.value(value: manager),
         ChangeNotifierProvider<TranslatorViewModel>.value(value: vm),
+        // A tela lê o TtsViewModel desde a F2.8 (botão 🔊 e snackbar de voz
+        // ausente). Autoplay OFF e voz muda: nenhuma fala real nos testes.
+        ChangeNotifierProvider<TtsViewModel>(
+          create: (_) => TtsViewModel(
+            ttsService: TtsService(engine: ttsEngine ?? _SilentTtsEngine()),
+            translatorViewModel: vm,
+          ),
+        ),
         // A tela lê o SpeechViewModel desde a F2.5 (botão 🎤 e RN-07). Estes
         // testes são da F1.6 e nunca ditam: a fonte de áudio indisponível
         // basta, e o ditado em si é coberto por mic_button_test.dart.
@@ -272,4 +337,36 @@ void main() {
     vm.dispose();
     manager.dispose();
   });
+
+  testWidgets(
+    '🔊 desabilitado sem resultado; fala a tradução ao tocar (F2.8)',
+    (tester) async {
+      final api = _GateApi()..installed.addAll(Language.values);
+      final manager = ModelManagerService(api: api);
+      final vm = _vm(manager);
+      final engine = _RecordingTtsEngine();
+      await _pump(tester, vm, manager, ttsEngine: engine);
+
+      // Sem resultado: o botão existe, mas está inerte (nenhuma ação).
+      IconButton speaker() => tester.widget<IconButton>(
+        find.ancestor(
+          of: find.byIcon(Icons.volume_up_outlined),
+          matching: find.byType(IconButton),
+        ),
+      );
+      expect(speaker().onPressed, isNull);
+
+      await tester.enterText(find.byType(TextField), 'Olá');
+      await tester.pump(const Duration(milliseconds: 850));
+      await tester.pump();
+      expect(find.text('[pten]Olá'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Listen to translation'));
+      await tester.pump();
+      expect(engine.spoken, ['[pten]Olá']);
+
+      vm.dispose();
+      manager.dispose();
+    },
+  );
 }

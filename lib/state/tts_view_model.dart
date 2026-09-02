@@ -61,6 +61,9 @@ class TtsViewModel extends ChangeNotifier {
   Language? _errorLanguage;
   String? _lastSpokenText;
   DateTime? _lastSpokenAt;
+
+  /// Trecho em reprodução (para o mini-player da F2.8) — `null` quando parado.
+  String? _speakingText;
   StreamSubscription<TtsEvent>? _eventsSub;
 
   TtsState get state => _state;
@@ -76,6 +79,10 @@ class TtsViewModel extends ChangeNotifier {
   /// Velocidade/tom vigentes (lidos do serviço; os sliders da F2.8/F3 usam).
   double get rate => _tts.rate;
   double get pitch => _tts.pitch;
+
+  /// Trecho falado em curso (mini-player). Vale mesmo se o resultado da
+  /// tradução mudou enquanto a voz antiga ainda terminava.
+  String? get speakingText => _speakingText;
 
   /// Autoplay (default OFF — vira item de Ajustes na F3).
   void setAutoPlay(bool value) {
@@ -113,12 +120,14 @@ class TtsViewModel extends ChangeNotifier {
     }
     _lastSpokenText = text;
     _lastSpokenAt = now;
+    _speakingText = text;
 
     try {
       await _tts.speak(language: _translator.targetLang, text: text);
       // O estado `speaking` nasce do evento nativo `started` (fala de verdade
       // começou); até lá a UI continua com o botão ▶ — nenhum estado otimista.
     } on AppException catch (e) {
+      _speakingText = null;
       _fail(e, _translator.targetLang);
     }
   }
@@ -126,6 +135,7 @@ class TtsViewModel extends ChangeNotifier {
   /// ⏹ — interrompe a fala em curso.
   Future<void> stop() async {
     await _tts.stop();
+    _speakingText = null;
     // O serviço descarta o `cancelled` do motor (sessão já encerrada); quem
     // encerra o estado aqui é o próprio comando de parada.
     _setState(TtsState.idle);
@@ -171,6 +181,7 @@ class TtsViewModel extends ChangeNotifier {
       case TtsEventKind.started:
         if (_state != TtsState.speaking) _setState(TtsState.speaking);
       case TtsEventKind.completed || TtsEventKind.cancelled:
+        _speakingText = null;
         _setState(TtsState.idle);
     }
   }
@@ -179,6 +190,7 @@ class TtsViewModel extends ChangeNotifier {
     final exception = error is AppException
         ? error
         : AppException(ErrorCode.ttsVoiceMissing, cause: error);
+    _speakingText = null;
     _fail(exception, _translator.targetLang);
   }
 
