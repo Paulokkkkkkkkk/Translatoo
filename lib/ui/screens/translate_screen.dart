@@ -14,11 +14,11 @@ import '../../models/model_state.dart';
 import '../../state/speech_view_model.dart';
 import '../../state/translator_view_model.dart';
 import '../widgets/download_progress_card.dart';
-import '../widgets/language_pill.dart';
+import '../widgets/language_bar.dart';
 import '../widgets/listening_sheet.dart';
 import '../widgets/mic_button.dart';
 import '../widgets/shimmer_box.dart';
-import '../widgets/translation_card.dart';
+import '../widgets/translation_panel.dart';
 
 /// Tela Traduzir (F1.6 — PRD §3.1): cartões duplos origem/destino com ⇄
 /// central, tradução automática por debounce e fluxo de download embutido.
@@ -162,105 +162,60 @@ class _TranslateScreenState extends State<TranslateScreen> {
     final t = AppStrings.of(context);
     final manager = context.read<ModelManagerService>();
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Cartão de download sobreposto quando o par corrente está incompleto.
-          Selector<TranslatorViewModel, (Language, ModelState)?>(
-            selector: (_, vm) => _missingModelFor(vm),
-            builder: (context, missing, _) {
-              final entry = missing;
-              if (entry == null) return const SizedBox.shrink();
-              return DownloadProgressCard(
-                language: entry.$1,
-                state: entry.$2,
-                onDownload: () => _observed?.retryLastAction(),
-                onCancel: () => manager.cancelDownload(entry.$1),
-              );
-            },
-          ),
-          const SizedBox(height: AppSpacing.sm),
-
-          // ── Cartão ORIGEM ────────────────────────────────────────────────
-          TranslationCard(
-            leading: LanguagePill(
-              language: context.select<TranslatorViewModel, Language>(
-                (vm) => vm.sourceLang,
-              ),
-              onSelected: (language) =>
-                  context.read<TranslatorViewModel>().selectSource(language),
-              semanticLabel: t.originLabel,
-            ),
-            actions: [
-              Selector<TranslatorViewModel, bool>(
-                selector: (_, vm) => vm.sourceText.isNotEmpty,
-                builder: (context, hasText, _) => IconButton(
-                  tooltip: t.actionClear,
-                  onPressed: hasText
-                      ? () => context.read<TranslatorViewModel>().clearSource()
-                      : null,
-                  icon: const Icon(Icons.close),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // ── Faixas 2 e 3 da §4: pilha de painéis ────────────────────────────
+        // Painéis SANGRAM até a borda (§4) e são empilhados sem gap: o topo
+        // arredondado do painel seguinte cobre a borda reta do anterior, que é
+        // o que produz a "pilha" da §P1 sem nenhum offset negativo.
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Card de download só aparece com o par incompleto; é o único
+                // bloco com margem lateral, porque é aviso, não painel.
+                Selector<TranslatorViewModel, (Language, ModelState)?>(
+                  selector: (_, vm) => _missingModelFor(vm),
+                  builder: (context, missing, _) {
+                    final entry = missing;
+                    if (entry == null) return const SizedBox.shrink();
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.md,
+                        AppSpacing.md,
+                        AppSpacing.md,
+                        AppSpacing.sm,
+                      ),
+                      child: DownloadProgressCard(
+                        language: entry.$1,
+                        state: entry.$2,
+                        onDownload: () => _observed?.retryLastAction(),
+                        onCancel: () => manager.cancelDownload(entry.$1),
+                      ),
+                    );
+                  },
                 ),
-              ),
-            ],
-            footer: _OriginFooter(onPaste: _pasteFromClipboard),
-            child: TextField(
-              controller: _controller,
-              // RF-M2-07: digitar durante a escuta disputaria o mesmo campo
-              // que o ditado vai preencher.
-              enabled: !context.select<SpeechViewModel, bool>(
-                (vm) => vm.isDictating,
-              ),
-              maxLines: null,
-              minLines: 3,
-              keyboardType: TextInputType.multiline,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                filled: false,
-                hintText: t.sourceHint,
-              ),
+                _OriginPanel(
+                  controller: _controller,
+                  onPaste: _pasteFromClipboard,
+                ),
+                _DestinationPanel(onCopy: _copyTranslation),
+              ],
             ),
           ),
+        ),
 
-          // ── Botão ⇄ circular central (56 dp, elevação 2) ─────────────────
-          Center(
-            child: Semantics(
-              button: true,
-              label: t.actionSwapLanguages,
-              child: Material(
-                elevation: 2,
-                shape: CircleBorder(
-                  side: BorderSide(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-                ),
-                color: Theme.of(context).colorScheme.surface,
-                child: InkWell(
-                  customBorder: const CircleBorder(),
-                  onTap:
-                      context.select<TranslatorViewModel, bool>(
-                        (vm) => vm.isTranslating,
-                      )
-                      ? null
-                      : () => _observed!.swapLanguages(),
-                  child: SizedBox.square(
-                    dimension: 56,
-                    child: Icon(
-                      Icons.swap_horiz,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+        // ── Faixa 4 da §4: ação ancorada no polegar (§P5) ───────────────────
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            AppSpacing.md,
+            AppSpacing.md,
+            AppSpacing.sm,
           ),
-          _DestinationSection(onCopy: _copyTranslation),
-          const SizedBox(height: AppSpacing.md),
-
-          // ── Botão primário TRADUZIR ──────────────────────────────────────
-          Selector<TranslatorViewModel, bool>(
+          child: Selector<TranslatorViewModel, bool>(
             selector: (_, vm) =>
                 !vm.isTranslating && vm.sourceText.trim().isNotEmpty,
             builder: (context, enabled, _) => FilledButton(
@@ -268,8 +223,36 @@ class _TranslateScreenState extends State<TranslateScreen> {
               child: Text(t.buttonTranslate),
             ),
           ),
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            0,
+            AppSpacing.md,
+            AppSpacing.md,
+          ),
+          child: Selector<TranslatorViewModel, (Language, Language, bool)>(
+            selector: (_, vm) =>
+                (vm.sourceLang, vm.targetLang, vm.isTranslating),
+            builder: (context, data, _) {
+              final (source, target, translating) = data;
+              return LanguageBar(
+                source: source,
+                target: target,
+                enabled: !translating,
+                onSelectSource: (language) =>
+                    context.read<TranslatorViewModel>().selectSource(language),
+                onSelectTarget: (language) =>
+                    context.read<TranslatorViewModel>().selectTarget(language),
+                onSwap: () => _observed!.swapLanguages(),
+                sourceSemanticLabel: t.originLabel,
+                targetSemanticLabel: t.destinationLabel,
+                swapSemanticLabel: t.actionSwapLanguages,
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -287,6 +270,79 @@ class _TranslateScreenState extends State<TranslateScreen> {
       if (entry.$2 is ModelNotDownloaded) return entry;
     }
     return null;
+  }
+}
+
+/// Painel de ORIGEM (§4 faixa 2 · §5.1). Superfície `colorBackground` — um
+/// degrau mais escuro que o destino, pela inversão deliberada da §3.
+class _OriginPanel extends StatelessWidget {
+  const _OriginPanel({required this.controller, required this.onPaste});
+
+  final TextEditingController controller;
+  final Future<void> Function() onPaste;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
+    return TranslationPanel(
+      role: PanelRole.source,
+      header: PanelHeader(
+        languageLabel: context
+            .select<TranslatorViewModel, Language>((vm) => vm.sourceLang)
+            .displayName,
+        semanticLabel: t.originLabel,
+        onTapLanguage: () => _pickLanguage(context),
+        // §5.1: a única ação do painel de origem é limpar.
+        actions: [
+          Selector<TranslatorViewModel, bool>(
+            selector: (_, vm) => vm.sourceText.isNotEmpty,
+            builder: (context, hasText, _) => IconButton(
+              tooltip: t.actionClear,
+              onPressed: hasText
+                  ? () => context.read<TranslatorViewModel>().clearSource()
+                  : null,
+              icon: const Icon(Icons.close),
+            ),
+          ),
+        ],
+      ),
+      footer: _OriginFooter(onPaste: onPaste),
+      child: TextField(
+        controller: controller,
+        // RF-M2-07: digitar durante a escuta disputaria o mesmo campo que o
+        // ditado vai preencher.
+        enabled: !context.select<SpeechViewModel, bool>((vm) => vm.isDictating),
+        maxLines: null,
+        minLines: 3,
+        keyboardType: TextInputType.multiline,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          filled: false,
+          hintText: t.sourceHint,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickLanguage(BuildContext context) async {
+    final vm = context.read<TranslatorViewModel>();
+    final choice = await showModalBottomSheet<Language>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final option in Language.values)
+              ListTile(
+                title: Text(option.displayName),
+                onTap: () => Navigator.of(context).pop(option),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (choice != null) vm.selectSource(choice);
   }
 }
 
@@ -425,11 +481,13 @@ class _OriginFooter extends StatelessWidget {
   }
 }
 
-/// Cartão DESTINO (F1.6): pill, área somente-leitura com skeleton shimmer
-/// enquanto `translating`, badge "motor alternativo" (F1.4) e linha de ações
-/// 🔊 F3 · copiar · ⭐ F3 · compartilhar F4 — todas com Semantics.
-class _DestinationSection extends StatelessWidget {
-  const _DestinationSection({required this.onCopy});
+/// Painel de DESTINO (§4 faixa 3 · §5.1). Superfície `colorSurface`, mais
+/// clara que a origem: puxa o olho para a tradução, que é o resultado (§3).
+///
+/// §5.1 põe as ações no CABEÇALHO, não num rodapé: favoritar, copiar e "mais".
+/// Ouvir (M3) e compartilhar (F4) vivem no `⋮` enquanto não existem.
+class _DestinationPanel extends StatelessWidget {
+  const _DestinationPanel({required this.onCopy});
 
   final ValueChanged<String> onCopy;
 
@@ -442,49 +500,47 @@ class _DestinationSection extends StatelessWidget {
       builder: (context, data, _) {
         final (statusIndex, translated, alternative) = data;
         final translating = statusIndex == TranslatorStatus.translating.index;
-        return TranslationCard(
-          leading: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              LanguagePill(
-                language: context.select<TranslatorViewModel, Language>(
-                  (vm) => vm.targetLang,
+
+        return TranslationPanel(
+          role: PanelRole.target,
+          header: PanelHeader(
+            languageLabel: context
+                .select<TranslatorViewModel, Language>((vm) => vm.targetLang)
+                .displayName,
+            semanticLabel: t.destinationLabel,
+            onTapLanguage: () => _pickLanguage(context),
+            actions: [
+              if (alternative)
+                Padding(
+                  padding: const EdgeInsets.only(right: AppSpacing.xs),
+                  child: Chip(
+                    label: Text(t.engineAlternative),
+                    labelStyle: Theme.of(context).textTheme.labelSmall,
+                    visualDensity: VisualDensity.compact,
+                  ),
                 ),
-                onSelected: (language) =>
-                    context.read<TranslatorViewModel>().selectTarget(language),
-                semanticLabel: t.destinationLabel,
-              ),
-              if (alternative) ...[
-                const SizedBox(width: AppSpacing.xs),
-                Chip(
-                  label: Text(t.engineAlternative),
-                  labelStyle: Theme.of(context).textTheme.labelSmall,
-                  visualDensity: VisualDensity.compact,
-                ),
-              ],
-            ],
-          ),
-          footer: Row(
-            children: [
-              IconButton(
-                tooltip: '${t.actionListen} · ${t.comingSoon}',
-                onPressed: null, // placeholder F3 (TTS)
-                icon: const Icon(Icons.volume_up_outlined),
-              ),
-              IconButton(
-                tooltip: t.actionCopy,
-                onPressed: translated.isEmpty ? null : () => onCopy(translated),
-                icon: const Icon(Icons.copy_outlined),
-              ),
               IconButton(
                 tooltip: '${t.actionFavorite} · ${t.comingSoon}',
                 onPressed: null, // placeholder F3 (favoritos)
                 icon: const Icon(Icons.star_border_outlined),
               ),
               IconButton(
-                tooltip: '${t.actionShare} · ${t.comingSoon}',
-                onPressed: null, // placeholder F4 (share_plus, P1)
-                icon: const Icon(Icons.share_outlined),
+                tooltip: t.actionCopy,
+                onPressed: translated.isEmpty ? null : () => onCopy(translated),
+                icon: const Icon(Icons.copy_outlined),
+              ),
+              PopupMenuButton<void>(
+                icon: const Icon(Icons.more_vert),
+                itemBuilder: (context) => <PopupMenuItem<void>>[
+                  PopupMenuItem<void>(
+                    enabled: false, // placeholder F3 (TTS)
+                    child: Text('${t.actionListen} · ${t.comingSoon}'),
+                  ),
+                  PopupMenuItem<void>(
+                    enabled: false, // placeholder F4 (share_plus, P1)
+                    child: Text('${t.actionShare} · ${t.comingSoon}'),
+                  ),
+                ],
               ),
             ],
           ),
@@ -500,5 +556,25 @@ class _DestinationSection extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _pickLanguage(BuildContext context) async {
+    final vm = context.read<TranslatorViewModel>();
+    final choice = await showModalBottomSheet<Language>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final option in Language.values)
+              ListTile(
+                title: Text(option.displayName),
+                onTap: () => Navigator.of(context).pop(option),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (choice != null) vm.selectTarget(choice);
   }
 }

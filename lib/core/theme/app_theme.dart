@@ -96,6 +96,9 @@ abstract final class AppTheme {
       surface: c.surface,
       onSurface: c.textPrimary,
       surfaceContainerHighest: c.border,
+      // Expõe `colorBackground` pelo ColorScheme: é a superfície do painel de
+      // ORIGEM (§3), e widget nenhum pode alcançar app_colors.dart direto.
+      surfaceContainerLow: c.background,
       onSurfaceVariant: c.textSecondary,
       outline: c.border,
       outlineVariant: c.border,
@@ -109,9 +112,12 @@ abstract final class AppTheme {
       colorScheme: scheme,
       scaffoldBackgroundColor: c.background,
       textTheme: text,
+      // BLOCO DE MARCA (§3 plano 1 · §4 primeira faixa): a barra superior é a
+      // superfície de marca do app, não um cabeçalho neutro. O painel de
+      // conteúdo sobe por cima dela (§P1).
       appBarTheme: AppBarTheme(
-        backgroundColor: c.background,
-        foregroundColor: c.textPrimary,
+        backgroundColor: c.primary,
+        foregroundColor: c.onPrimary,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
@@ -122,9 +128,9 @@ abstract final class AppTheme {
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          // Card é painel (§2 · §3, plano 2).
+          // Card é painel (§2 · §3, plano 2). SEM borda: hierarquia vem da
+          // superfície e da sombra, nunca de contorno (§P3).
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-          side: BorderSide(color: c.border),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
