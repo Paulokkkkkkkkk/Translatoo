@@ -10,6 +10,7 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/services/app_exception.dart';
 import '../../core/services/model_manager_service.dart';
+import '../../core/services/share_service.dart';
 import '../../models/language.dart';
 import '../../models/model_state.dart';
 import '../../state/speech_view_model.dart';
@@ -702,8 +703,11 @@ class _DestinationPanel extends StatelessWidget {
                 icon: const Icon(Icons.more_vert),
                 itemBuilder: (context) => <PopupMenuItem<void>>[
                   PopupMenuItem<void>(
-                    enabled: false, // placeholder F4 (share_plus, P1)
-                    child: Text('${t.actionShare} · ${t.comingSoon}'),
+                    // Compartilhar funciona OFFLINE: a folha é do SO e o que
+                    // entregamos a ela é texto puro (F4.1 · RN-02).
+                    enabled: translated.isNotEmpty,
+                    onTap: () => unawaited(_share(context, translated)),
+                    child: Text(t.actionShare),
                   ),
                 ],
               ),
@@ -720,6 +724,17 @@ class _DestinationPanel extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  /// Abre a folha nativa com origem, tradução e o par de idiomas (F4.1).
+  Future<void> _share(BuildContext context, String translated) async {
+    final vm = context.read<TranslatorViewModel>();
+    await context.read<ShareService>().shareTranslation(
+      source: vm.sourceLang,
+      target: vm.targetLang,
+      sourceText: vm.sourceText,
+      translatedText: translated,
     );
   }
 
