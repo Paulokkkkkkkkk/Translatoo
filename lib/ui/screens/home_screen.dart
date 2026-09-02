@@ -22,8 +22,17 @@ import 'translate_screen.dart';
 /// com o rodapé livre, a `LanguageBar` de largura total ocupa a zona do polegar
 /// sem empilhar 128 dp de crômio fixo (§P5).
 ///
-/// - < 1024 dp: coluna única;
-/// - >= 1024 dp: conteúdo centralizado em 720 dp (`NavigationRail` na F4).
+/// Três breakpoints (PRD §4.1 · F4.2):
+/// - **< 600 dp**: coluna única, navegação na gaveta;
+/// - **600–1024 dp**: painéis lado a lado na tela Traduzir (ver
+///   `TranslateScreen`), navegação ainda na gaveta;
+/// - **>= 1024 dp**: `NavigationRail` fixo à esquerda **substituindo a
+///   gaveta**, conteúdo centralizado em 720 dp.
+///
+/// > O critério da issue #38 fala em "substituir a `NavigationBar`". Ela não
+/// > existe desde a decisão da §10 (opção A): quem o rail substitui é a
+/// > gaveta. O efeito para o usuário é o previsto — em tela larga a navegação
+/// > fica permanentemente visível, sem depender do ☰.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -63,64 +72,120 @@ class _HomeScreenState extends State<HomeScreen> {
     final t = AppStrings.of(context);
     final connection = context.watch<ConnectionViewModel>();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: kDebugMode
-            ? GestureDetector(
-                onLongPress: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const DebugModelsScreen(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // O rail precisa ser decidido no nível do Scaffold, não do corpo: é ele
+        // que também remove a gaveta e o ☰ do cabeçalho.
+        final wide = constraints.maxWidth >= 1024;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: kDebugMode
+                ? GestureDetector(
+                    onLongPress: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const DebugModelsScreen(),
+                      ),
+                    ),
+                    child: Text(t.appName),
+                  )
+                : Text(t.appName),
+            actions: [ConnectionBadge(isOnline: connection.isOnline)],
+          ),
+          // Em tela larga o rail já mostra os destinos: manter a gaveta seria
+          // duas navegações para o mesmo lugar.
+          drawer: wide
+              ? null
+              : _NavigationDrawer(
+                  selectedIndex: _index,
+                  onSelected: (value) {
+                    setState(() => _index = value);
+                    Navigator.of(context).pop();
+                  },
+                ),
+          body: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      if (wide)
+                        _Rail(
+                          selectedIndex: _index,
+                          onSelected: (value) => setState(() => _index = value),
+                        ),
+                      Expanded(
+                        child: wide
+                            ? Center(
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 720,
+                                  ),
+                                  child: _screens[_index],
+                                ),
+                              )
+                            : _screens[_index],
+                      ),
+                    ],
                   ),
                 ),
-                child: Text(t.appName),
-              )
-            : Text(t.appName),
-        actions: [ConnectionBadge(isOnline: connection.isOnline)],
-      ),
-      drawer: _NavigationDrawer(
-        selectedIndex: _index,
-        onSelected: (value) {
-          setState(() => _index = value);
-          Navigator.of(context).pop();
-        },
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final width = constraints.maxWidth;
-                  final screen = _screens[_index];
-                  if (width >= 1024) {
-                    return Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 720),
-                        child: screen,
-                      ),
+                // Mini-player (F2.8): só existe durante a reprodução; some sozinho
+                // quando a fala termina. Vive na shell porque a voz continua mesmo
+                // com o usuário navegando (RN-07).
+                Selector<TtsViewModel, (bool, String?)>(
+                  selector: (_, vm) => (vm.isSpeaking, vm.speakingText),
+                  builder: (context, data, _) {
+                    final (speaking, text) = data;
+                    if (!speaking) return const SizedBox.shrink();
+                    return MiniPlayerTts(
+                      text: text ?? '',
+                      onStop: () =>
+                          unawaited(context.read<TtsViewModel>().stop()),
                     );
-                  }
-                  return screen;
-                },
-              ),
+                  },
+                ),
+              ],
             ),
-            // Mini-player (F2.8): só existe durante a reprodução; some sozinho
-            // quando a fala termina. Vive na shell porque a voz continua mesmo
-            // com o usuário navegando (RN-07).
-            Selector<TtsViewModel, (bool, String?)>(
-              selector: (_, vm) => (vm.isSpeaking, vm.speakingText),
-              builder: (context, data, _) {
-                final (speaking, text) = data;
-                if (!speaking) return const SizedBox.shrink();
-                return MiniPlayerTts(
-                  text: text ?? '',
-                  onStop: () => unawaited(context.read<TtsViewModel>().stop()),
-                );
-              },
-            ),
-          ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// `NavigationRail` de tela larga (>= 1024 dp). Mesmos três destinos da gaveta,
+/// permanentemente visíveis — em desktop não há polegar para alcançar rodapé,
+/// e esconder navegação atrás de um ☰ desperdiça a largura que sobra.
+class _Rail extends StatelessWidget {
+  const _Rail({required this.selectedIndex, required this.onSelected});
+
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+    return NavigationRail(
+      selectedIndex: selectedIndex,
+      onDestinationSelected: onSelected,
+      labelType: NavigationRailLabelType.all,
+      destinations: [
+        NavigationRailDestination(
+          icon: const Icon(Icons.translate_outlined),
+          selectedIcon: const Icon(Icons.translate),
+          label: Text(t.tabTranslate),
         ),
-      ),
+        NavigationRailDestination(
+          icon: const Icon(Icons.history_outlined),
+          selectedIcon: const Icon(Icons.history),
+          label: Text(t.tabHistory),
+        ),
+        NavigationRailDestination(
+          icon: const Icon(Icons.settings_outlined),
+          selectedIcon: const Icon(Icons.settings),
+          label: Text(t.tabSettings),
+        ),
+      ],
     );
   }
 }
