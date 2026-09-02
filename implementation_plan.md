@@ -446,7 +446,7 @@ lib/
 - Painel de voz (sliders rotulados velocidade/tom com valor numérico) já funcional em tela de debug; migra para Ajustes na F3.
 - **Entregável**: UX de áudio completa conforme PRD §3.3.
 
-### F2.9 — Integração M2×M3×M1 e qualidade da fase
+### F2.9 — Integração M2×M3×M1 e qualidade da fase ✅ concluída ([#29](../../issues/29))
 - Orquestração conversacional completa: 🎤 → texto → tradução automática → 🔊 automático (ditado).
 - Testes de integração dos três ViewModels com services fakeados.
 - **Critérios de aceite da fase** (= US-2 e US-3 do PRD):
