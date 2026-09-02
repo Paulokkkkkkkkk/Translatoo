@@ -678,11 +678,15 @@ class _DestinationPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppStrings.of(context);
-    return Selector<TranslatorViewModel, (int, String, bool)>(
-      selector: (_, vm) =>
-          (vm.status.index, vm.translatedText, vm.usesAlternativeEngine),
+    return Selector<TranslatorViewModel, (int, String, bool, bool)>(
+      selector: (_, vm) => (
+        vm.status.index,
+        vm.translatedText,
+        vm.usesAlternativeEngine,
+        vm.resultWasLocalFallback,
+      ),
       builder: (context, data, _) {
-        final (statusIndex, translated, alternative) = data;
+        final (statusIndex, translated, alternative, localFallback) = data;
         final translating = statusIndex == TranslatorStatus.translating.index;
 
         return TranslationPanel(
@@ -699,6 +703,18 @@ class _DestinationPanel extends StatelessWidget {
                   padding: const EdgeInsets.only(right: AppSpacing.xs),
                   child: Chip(
                     label: Text(t.engineAlternative),
+                    labelStyle: Theme.of(context).textTheme.labelSmall,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+              // Modo híbrido (F4.3): a nuvem não respondeu e o aparelho
+              // assumiu. Badge DISCRETO — a tradução saiu, e o usuário não
+              // precisa fazer nada com essa informação.
+              if (localFallback)
+                Padding(
+                  padding: const EdgeInsets.only(right: AppSpacing.xs),
+                  child: Chip(
+                    label: Text(t.engineLocal),
                     labelStyle: Theme.of(context).textTheme.labelSmall,
                     visualDensity: VisualDensity.compact,
                   ),
