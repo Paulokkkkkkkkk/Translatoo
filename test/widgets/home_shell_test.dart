@@ -147,10 +147,8 @@ void main() {
     // Navegação → History:
     await tester.tap(find.text('History'));
     await tester.pumpAndSettle();
-    expect(
-      find.text('Your translations are stored only on this device.'),
-      findsOneWidget,
-    );
+    // Desde a F3.2 a aba mostra a tela real; sem histórico, o estado vazio.
+    expect(find.text('No translations yet.'), findsOneWidget);
 
     // Navegação → Settings:
     scaffold.openDrawer();

@@ -433,6 +433,34 @@ sem separador. As duas lidas juntas são o bloco de marca da §4.
 - Terminar a escuta **não sai do modo**. O bloco é tela, não overlay — quem sai
   dele é o botão da §5.3.
 
+### 5.12 Card de histórico (F3.2)
+
+Item da lista da tela Histórico. Segue a §5.1 no espírito — sem borda,
+superfície como hierarquia — mas é **card com margem**, não painel sangrado: a
+lista precisa de separação entre itens, e é a única superfície do app onde
+vários "cards" coexistem verticalmente.
+
+Composição, de cima para baixo: **linha de idiomas + favorito** → **origem** →
+**tradução** → **horário relativo**.
+
+| Propriedade | Default | Favorito | Excluindo |
+|---|---|---|---|
+| Superfície | `colorSurface` | `colorSurface` | desliza para fora |
+| Texto de origem | `bodySmall`, `textSecondary` | idem | idem |
+| Tradução | `bodyLarge`, `textPrimary` | idem | idem |
+| Par de idiomas | chip da §5.6 | idem | idem |
+| Ícone ★ | contorno, `textSecondary` | **preenchido, `colorWarning`** | idem |
+| Fundo do swipe | — | — | `colorError`, ícone `onPrimary` |
+
+- ★ preenchido é uma das três exceções cromáticas da §6 — a única do app que usa
+  ícone sólido.
+- O horário é **relativo** ("há 5 min"): a data absoluta não ajuda a reencontrar
+  algo que se traduziu há pouco, que é o caso de uso real da tela.
+- Toque no card reabre a tradução no Tradutor, preenchendo texto **e** par de
+  idiomas — reusar é mais comum que reler.
+- Swipe exclui com "Desfazer" por 5 s, restaurando na **posição original**
+  (`LibraryViewModel.undoDelete`), nunca no topo.
+
 ---
 
 ## 6. Ícones

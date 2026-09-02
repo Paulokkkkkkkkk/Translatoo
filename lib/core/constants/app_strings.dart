@@ -115,6 +115,15 @@ abstract final class AppStrings {
   // Estados vazios
   String get historyEmpty;
 
+  // Tela Histórico (F3.2)
+  String get historySearchHint;
+  String get filterAll;
+  String get actionClearAll;
+  String get actionUndo;
+  String get confirmClearHistoryTitle;
+  String get confirmClearHistoryBody;
+  String relativeTime(int minutes);
+
   // Ajustes (textos reservados para a F3)
   String get settingsLanguagePair;
   String get settingsAutoplay;
@@ -263,6 +272,26 @@ final class _PtStrings extends AppStrings {
 
   @override
   String get historyEmpty => 'Nenhuma tradução ainda.';
+  @override
+  String get historySearchHint => 'Buscar nas traduções';
+  @override
+  String get filterAll => 'Todos';
+  @override
+  String get actionClearAll => 'Limpar tudo';
+  @override
+  String get actionUndo => 'Desfazer';
+  @override
+  String get confirmClearHistoryTitle => 'Limpar o histórico?';
+  @override
+  String get confirmClearHistoryBody =>
+      'As traduções favoritas continuam guardadas.';
+  @override
+  String relativeTime(int minutes) {
+    if (minutes < 1) return 'agora';
+    if (minutes < 60) return 'há $minutes min';
+    if (minutes < 1440) return 'há ${minutes ~/ 60} h';
+    return 'há ${minutes ~/ 1440} d';
+  }
 
   @override
   String get settingsLanguagePair => 'Par de idiomas padrão';
@@ -419,6 +448,25 @@ final class _EnStrings extends AppStrings {
 
   @override
   String get historyEmpty => 'No translations yet.';
+  @override
+  String get historySearchHint => 'Search translations';
+  @override
+  String get filterAll => 'All';
+  @override
+  String get actionClearAll => 'Clear all';
+  @override
+  String get actionUndo => 'Undo';
+  @override
+  String get confirmClearHistoryTitle => 'Clear history?';
+  @override
+  String get confirmClearHistoryBody => 'Favourite translations are kept.';
+  @override
+  String relativeTime(int minutes) {
+    if (minutes < 1) return 'now';
+    if (minutes < 60) return '$minutes min ago';
+    if (minutes < 1440) return '${minutes ~/ 60} h ago';
+    return '${minutes ~/ 1440} d ago';
+  }
 
   @override
   String get settingsLanguagePair => 'Default language pair';
@@ -566,6 +614,25 @@ final class _ZhStrings extends AppStrings {
 
   @override
   String get historyEmpty => '暂无翻译记录。';
+  @override
+  String get historySearchHint => '搜索翻译记录';
+  @override
+  String get filterAll => '全部';
+  @override
+  String get actionClearAll => '全部清除';
+  @override
+  String get actionUndo => '撤销';
+  @override
+  String get confirmClearHistoryTitle => '清除历史记录？';
+  @override
+  String get confirmClearHistoryBody => '收藏的翻译会被保留。';
+  @override
+  String relativeTime(int minutes) {
+    if (minutes < 1) return '刚刚';
+    if (minutes < 60) return '$minutes 分钟前';
+    if (minutes < 1440) return '${minutes ~/ 60} 小时前';
+    return '${minutes ~/ 1440} 天前';
+  }
 
   @override
   String get settingsLanguagePair => '默认语言对';

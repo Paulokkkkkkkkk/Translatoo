@@ -227,6 +227,7 @@ gentileza.
 | DS | [#58](../../issues/58) | Modo voz do case — bloco de marca expandido, onda no cabeçalho e botão de modo | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.9 | [#29](../../issues/29) | Integração M1×M2×M3 — ciclo conversacional testado ponta a ponta | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F3.1 | [#30](../../issues/30) | `LibraryViewModel` — dedupe, FIFO de 200, undo posicional e filtros | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F3.2 | [#31](../../issues/31) | Tela Histórico — busca, filtros bidirecionais e exclusão reversível | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F4.7a | [#54](../../issues/54) | Identidade do app: bundle id, nome e textos de permissão do iOS | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | DS | — | Redesenho da tela Traduzir para a anatomia da §4 do design system | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.6 | [#26](../../issues/26) | `TtsService` + motor `flutter_tts` — fila única, cache de voz, erros mapeados | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
