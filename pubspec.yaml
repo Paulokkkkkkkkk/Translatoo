@@ -67,9 +67,16 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # Diretorios reservados aos modelos embutidos (preenchidos nas Fases 1-2).
+  # F2.1b - assets condicionais por flavor: cada variante embarca UM modelo
+  # ggml. Sem isto os dois entrariam nos dois APKs (88 MB) e o teto de 40 MB do
+  # `lite` seria inalcancavel. Ver docs/whisper_models.md.
   assets:
-    - assets/models/whisper/
+    - path: assets/models/whisper/ggml-base-q5_1.bin
+      flavors:
+        - full
+    - path: assets/models/whisper/ggml-tiny-q5_1.bin
+      flavors:
+        - lite
     - assets/models/tflite/
 
   # F1.9 - cobertura de Han para o mandarim (RF-CJK-01..04, risco R8).

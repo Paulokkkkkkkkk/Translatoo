@@ -10,7 +10,7 @@ download de pacotes de idiomas e, no futuro, modo híbrido (P2).
 |---|---|---|
 | **F0** | Fundação e design system (tokens, tema, i18n, storage, conectividade, shell responsivo, pipeline de qualidade) | ✅ **concluída** |
 | **F1** | Motor de tradução offline (ML Kit + Plano B TFLite) | ✅ **concluída** (F1.1–F1.9, tipografia CJK incluída) |
-| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **F2.0–F2.1 concluídas** (motor `whisper_ggml`, modelos embutidos) · ⬜ F2.1b–F2.9 |
+| F2 | Voz: ditado STT + leitura TTS nativa | 🟡 **F2.0–F2.1b concluídas** (motor `whisper_ggml`, modelos e flavors) · ⬜ F2.2–F2.9 |
 | F3 | Histórico, favoritos, ajustes, gerenciador de modelos | ⬜ — pode ser antecipada (depende de F1, não de F2) |
 | F4 | Polimento, modo híbrido, performance, release v1 | ⬜ |
 
@@ -24,8 +24,58 @@ flutter pub get
 flutter run                # device/emulador Android (minSdk 23)
 ```
 
-Requisitos: Flutter com Dart `^3.12.2` · Android `minSdk 23` · iOS **15.5**
-(imposto pelo pod `GoogleMLKit/Translate`).
+Requisitos: Flutter com Dart `^3.12.2` · Android `minSdk 23` · iOS **15.6**
+(imposto pelo pod do `whisper_ggml`; o `GoogleMLKit/Translate` exige 15.5).
+
+> **iOS só roda em iPhone físico.** O ML Kit publica fatia `arm64` apenas para
+> device, e o simulador do Apple Silicon recusa `x86_64` — não há contorno.
+
+## Flavors `lite` e `full` (F2.1b)
+
+Cada variante embarca **um** modelo de ditado; a seleção do `.bin` é feita
+pelos `flavors:` do `pubspec.yaml`, e o `--dart-define` diz ao app qual
+procurar. Os dois valores precisam combinar.
+
+```bash
+# full — ggml-base-q5_1 (56,9 MB), melhor qualidade
+flutter run --flavor full \
+  --dart-define=STT_MODEL_ASSET=assets/models/whisper/ggml-base-q5_1.bin
+
+# lite — ggml-tiny-q5_1 (30,7 MB)
+flutter run --flavor lite \
+  --dart-define=STT_MODEL_ASSET=assets/models/whisper/ggml-tiny-q5_1.bin
+
+# build sem ditado: o 🎤 some da árvore de widgets (TranslatorViewModel.canDictate)
+flutter run --flavor lite --dart-define=STT_MODEL_ASSET=
+```
+
+Troque `run` por `build apk --release --split-per-abi` para gerar os APKs.
+
+### Tamanhos medidos (release, `--split-per-abi`, arm64-v8a)
+
+| Flavor | Medido | Meta PRD §4.7 | |
+|---|---|---|---|
+| `lite` | **92,4 MB** | < 40 MB | ❌ estoura em 2,3× |
+| `full` | **119,3 MB** | ≤ 180 MB | ✅ |
+
+O `lite` **não atinge o orçamento do PRD** — e a distância não vem do modelo.
+Composição do APK arm64 (descomprimido):
+
+| Item | Tamanho |
+|---|---|
+| Modelo `ggml-tiny-q5_1` | 30,7 MB |
+| `libtranslate_jni` (ML Kit) | 15,6 MB |
+| `libflutter` | 11,0 MB |
+| **ffmpeg** (`avcodec`, `avfilter`, `avformat`, …) | **~14,2 MB** |
+| TF Lite (`jni` + `gpu_jni`) | 6,9 MB |
+| `libwhisper` | 2,8 MB |
+
+Mesmo com **zero** modelo embutido o `lite` passaria de 55 MB só em código
+nativo. Os ~14 MB de ffmpeg são peso morto: vêm como dependência dura do
+`whisper_ggml` para converter arquivos de áudio, e o app alimenta PCM direto.
+Fechar os 40 MB exige decisão de produto — remover o Plano B TFLite do `lite`,
+entregar o modelo por *dynamic feature*, ou revisar a meta. **Não é algo que a
+F2.1b pudesse resolver dentro do seu escopo.**
 
 ## Pipeline de qualidade (obrigatório por subfase)
 
@@ -146,6 +196,7 @@ gentileza.
 | F2.0 | [#19](../../issues/19) | Spike do motor de STT — decisão por `whisper_ggml` | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F0.10 | [#45](../../issues/45) | Design system extraído do case + troca da paleta para Azul & Branco | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F2.1 | [#20](../../issues/20) | Modelos ggml de STT embutidos + instalador para o diretório de dados | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F2.1b | [#21](../../issues/21) | Flavors `lite`/`full` com assets condicionais por flavor | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 

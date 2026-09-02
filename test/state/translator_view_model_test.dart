@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:translatoo/core/constants/app_constants.dart';
 import 'package:translatoo/core/services/app_exception.dart';
 import 'package:translatoo/core/services/model_manager_service.dart';
 import 'package:translatoo/core/services/translation_backend.dart';
@@ -209,6 +210,16 @@ void main() {
 
       expect(vm.status, TranslatorStatus.error);
       expect(vm.error?.code, ErrorCode.translationFailed);
+    });
+  });
+
+  test('canDictate reflete o modelo embutido no flavor (F2.1b)', () {
+    fakeAsync((async) async {
+      await build();
+      // O default de compilação é o flavor `full`; um build sem
+      // --dart-define=STT_MODEL_ASSET= mantém o ditado disponível.
+      expect(vm.canDictate, AppConstants.hasEmbeddedSttModels);
+      expect(vm.canDictate, isTrue);
     });
   });
 

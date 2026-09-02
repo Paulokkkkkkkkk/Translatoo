@@ -7,7 +7,7 @@
 | **Versão do plano** | 1.1 |
 | **Data** | 2026-08-28 |
 | **Documento-fonte** | `prd.md` **v1.1** (requisitos, módulos, critérios de aceite) |
-| **Estado real** | **F0, F1 (com F1.9), a spike F2.0 e a F2.1 concluídas** · F2.1b é o próximo passo |
+| **Estado real** | **F0, F1 (com F1.9), a spike F2.0, a F2.1 e a F2.1b concluídas** · F2.2 é o próximo passo |
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
@@ -369,7 +369,8 @@ lib/
 - Colocar em `assets/models/`; no primeiro uso, copiar para diretório de dados (`path_provider`) — os motores de STT exigem caminho real de arquivo, não asset bundle.
 - **Entregável**: assets versionados + script/README de atualização dos modelos.
 
-### F2.1b — Flavors `lite` e `full` (PRD §4.7) 🆕 v1.1
+### F2.1b — Flavors `lite` e `full` (PRD §4.7) 🆕 v1.1 ✅ concluída ([#21](../../issues/21))
+> **Mecanismo entregue, orçamento do `lite` REPROVADO.** Os flavors existem e os assets são condicionais (`flavors:` do pubspec), mas o `lite` mede **92,4 MB** contra a meta de 40 MB — e o modelo é só um terço disso: ffmpeg (dependência dura do `whisper_ggml`), ML Kit e TF Lite somam ~55 MB de código nativo antes de qualquer modelo. Fechar a meta é decisão de produto, não de implementação. Composição medida no README.
 
 > **Por que virou subfase própria.** A v1.0 citava os flavors numa linha solta dentro da F2.1, sem nenhuma especificação de build — os limites de 40 MB e 180 MB não tinham mecanismo que os produzisse. Hoje o projeto **não tem flavor algum** configurado.
 
