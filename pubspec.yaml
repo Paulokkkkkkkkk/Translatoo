@@ -58,6 +58,12 @@ dependencies:
   # da §5.7. Nao colide com permission_handler ^11.3.1. Ver docs/audio_source.md.
   record: ^7.1.1
 
+  # RF-M1-08 - romanizacao (pinyin) do resultado em chines (design system 5.13).
+  # Dart puro com dicionario embutido: nao e plugin, nao faz rede, e o mapa de
+  # EXPRESSOES resolve os polifonicos que um mapa por caractere erra
+  # (zhang da / yin hang / le, em vez de chang da / yin xing / liao).
+  pinyin: ^3.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

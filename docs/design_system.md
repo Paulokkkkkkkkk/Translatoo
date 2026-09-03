@@ -467,6 +467,37 @@ Composição, de cima para baixo: **linha de idiomas + favorito** → **origem**
 - Swipe exclui com "Desfazer" por 5 s, restaurando na **posição original**
   (`LibraryViewModel.undoDelete`), nunca no topo.
 
+### 5.13 Linha de pinyin (RF-M1-11)
+
+Romanização exibida **acima** do hanzi, no painel de destino, quando o idioma
+de destino é `zh`. Não é um card novo: é uma linha extra dentro da §5.1, antes
+do texto.
+
+A ordem importa. Pinyin em cima é o padrão de dicionários e materiais de
+ensino, e resolve o caso real do app: quem está com o celular na mão para
+falar com alguém não lê hanzi — precisa achar a pronúncia primeiro. Quem lê
+hanzi salta a linha sem esforço, porque ela é visivelmente secundária.
+
+| Propriedade | Default | Sem pinyin | Carregando | Erro |
+|---|---|---|---|---|
+| Pinyin | `bodySmall`, `textSecondary` | linha **ausente** | ausente | ausente |
+| Hanzi | `bodyLarge`, `textPrimary` | idem | shimmer | mensagem §4.8 |
+| Espaço entre as duas | `AppSpacing.xs` | — | — | — |
+
+- **Só com destino `zh`.** Em `pt`/`en` a linha não existe — nem vazia, nem com
+  placeholder: espaço reservado para nada é ruído.
+- **Nunca entra em copiar, compartilhar ou favoritar.** O pinyin é apoio de
+  leitura, não a tradução; quem cola o resultado num aplicativo de mensagens
+  quer mandar 谢谢, não `xiè xie 谢谢`.
+- **Nunca é falado.** O TTS lê o hanzi — é o mesmo texto, e ler a romanização
+  em voz alta produziria pronúncia de português.
+- Quebra de linha é por palavra, como texto comum. O alinhamento sílaba-a-sílaba
+  (ruby) foi considerado e ficou de fora: exige layout próprio, quebra mal em
+  texto longo, e o ganho só existe para quem já está estudando os caracteres.
+- Falha na romanização **não é erro de tradução**: a linha simplesmente não
+  aparece e o hanzi segue exibido. Uma tradução correta não pode ser
+  transformada em erro por causa de um apoio.
+
 ---
 
 ## 6. Ícones

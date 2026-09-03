@@ -702,15 +702,17 @@ class _DestinationPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppStrings.of(context);
-    return Selector<TranslatorViewModel, (int, String, bool, bool)>(
+    return Selector<TranslatorViewModel, (int, String, bool, bool, String?)>(
       selector: (_, vm) => (
         vm.status.index,
         vm.translatedText,
         vm.usesAlternativeEngine,
         vm.resultWasLocalFallback,
+        vm.translatedPinyin,
       ),
       builder: (context, data, _) {
-        final (statusIndex, translated, alternative, localFallback) = data;
+        final (statusIndex, translated, alternative, localFallback, pinyin) =
+            data;
         final translating = statusIndex == TranslatorStatus.translating.index;
 
         return TranslationPanel(
@@ -785,9 +787,33 @@ class _DestinationPanel extends StatelessWidget {
             height: 140,
             child: translating
                 ? const ShimmerBox(lines: 3)
-                : SelectableText(
-                    translated,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // §5.13: pinyin ACIMA do hanzi. Quem está com o celular
+                      // na mão para falar com alguém não lê hanzi — precisa
+                      // achar a pronúncia primeiro; quem lê salta a linha
+                      // porque ela é visivelmente secundária. Ausente (não
+                      // vazia) fora do chinês: espaço reservado para nada é
+                      // ruído.
+                      if (pinyin != null) ...[
+                        SelectableText(
+                          pinyin,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                      ],
+                      SelectableText(
+                        translated,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ],
                   ),
           ),
         );

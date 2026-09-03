@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import '../core/constants/app_constants.dart';
 import '../core/services/app_exception.dart';
 import '../core/services/model_manager_service.dart';
+import '../core/services/pinyin_service.dart';
 import '../core/services/storage_service.dart';
 import '../core/services/translation_service.dart';
 import '../core/utils/perf_trace.dart';
@@ -34,6 +35,7 @@ class TranslatorViewModel extends ChangeNotifier {
     required TranslationService translationService,
     required ModelManagerService modelManager,
     StorageService? settings,
+    this.pinyin = const PinyinService(),
   }) : _translation = translationService,
        _models = modelManager,
        _settings = settings {
@@ -51,6 +53,7 @@ class TranslatorViewModel extends ChangeNotifier {
 
   /// Persistência do último par (opcional: os testes de tradução não usam).
   final StorageService? _settings;
+  final PinyinService pinyin;
 
   Language _sourceLang = Language.pt;
   Language _targetLang = Language.en;
@@ -75,6 +78,14 @@ class TranslatorViewModel extends ChangeNotifier {
   Language get targetLang => _targetLang;
   String get sourceText => _sourceText;
   String get translatedText => _translatedText;
+
+  /// Linha de pinyin do resultado, ou `null` quando não cabe (§5.13).
+  ///
+  /// Calculada aqui, e não no widget, porque a `ui/` não conhece serviços — e
+  /// `null` em vez de string vazia para que o painel OMITA a linha: espaço
+  /// reservado para nada é ruído.
+  String? get translatedPinyin =>
+      pinyin.romanizeFor(_targetLang, _translatedText);
   TranslatorStatus get status => _status;
   AppException? get error => _error;
 

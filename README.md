@@ -247,6 +247,7 @@ gentileza.
 | F4.4 | [#40](../../issues/40) | Performance auditada — `PerfTrace`, pré-aquecimento do tradutor e roteiro de medição | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F4.5 | [#41](../../issues/41) | Acessibilidade e privacidade — guardas automatizadas e checklist verificável | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F4.6 | [#42](../../issues/42) | QA final — planilha de execução dos 20 ACs e RN-07 travada por teste | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| RF-M1-11 | — | Linha de pinyin acima do hanzi no painel de destino (design system §5.13) | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 

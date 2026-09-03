@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:translatoo/core/constants/app_constants.dart';
@@ -39,7 +39,13 @@ class _EchoBackend implements TranslationBackend {
     required Language source,
     required Language target,
     required String text,
-  }) async => '[${source.mlKitCode}${target.mlKitCode}]$text';
+  }) async {
+    // Destino zh devolve HANZI de verdade: a linha de pinyin da §5.13 só
+    // existe se houver caractere Han no resultado, e um eco em ASCII faria o
+    // teste de pinyin verificar o vazio.
+    if (target == Language.zh) return '谢谢';
+    return '[${source.mlKitCode}${target.mlKitCode}]$text';
+  }
 
   @override
   void dispose() {}
@@ -502,6 +508,72 @@ void main() {
           'o card de download precisa ficar ACIMA da pilha, fora do alcance '
           'do botão flutuante — senão sua ação fica inalcançável',
     );
+
+    vm.dispose();
+    manager.dispose();
+  });
+
+  testWidgets('§5.13: pinyin ACIMA do hanzi, e só com destino zh', (
+    tester,
+  ) async {
+    final api = _GateApi()..installed.addAll(Language.values);
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    final engine = _RecordingTtsEngine();
+    await _pump(tester, vm, manager, ttsEngine: engine);
+
+    // Destino en: nenhuma linha de pinyin — nem vazia. Espaço reservado para
+    // nada é ruído.
+    await tester.enterText(find.byType(TextField), 'obrigado');
+    await tester.pump(const Duration(milliseconds: 850));
+    await tester.pump();
+    expect(vm.translatedPinyin, isNull);
+
+    // Destino zh: a linha existe e vem ANTES do hanzi na tela.
+    vm.selectTarget(Language.zh);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 850));
+    await tester.pump();
+
+    final pinyin = vm.translatedPinyin;
+    expect(pinyin, isNotNull);
+    expect(
+      tester.getTopLeft(find.text(pinyin!)).dy,
+      lessThan(tester.getTopLeft(find.text(vm.translatedText)).dy),
+      reason: 'quem precisa pronunciar acha a pronúncia primeiro (§5.13)',
+    );
+
+    // Copiar leva o hanzi SOZINHO: quem cola numa conversa quer mandar a
+    // tradução, não a romanização junto. Interceptamos o canal em vez de ler
+    // a área de transferência de volta — `Clipboard.getData` depende de uma
+    // resposta que o ambiente de teste não entrega.
+    String? copiado;
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        if (call.method == 'Clipboard.setData') {
+          copiado =
+              (call.arguments as Map<Object?, Object?>)['text'] as String?;
+        }
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Copy'));
+    await tester.pump();
+    expect(copiado, vm.translatedText);
+    expect(copiado, isNot(contains(pinyin)));
+
+    // E o TTS fala o hanzi — ler a romanização daria pronúncia de português.
+    await tester.tap(find.byTooltip('Listen to translation'));
+    await tester.pump();
+    expect(engine.spoken.single, vm.translatedText);
 
     vm.dispose();
     manager.dispose();

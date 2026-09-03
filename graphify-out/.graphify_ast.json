@@ -2609,6 +2609,126 @@
       "_origin": "ast"
     },
     {
+      "id": "lib_core_services_pinyin_service",
+      "label": "pinyin_service.dart",
+      "file_type": "code",
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_pinyin_service_pinyinengine",
+      "label": "PinyinEngine",
+      "file_type": "code",
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_pinyin_service_packagepinyinengine",
+      "label": "PackagePinyinEngine",
+      "file_type": "code",
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_pinyin_service_pinyinservice",
+      "label": "PinyinService",
+      "file_type": "code",
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_pinyin_service_engine",
+      "label": "engine",
+      "file_type": "code",
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_pinyin_service_han",
+      "label": "_han",
+      "file_type": "code",
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "static_final_regexp",
+      "label": "static final RegExp",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_pinyin_service_spacebeforepunctuation",
+      "label": "_spaceBeforePunctuation",
+      "file_type": "code",
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_pinyin_service_spaceafterwidepunctuation",
+      "label": "_spaceAfterWidePunctuation",
+      "file_type": "code",
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_pinyin_service_doublespace",
+      "label": "_doubleSpace",
+      "file_type": "code",
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_pinyin_service_romanize",
+      "label": "romanize",
+      "file_type": "code",
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_pinyin_service_romanizefor",
+      "label": "romanizeFor",
+      "file_type": "code",
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_core_services_pinyin_service_tidy",
+      "label": "_tidy",
+      "file_type": "code",
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_pinyin_pinyin_dart",
+      "label": "package:pinyin/pinyin.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "models_language_dart",
+      "label": "../../models/language.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "lib_core_services_record_audio_source",
       "label": "record_audio_source.dart",
       "file_type": "code",
@@ -7105,6 +7225,14 @@
       "_origin": "ast"
     },
     {
+      "id": "lib_state_translator_view_model_pinyin",
+      "label": "pinyin",
+      "file_type": "code",
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "lib_state_translator_view_model_sourcelang",
       "label": "_sourceLang",
       "file_type": "code",
@@ -7221,6 +7349,14 @@
       "label": "String get",
       "file_type": "code",
       "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_state_translator_view_model_translatedpinyin",
+      "label": "translatedPinyin",
+      "file_type": "code",
+      "source_file": "lib/state/translator_view_model.dart",
       "source_location": null,
       "_origin": "ast"
     },
@@ -7523,6 +7659,14 @@
     {
       "id": "core_services_model_manager_service_dart",
       "label": "../core/services/model_manager_service.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "core_services_pinyin_service_dart",
+      "label": "../core/services/pinyin_service.dart",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -13363,6 +13507,78 @@
     {
       "id": "package_translatoo_core_utils_perf_trace_dart",
       "label": "package:translatoo/core/utils/perf_trace.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_pinyin_service_test",
+      "label": "pinyin_service_test.dart",
+      "file_type": "code",
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_pinyin_service_test_brokenengine",
+      "label": "_BrokenEngine",
+      "file_type": "code",
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_pinyin_service_test_echoengine",
+      "label": "_EchoEngine",
+      "file_type": "code",
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_pinyin_service_test_service",
+      "label": "service",
+      "file_type": "code",
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_pinyin_service_test_romanize",
+      "label": "romanize",
+      "file_type": "code",
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "test_services_pinyin_service_test_main",
+      "label": "main",
+      "file_type": "code",
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_flutter_test_flutter_test_dart",
+      "label": "package:flutter_test/flutter_test.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_translatoo_core_services_pinyin_service_dart",
+      "label": "package:translatoo/core/services/pinyin_service.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "package_translatoo_models_language_dart",
+      "label": "package:translatoo/models/language.dart",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -19553,16 +19769,16 @@
       "_origin": "ast"
     },
     {
-      "id": "dart_typed_data",
-      "label": "dart:typed_data",
+      "id": "package_flutter_material_dart",
+      "label": "package:flutter/material.dart",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
       "_origin": "ast"
     },
     {
-      "id": "package_flutter_material_dart",
-      "label": "package:flutter/material.dart",
+      "id": "package_flutter_services_dart",
+      "label": "package:flutter/services.dart",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -31181,6 +31397,231 @@
       "_origin": "ast"
     },
     {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_pinyinengine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_packagepinyinengine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service_packagepinyinengine",
+      "target": "lib_core_services_pinyin_service_pinyinengine",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_pinyinservice",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_engine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_pinyinengine",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_han",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "static_final_regexp",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_spacebeforepunctuation",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "static_final_regexp",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_spaceafterwidepunctuation",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "static_final_regexp",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_doublespace",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "static_final_regexp",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_romanize",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_romanize",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_romanizefor",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "lib_core_services_pinyin_service_tidy",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "package_pinyin_pinyin_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_pinyin_service",
+      "target": "models_language_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/pinyin_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
       "source": "lib_core_services_record_audio_source",
       "target": "lib_core_services_record_audio_source_recordaudiosource",
       "relation": "defines",
@@ -39057,6 +39498,29 @@
     },
     {
       "source": "lib_state_translator_view_model",
+      "target": "lib_state_translator_view_model_pinyin",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_translator_view_model",
+      "target": "lib_core_services_pinyin_service_pinyinservice",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_translator_view_model",
       "target": "lib_state_translator_view_model_sourcelang",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -39320,6 +39784,29 @@
     {
       "source": "lib_state_translator_view_model",
       "target": "lib_state_translator_view_model_translatedtext",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_translator_view_model",
+      "target": "string_get",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_translator_view_model",
+      "target": "lib_state_translator_view_model_translatedpinyin",
       "relation": "defines",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -39869,6 +40356,17 @@
     {
       "source": "lib_state_translator_view_model",
       "target": "core_services_model_manager_service_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_translator_view_model",
+      "target": "core_services_pinyin_service_dart",
       "relation": "imports",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -51023,6 +51521,149 @@
       "_origin": "ast"
     },
     {
+      "source": "test_services_pinyin_service_test",
+      "target": "test_services_pinyin_service_test_brokenengine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_pinyin_service_test_brokenengine",
+      "target": "lib_core_services_pinyin_service_pinyinengine",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_pinyin_service_test",
+      "target": "test_services_pinyin_service_test_echoengine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_pinyin_service_test_echoengine",
+      "target": "lib_core_services_pinyin_service_pinyinengine",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_pinyin_service_test",
+      "target": "test_services_pinyin_service_test_service",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_pinyin_service_test",
+      "target": "test_services_pinyin_service_test_brokenengine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_pinyin_service_test",
+      "target": "test_services_pinyin_service_test_romanize",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_pinyin_service_test",
+      "target": "test_services_pinyin_service_test_echoengine",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_pinyin_service_test",
+      "target": "test_services_pinyin_service_test_romanize",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_pinyin_service_test",
+      "target": "test_services_pinyin_service_test_main",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_pinyin_service_test",
+      "target": "package_flutter_test_flutter_test_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_pinyin_service_test",
+      "target": "package_translatoo_core_services_pinyin_service_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_pinyin_service_test",
+      "target": "package_translatoo_models_language_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/pinyin_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
       "source": "test_services_record_audio_source_test",
       "target": "test_services_record_audio_source_test_main",
       "relation": "defines",
@@ -61296,7 +61937,7 @@
     },
     {
       "source": "test_widgets_translate_screen_test",
-      "target": "dart_typed_data",
+      "target": "package_flutter_material_dart",
       "relation": "imports",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -61307,7 +61948,7 @@
     },
     {
       "source": "test_widgets_translate_screen_test",
-      "target": "package_flutter_material_dart",
+      "target": "package_flutter_services_dart",
       "relation": "imports",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
