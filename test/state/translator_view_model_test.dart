@@ -93,6 +93,10 @@ void main() {
     // Espelha o estado REAL dos pacotes antes de qualquer interação
     // (installAll=true ⇒ todos Ready; false ⇒ todos NotDownloaded).
     await manager.refreshAll();
+    // O pré-aquecimento da F4.4 traduz um caractere assim que o par fica
+    // pronto. É setup, não comportamento sob teste: contá-lo faria toda
+    // asserção sobre `received` medir uma chamada que o usuário não pediu.
+    backend.received.clear();
   }
 
   tearDown(() {
@@ -101,8 +105,9 @@ void main() {
   });
 
   test('debounce de 800 ms dispara tradução automática (RF-M1-03)', () {
-    fakeAsync((async) async {
-      await build();
+    fakeAsync((async) {
+      unawaited(build());
+      async.flushMicrotasks();
       vm.onTextChanged('Bom dia');
       expect(vm.status, TranslatorStatus.typing);
 
@@ -116,8 +121,9 @@ void main() {
   });
 
   test('digitar de novo reinicia o timer do debounce', () {
-    fakeAsync((async) async {
-      await build();
+    fakeAsync((async) {
+      unawaited(build());
+      async.flushMicrotasks();
       vm.onTextChanged('O');
       async.elapse(const Duration(milliseconds: 600));
       vm.onTextChanged('Oi'); // reinicia
@@ -131,8 +137,9 @@ void main() {
   });
 
   test('texto vazio cancela o debounce e volta a idle', () {
-    fakeAsync((async) async {
-      await build();
+    fakeAsync((async) {
+      unawaited(build());
+      async.flushMicrotasks();
       vm.onTextChanged('x');
       async.elapse(const Duration(milliseconds: 100));
       vm.onTextChanged('');
@@ -146,8 +153,9 @@ void main() {
   });
 
   test('truncamento em 5.000 chars com flag + segurança surrogate', () {
-    fakeAsync((async) async {
-      await build();
+    fakeAsync((async) {
+      unawaited(build());
+      async.flushMicrotasks();
       vm.onTextChanged('a' * 6000);
       expect(vm.sourceText.length, 5000);
       expect(vm.isTruncated, isTrue);
@@ -159,8 +167,9 @@ void main() {
     });
   });
   test('⇄ troca idiomas E textos e retraduz (AC-M1-3)', () {
-    fakeAsync((async) async {
-      await build();
+    fakeAsync((async) {
+      unawaited(build());
+      async.flushMicrotasks();
       vm.onTextChanged('Bom dia');
       async.elapse(const Duration(milliseconds: 850));
       expect(vm.translatedText, '[pten]Bom dia');
@@ -176,9 +185,53 @@ void main() {
     });
   });
 
+  test('trocar de idioma APAGA o resultado anterior', () {
+    fakeAsync((async) {
+      unawaited(build());
+      async.flushMicrotasks();
+      vm.onTextChanged('Bom dia');
+      async.elapse(const Duration(milliseconds: 850));
+      expect(vm.translatedText, '[pten]Bom dia');
+
+      // O texto no painel foi traduzido para INGLÊS; sob o rótulo "中文" ele
+      // afirma uma coisa falsa.
+      vm.selectTarget(Language.zh);
+      expect(vm.translatedText, isEmpty);
+
+      async.elapse(const Duration(milliseconds: 50));
+      expect(vm.translatedText, '[ptzh]Bom dia');
+    });
+  });
+
+  test('sem o pacote do idioma novo, o painel esvazia ANTES da retradução', () {
+    fakeAsync((async) {
+      unawaited(build());
+      async.flushMicrotasks();
+      vm.onTextChanged('Bom dia');
+      async.elapse(const Duration(milliseconds: 850));
+      expect(vm.translatedText, '[pten]Bom dia');
+
+      // Pacote de zh some do aparelho: a retradução não sai na hora.
+      api.installed.remove(Language.zh);
+      unawaited(manager.refreshAll());
+      async.flushMicrotasks();
+
+      vm.selectTarget(Language.zh);
+      // Sem a limpeza, o inglês ficaria sob o rótulo 中文 durante todo o
+      // download — que no aparelho leva minutos, não milissegundos.
+      expect(vm.translatedText, isEmpty);
+      expect(vm.status, isNot(TranslatorStatus.done));
+
+      // E o AC-M1-2 continua valendo: baixado o pacote, a tradução retoma.
+      async.elapse(const Duration(milliseconds: 900));
+      expect(vm.translatedText, '[ptzh]Bom dia');
+    });
+  });
+
   test('bloqueios durante `translating`: swap/seleção são ignorados', () {
-    fakeAsync((async) async {
-      await build();
+    fakeAsync((async) {
+      unawaited(build());
+      async.flushMicrotasks();
       backend.gate = Completer<void>(); // segura a tradução
       vm.onTextChanged('Oi');
       async.elapse(const Duration(milliseconds: 850));
@@ -199,8 +252,9 @@ void main() {
   });
 
   test('erro do motor vira AppException — nunca exceção crua (RN-03)', () {
-    fakeAsync((async) async {
-      await build();
+    fakeAsync((async) {
+      unawaited(build());
+      async.flushMicrotasks();
       backend.throwOnTranslate = const AppException(
         ErrorCode.translationFailed,
       );
@@ -214,8 +268,9 @@ void main() {
   });
 
   test('canDictate reflete o modelo embutido no flavor (F2.1b)', () {
-    fakeAsync((async) async {
-      await build();
+    fakeAsync((async) {
+      unawaited(build());
+      async.flushMicrotasks();
       // O default de compilação é o flavor `full`; um build sem
       // --dart-define=STT_MODEL_ASSET= mantém o ditado disponível.
       expect(vm.canDictate, AppConstants.hasEmbeddedSttModels);
@@ -224,8 +279,9 @@ void main() {
   });
 
   test('acceptDictatedText traduz imediatamente (gancho F2)', () {
-    fakeAsync((async) async {
-      await build();
+    fakeAsync((async) {
+      unawaited(build());
+      async.flushMicrotasks();
       vm.acceptDictatedText('Oi'); // sem esperar debounce nenhum
       async.elapse(Duration.zero);
 
@@ -237,8 +293,9 @@ void main() {
   test(
     'AC-M1-2: pacote ausente → download → tradução pendente executa sozinha',
     () {
-      fakeAsync((async) async {
-        await build(installAll: false);
+      fakeAsync((async) {
+        unawaited(build(installAll: false));
+        async.flushMicrotasks();
         vm.onTextChanged('Oi');
         async.elapse(const Duration(milliseconds: 850));
         async.elapse(Duration.zero);
@@ -257,12 +314,15 @@ void main() {
   test(
     'ERR_WIFI_ONLY expõe erro + "baixar mesmo assim" força sem mudar prefs',
     () {
-      fakeAsync((async) async {
-        await build(
-          installAll: false,
-          online: ValueNotifier<bool>(true),
-          onMobileData: ValueNotifier<bool>(true),
+      fakeAsync((async) {
+        unawaited(
+          build(
+            installAll: false,
+            online: ValueNotifier<bool>(true),
+            onMobileData: ValueNotifier<bool>(true),
+          ),
         );
+        async.flushMicrotasks();
 
         vm.onTextChanged('Oi');
         async.elapse(const Duration(milliseconds: 850));

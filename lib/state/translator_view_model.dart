@@ -210,6 +210,10 @@ class TranslatorViewModel extends ChangeNotifier {
             '${_translation.lastResultWasLocal ? 'local' : 'nuvem'}',
       );
       _translatedText = result;
+      // O pacote que faltava chegou: o rótulo guardado para a mensagem de erro
+      // não vale mais. Deixá-lo aqui faria um erro FUTURO e sem relação nomear
+      // o idioma errado.
+      _blockedLanguageLabel = null;
       _status = TranslatorStatus.done;
     } on AppException catch (e) {
       _error = e;
@@ -326,6 +330,7 @@ class TranslatorViewModel extends ChangeNotifier {
     _sourceLang = language;
     _error = null;
     _fromDictation = false;
+    _clearStaleResult();
     _persistPair();
     notifyListeners();
     if (_sourceText.trim().isNotEmpty) unawaited(_translate());
@@ -343,10 +348,24 @@ class TranslatorViewModel extends ChangeNotifier {
     _targetLang = language;
     _error = null;
     _fromDictation = false;
+    _clearStaleResult();
     _persistPair();
     notifyListeners();
     if (_sourceText.trim().isNotEmpty) unawaited(_translate());
     warmUpIfReady();
+  }
+
+  /// Apaga o resultado ao trocar de idioma.
+  ///
+  /// O texto que está no painel foi traduzido para OUTRO idioma; mantê-lo sob
+  /// o rótulo novo afirma uma coisa falsa — o painel dizia "中文" exibindo
+  /// inglês. Normalmente a retradução cobre isso em milissegundos, mas quando
+  /// o pacote do idioma novo ainda não existe ela não acontece, e a mentira
+  /// fica na tela durante todo o download.
+  void _clearStaleResult() {
+    if (_translatedText.isEmpty) return;
+    _translatedText = '';
+    _isTruncated = false;
   }
 
   /// Grava o par corrente (F3.6) — o debounce de 500 ms do storage agrupa

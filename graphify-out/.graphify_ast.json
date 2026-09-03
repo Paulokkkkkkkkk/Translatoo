@@ -7433,6 +7433,14 @@
       "_origin": "ast"
     },
     {
+      "id": "lib_state_translator_view_model_clearstaleresult",
+      "label": "_clearStaleResult",
+      "file_type": "code",
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "lib_state_translator_view_model_persistpair",
       "label": "_persistPair",
       "file_type": "code",
@@ -13675,14 +13683,6 @@
     {
       "id": "dart_convert",
       "label": "dart:convert",
-      "file_type": "code",
-      "source_file": null,
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "package_fake_async_fake_async_dart",
-      "label": "package:fake_async/fake_async.dart",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -39747,6 +39747,17 @@
     },
     {
       "source": "lib_state_translator_view_model",
+      "target": "lib_state_translator_view_model_clearstaleresult",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_translator_view_model",
       "target": "lib_state_translator_view_model_persistpair",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -51461,17 +51472,6 @@
     {
       "source": "test_services_storage_service_test",
       "target": "dart_convert",
-      "relation": "imports",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "test/services/storage_service_test.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "test_services_storage_service_test",
-      "target": "package_fake_async_fake_async_dart",
       "relation": "imports",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
