@@ -22,6 +22,10 @@ migrate_working_dir/
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
 #.vscode/
+# ...menos o launch.json: sem --flavor o build não produz app-debug.apk e o
+# botão de Run falha. Ver docs/CONTRIBUTING / qa_final.md.
+.vscode/*
+!.vscode/launch.json
 
 # Flutter/Dart/Pub related
 **/doc/api/

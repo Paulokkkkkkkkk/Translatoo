@@ -53,6 +53,25 @@ flutter run --flavor full \
 flutter clean
 ```
 
+O outro sintoma, quando não há APK obsoleto para pegar, é o build "falhar" com
+uma mensagem que não menciona flavor nenhum:
+
+```
+Error: Gradle build failed to produce an .apk file. It's likely that this file
+was generated under .../build, but the tool couldn't find it.
+```
+
+O Gradle **construiu** — `app-full-debug.apk` e `app-lite-debug.apk` estão lá.
+O que não existe é o `app-debug.apk` sem flavor que a ferramenta procura.
+
+Por isso o repositório versiona `.vscode/launch.json` com as três configurações
+já com `--flavor`: no VS Code, use o seletor de Run em vez do botão padrão, e o
+problema não acontece.
+
+O aviso de KGP (`ffmpeg_kit_flutter_new_min`, `flutter_tts`, `share_plus`) que
+aparece junto é **só aviso** — o build passa. Ele vira erro numa versão futura
+do Flutter, e aí depende dos plugins publicarem versões migradas.
+
 **iOS só roda em iPhone físico.** O ML Kit publica fatia `arm64` apenas para
 device, e o simulador do Apple Silicon recusa `x86_64` desde que o Xcode
 removeu a rota Rosetta. Não há contorno; o erro aparece como
