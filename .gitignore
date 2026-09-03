@@ -26,6 +26,7 @@ migrate_working_dir/
 # botão de Run falha. Ver docs/CONTRIBUTING / qa_final.md.
 .vscode/*
 !.vscode/launch.json
+!.vscode/settings.json
 
 # Flutter/Dart/Pub related
 **/doc/api/

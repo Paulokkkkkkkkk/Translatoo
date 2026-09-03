@@ -64,20 +64,34 @@ was generated under .../build, but the tool couldn't find it.
 O Gradle **construiu** — `app-full-debug.apk` e `app-lite-debug.apk` estão lá.
 O que não existe é o `app-debug.apk` sem flavor que a ferramenta procura.
 
-Por isso o repositório versiona `.vscode/launch.json` com as três configurações
-já com `--flavor`: no VS Code, use o seletor de Run em vez do botão padrão, e o
-problema não acontece.
+No VS Code isso está resolvido pelo `.vscode/settings.json` versionado:
 
-⚠️ Ao editar esse arquivo, o flavor vai em **`toolArgs`**, nunca em `args`. São
-coisas diferentes e a extensão não reclama da errada:
-
-```
-flutter run (toolArgs) -t lib/main.dart (args)
+```json
+"dart.flutterRunAdditionalArgs": ["--flavor", "full", "--dart-define=..."]
 ```
 
-`args` chega ao `main()` do Dart; só `toolArgs` chega ao `flutter run`. Pôr
-`--flavor` em `args` produz exatamente o erro desta seção, com a agravante de
-parecer configurado.
+Esse ajuste vale para **todo** `flutter run` da extensão, venha do botão de
+play, do F5 ou do seletor de Run — que é justamente o que um `launch.json`
+sozinho não garante, porque o botão de play não usa configuração nenhuma.
+
+⚠️ Duas armadilhas ao mexer nisso:
+
+1. Em `launch.json`, argumentos do `flutter run` vão em **`toolArgs`**, nunca
+   em `args` — e a extensão não reclama do campo errado:
+   `flutter run (toolArgs) -t lib/main.dart (args)`. `args` chega ao `main()`
+   do Dart. Pôr `--flavor` ali produz exatamente o erro desta seção, com a
+   agravante de parecer configurado.
+2. **Não repita `--flavor` nos dois lugares.** O `flutter run` aceita o
+   argumento repetido e o ÚLTIMO vence (verificado: `--flavor lite --flavor
+   full` monta `assembleFullDebug`); como a ordem em que a extensão junta as
+   duas fontes não é garantida, o flavor sairia imprevisível.
+
+Para rodar o `lite`, use o terminal:
+
+```bash
+flutter run --flavor lite \
+  --dart-define=STT_MODEL_ASSET=assets/models/whisper/ggml-tiny-q5_1.bin
+```
 
 O aviso de KGP (`ffmpeg_kit_flutter_new_min`, `flutter_tts`, `share_plus`) que
 aparece junto é **só aviso** — o build passa. Ele vira erro numa versão futura

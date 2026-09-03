@@ -1,39 +1,23 @@
 {
   "version": "0.2.0",
   "configurations": [
+    // O flavor e o --dart-define vêm de settings.json e valem para todas as
+    // configurações daqui. NÃO repita `--flavor` em `toolArgs`: em `flutter
+    // run` o ÚLTIMO `--flavor` vence, e a ordem em que a extensão junta as
+    // duas fontes não é garantida — o resultado seria um flavor imprevisível.
+    // Para rodar o `lite`, use o terminal (comando no CONTRIBUTING.md).
     {
-      "name": "Translatoo (full)",
+      "name": "Translatoo",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main.dart",
-      "toolArgs": [
-        "--flavor",
-        "full",
-        "--dart-define=STT_MODEL_ASSET=assets/models/whisper/ggml-base-q5_1.bin"
-      ]
+      "program": "lib/main.dart"
     },
     {
-      "name": "Translatoo (lite)",
-      "request": "launch",
-      "type": "dart",
-      "program": "lib/main.dart",
-      "toolArgs": [
-        "--flavor",
-        "lite",
-        "--dart-define=STT_MODEL_ASSET=assets/models/whisper/ggml-tiny-q5_1.bin"
-      ]
-    },
-    {
-      "name": "Translatoo (full · profile)",
+      "name": "Translatoo (profile)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile",
-      "program": "lib/main.dart",
-      "toolArgs": [
-        "--flavor",
-        "full",
-        "--dart-define=STT_MODEL_ASSET=assets/models/whisper/ggml-base-q5_1.bin"
-      ]
+      "program": "lib/main.dart"
     }
   ]
 }
