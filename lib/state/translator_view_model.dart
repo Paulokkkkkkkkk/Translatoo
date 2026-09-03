@@ -242,15 +242,39 @@ class TranslatorViewModel extends ChangeNotifier {
   }
 
   Future<void> _startDownload(Language language, {bool force = false}) async {
+    // Sem este log, um download que não acontece é indistinguível de um que
+    // trava: o ML Kit não expõe progresso, e o card mostra 90% nos dois casos.
+    if (kDebugMode) {
+      debugPrint('[Translatoo] download ${language.mlKitCode} (force: $force)');
+    }
     try {
       await _models.downloadModel(language, force: force);
+      if (kDebugMode) {
+        debugPrint('[Translatoo] download ${language.mlKitCode} concluído');
+      }
     } on AppException catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '[Translatoo] download ${language.mlKitCode} falhou: ${e.code}',
+        );
+      }
       _error = e;
       _blockedLanguageLabel = language.displayName;
       _status = TranslatorStatus.error;
       notifyListeners();
     }
   }
+
+  /// Baixa o pacote de [language] a pedido explícito do usuário — o botão
+  /// "Baixar" do card.
+  ///
+  /// Existe separado do fluxo de tradução por um motivo concreto: o card
+  /// chamava `retryLastAction()`, que passa por `_translate()`, e `_translate()`
+  /// retorna na primeira linha quando o campo de origem está VAZIO. Ou seja,
+  /// abrir o app e tocar em "Baixar" antes de digitar qualquer coisa não fazia
+  /// absolutamente nada — nem download, nem erro, nem indicação. Baixar um
+  /// pacote é uma ação em si, não efeito colateral de tentar traduzir.
+  Future<void> downloadModelFor(Language language) => _startDownload(language);
 
   /// Ação "Baixar mesmo assim" (ERR_WIFI_ONLY): força SEM alterar preferência.
   Future<void> confirmDownloadAnyway() async {

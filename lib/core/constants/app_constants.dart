@@ -80,13 +80,6 @@ abstract final class AppConstants {
   /// spike não embutir um modelo viável (docs/tflite_spike.md), permanece OFF.
   static const bool enableAlternativeEngine = false;
 
-  /// Passo do progresso simulado durante o download de pacote (o plugin ML Kit
-  /// não expõe progresso nativo; sondamos o estado — ver ModelManagerService).
-  static const int modelDownloadProgressStep = 7;
-
-  /// Teto do progresso simulado antes da confirmação real de conclusão.
-  static const int modelDownloadProgressCap = 90;
-
   /// Intervalo de sondagem do estado do modelo durante o download.
   static const Duration modelDownloadPollInterval = Duration(milliseconds: 400);
 }

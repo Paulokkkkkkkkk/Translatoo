@@ -99,7 +99,11 @@ class _ModelRow extends StatelessWidget {
           if (currentState is ModelDownloading) ...[
             const SizedBox(height: AppSpacing.xs),
             LinearProgressIndicator(
-              value: currentState.progressPercent / 100,
+              // `null` = indeterminado, e é o que sabemos: o ML Kit não
+              // informa quanto já baixou.
+              value: currentState.progressPercent == null
+                  ? null
+                  : currentState.progressPercent! / 100,
               minHeight: 4,
             ),
           ],

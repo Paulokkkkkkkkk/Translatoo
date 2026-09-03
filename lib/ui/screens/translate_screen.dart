@@ -246,7 +246,11 @@ class _TranslateScreenState extends State<TranslateScreen> {
               child: DownloadProgressCard(
                 language: entry.$1,
                 state: entry.$2,
-                onDownload: () => _observed?.retryLastAction(),
+                // Ação PRÓPRIA, não `retryLastAction()`: aquela passa por
+                // `_translate()`, que desiste quando o campo está vazio — e o
+                // botão ficava morto justamente no primeiro uso do app.
+                onDownload: () =>
+                    unawaited(_observed!.downloadModelFor(entry.$1)),
                 onCancel: () => manager.cancelDownload(entry.$1),
               ),
             );

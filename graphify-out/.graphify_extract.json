@@ -345,22 +345,6 @@
       "_origin": "ast"
     },
     {
-      "id": "lib_core_constants_app_constants_modeldownloadprogressstep",
-      "label": "modelDownloadProgressStep",
-      "file_type": "code",
-      "source_file": "lib/core/constants/app_constants.dart",
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "lib_core_constants_app_constants_modeldownloadprogresscap",
-      "label": "modelDownloadProgressCap",
-      "file_type": "code",
-      "source_file": "lib/core/constants/app_constants.dart",
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
       "id": "lib_core_constants_app_constants_modeldownloadpollinterval",
       "label": "modelDownloadPollInterval",
       "file_type": "code",
@@ -2521,14 +2505,6 @@
       "_origin": "ast"
     },
     {
-      "id": "lib_core_services_model_manager_service_startpolling",
-      "label": "_startPolling",
-      "file_type": "code",
-      "source_file": "lib/core/services/model_manager_service.dart",
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
       "id": "lib_core_services_model_manager_service_stoppolling",
       "label": "_stopPolling",
       "file_type": "code",
@@ -2587,14 +2563,6 @@
     {
       "id": "models_model_state_dart",
       "label": "../../models/model_state.dart",
-      "file_type": "code",
-      "source_file": null,
-      "source_location": null,
-      "_origin": "ast"
-    },
-    {
-      "id": "constants_app_constants_dart",
-      "label": "../constants/app_constants.dart",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -5881,6 +5849,14 @@
       "_origin": "ast"
     },
     {
+      "id": "int",
+      "label": "int?",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "lib_models_translation_record",
       "label": "translation_record.dart",
       "file_type": "code",
@@ -7499,6 +7475,14 @@
     {
       "id": "lib_state_translator_view_model_startdownload",
       "label": "_startDownload",
+      "file_type": "code",
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "lib_state_translator_view_model_downloadmodelfor",
+      "label": "downloadModelFor",
       "file_type": "code",
       "source_file": "lib/state/translator_view_model.dart",
       "source_location": null,
@@ -19897,6 +19881,14 @@
       "_origin": "ast"
     },
     {
+      "id": "package_translatoo_models_model_state_dart",
+      "label": "package:translatoo/models/model_state.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "package_translatoo_state_speech_view_model_dart",
       "label": "package:translatoo/state/speech_view_model.dart",
       "file_type": "code",
@@ -21028,52 +21020,6 @@
     {
       "source": "lib_core_constants_app_constants",
       "target": "static_const_bool",
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/constants/app_constants.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "context": "variable_type",
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_core_constants_app_constants",
-      "target": "lib_core_constants_app_constants_modeldownloadprogressstep",
-      "relation": "defines",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/constants/app_constants.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_core_constants_app_constants",
-      "target": "static_const_int",
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/constants/app_constants.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "context": "variable_type",
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_core_constants_app_constants",
-      "target": "lib_core_constants_app_constants_modeldownloadprogresscap",
-      "relation": "defines",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/constants/app_constants.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_core_constants_app_constants",
-      "target": "static_const_int",
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -31285,17 +31231,6 @@
     },
     {
       "source": "lib_core_services_model_manager_service",
-      "target": "lib_core_services_model_manager_service_startpolling",
-      "relation": "defines",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/services/model_manager_service.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_core_services_model_manager_service",
       "target": "lib_core_services_model_manager_service_stoppolling",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -31374,17 +31309,6 @@
     {
       "source": "lib_core_services_model_manager_service",
       "target": "models_model_state_dart",
-      "relation": "imports",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/core/services/model_manager_service.dart",
-      "source_location": null,
-      "weight": 1.0,
-      "_origin": "ast"
-    },
-    {
-      "source": "lib_core_services_model_manager_service",
-      "target": "constants_app_constants_dart",
       "relation": "imports",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -37105,6 +37029,18 @@
     },
     {
       "source": "lib_models_model_state",
+      "target": "int",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/models/model_state.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_models_model_state",
       "target": "lib_models_model_state_operator",
       "relation": "defines",
       "confidence": "EXTRACTED",
@@ -40144,6 +40080,17 @@
     {
       "source": "lib_state_translator_view_model",
       "target": "lib_state_translator_view_model_startdownload",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/state/translator_view_model.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_state_translator_view_model",
+      "target": "lib_state_translator_view_model_downloadmodelfor",
       "relation": "defines",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -51473,6 +51420,18 @@
     },
     {
       "source": "test_services_model_manager_service_test",
+      "target": "lib_models_model_state_modeldownloading",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/services/model_manager_service_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "type_lookup",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_services_model_manager_service_test",
       "target": "lib_core_services_app_exception_appexception",
       "relation": "references",
       "confidence": "EXTRACTED",
@@ -62121,6 +62080,17 @@
     },
     {
       "source": "test_widgets_translate_screen_test",
+      "target": "package_translatoo_models_model_state_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test",
       "target": "package_translatoo_state_speech_view_model_dart",
       "relation": "imports",
       "confidence": "EXTRACTED",
@@ -62235,6 +62205,18 @@
     {
       "source": "test_widgets_translate_screen_test",
       "target": "readingordertraversalpolicy",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "type_lookup",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test",
+      "target": "lib_models_model_state_modeldownloading",
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,

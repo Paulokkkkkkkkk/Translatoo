@@ -539,7 +539,7 @@ lib/
 - Perfis com DevTools: cold start < 2 s; tradução ≤ 300 ms (≤ 500 chars); início de escuta ≤ 500 ms (modelo carregado); animações 60 fps.
 - Otimizações típicas: lazy-load do modelo de STT (só no primeiro uso, com `keepModelLoaded`), pré-aquecimento do translator, evitar rebuilds globais (já garantido por `Selector`), const widgets.
 - **Entregável**: relatório curto de medições vs metas.
-- ✅ Código entregue: `PerfTrace` (sondas debug-only das três métricas), pré-aquecimento do tradutor por par, lazy-load de STT confirmado. Roteiro e orçamentos em [`docs/performance.md`](docs/performance.md) — **os números faltam colher em aparelho físico**.
+- ✅ Código entregue: `PerfTrace` (sondas debug-only das três métricas), pré-aquecimento do tradutor por par, lazy-load de STT confirmado. Roteiro e orçamentos em [`docs/performance.md`](docs/performance.md); primeiras medições em aparelho físico em [`docs/performance_results.md`](docs/performance_results.md) (cold start 1008 ms e escuta 320 ms, dentro do orçamento). **A tradução em aparelho depende do pacote de idioma, hoje travado pela rede (cenário China).**
 
 ### F4.5 — Acessibilidade e privacidade (RN-05/06, §4.5)
 - `Semantics` completo, contraste AA verificado nas duas paletas (ferramenta de auditoria), foco/ordem de tabulação coerentes.

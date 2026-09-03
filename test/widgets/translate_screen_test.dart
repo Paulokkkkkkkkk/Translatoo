@@ -15,6 +15,7 @@ import 'package:translatoo/core/services/whisper_model_installer.dart';
 import 'package:translatoo/core/services/whisper_stt_engine.dart';
 import 'package:translatoo/models/language.dart';
 import 'package:translatoo/models/language_pair.dart';
+import 'package:translatoo/models/model_state.dart';
 import 'package:translatoo/state/speech_view_model.dart';
 import 'package:translatoo/state/translator_view_model.dart';
 import 'package:translatoo/state/tts_view_model.dart';
@@ -269,9 +270,11 @@ void main() {
     // Card sobreposto: nome nativo + progresso inicial.
     expect(find.byType(DownloadProgressCard), findsOneWidget);
     expect(find.text('Português'), findsWidgets);
-    // O aviso ficou compacto (uma linha): o progresso divide o texto com o
-    // tamanho estimado, em vez de ter linha própria.
-    expect(find.textContaining('0%'), findsOneWidget);
+    // O aviso ficou compacto (uma linha) e NÃO mostra percentual: o ML Kit
+    // não informa quanto já baixou, e o número simulado dizia "90%" enquanto
+    // o download real estava em 34%.
+    expect(find.textContaining('%'), findsNothing);
+    expect(find.textContaining('Downloading'), findsOneWidget);
 
     api.complete(Language.pt);
     api.complete(Language.en);
@@ -605,6 +608,35 @@ void main() {
       tester.takeException(),
       isNull,
       reason: 'nenhum overflow de layout com resultado longo',
+    );
+
+    vm.dispose();
+    manager.dispose();
+  });
+
+  testWidgets('"Baixar" funciona com o campo VAZIO (primeiro uso do app)', (
+    tester,
+  ) async {
+    // Era o bug relatado como "os pacotes não estão baixando". O botão do card
+    // chamava `retryLastAction()`, que passa por `_translate()` — e essa
+    // desiste na primeira linha quando não há texto. Abrir o app e tocar em
+    // "Baixar" antes de digitar não fazia nada: nem download, nem erro.
+    final api = _GateApi(); // nada instalado
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    await _pump(tester, vm, manager);
+    await tester.pump();
+
+    expect(find.byType(DownloadProgressCard), findsOneWidget);
+    expect(vm.sourceText, isEmpty, reason: 'o campo NÃO foi preenchido');
+
+    await tester.tap(find.text('Download'));
+    await tester.pump();
+
+    expect(
+      manager.stateFor(Language.pt),
+      isA<ModelDownloading>(),
+      reason: 'tocar em Baixar precisa iniciar o download por si só',
     );
 
     vm.dispose();

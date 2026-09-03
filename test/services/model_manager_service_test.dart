@@ -60,7 +60,7 @@ void main() {
     });
   });
 
-  test('download emite progresso determinístico e termina READY', () {
+  test('download fica em progresso DESCONHECIDO e termina READY', () {
     fakeAsync((async) {
       final api = _FakeApi();
       final service = ModelManagerService(
@@ -71,13 +71,7 @@ void main() {
 
       unawaited(service.downloadModel(Language.pt));
       async.elapse(Duration.zero);
-      expect(service.stateFor(Language.pt), const ModelDownloading(0));
-
-      async.elapse(AppConstants.modelDownloadPollInterval);
-      expect(
-        service.stateFor(Language.pt),
-        const ModelDownloading(AppConstants.modelDownloadProgressStep),
-      );
+      expect(service.stateFor(Language.pt), const ModelDownloading());
 
       api.completeDownload(Language.pt);
       async.elapse(Duration.zero);
@@ -87,17 +81,25 @@ void main() {
       service.dispose();
     });
   });
-  test('progresso simulado estaciona no teto até a confirmação real', () {
+
+  test('nenhum progresso é INVENTADO com o tempo', () {
     fakeAsync((async) {
       final api = _FakeApi();
       final service = ModelManagerService(api: api);
 
       unawaited(service.downloadModel(Language.zh));
-      async.elapse(AppConstants.modelDownloadPollInterval * 30); // >> teto 90%
+      // Numa rede lenta o download real leva HORAS. O percentual simulado
+      // chegava a 90% em cinco segundos e ficava lá — dizendo "quase pronto"
+      // enquanto o download de verdade estava em 34%. Não saber quanto falta
+      // é a verdade; a UI mostra indicador indeterminado.
+      async.elapse(const Duration(minutes: 30));
 
+      final state = service.stateFor(Language.zh);
+      expect(state, isA<ModelDownloading>());
       expect(
-        service.stateFor(Language.zh),
-        const ModelDownloading(AppConstants.modelDownloadProgressCap),
+        (state as ModelDownloading).progressPercent,
+        isNull,
+        reason: 'sem número inventado — o ML Kit não informa o progresso',
       );
       service.dispose();
     });
@@ -129,7 +131,7 @@ void main() {
         // Decisão "Baixar mesmo assim" vem da UI via `force`.
         unawaited(service.downloadModel(Language.pt, force: true));
         async.elapse(Duration.zero);
-        expect(service.stateFor(Language.pt), const ModelDownloading(0));
+        expect(service.stateFor(Language.pt), const ModelDownloading());
 
         service.dispose();
       });
@@ -166,7 +168,7 @@ void main() {
         service.downloadModel(Language.en).catchError((Object e) => caught = e),
       );
       async.elapse(Duration.zero);
-      expect(service.stateFor(Language.en), const ModelDownloading(0));
+      expect(service.stateFor(Language.en), const ModelDownloading());
 
       api.failDownload(
         Language.en,
