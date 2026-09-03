@@ -400,4 +400,42 @@ void main() {
       manager.dispose();
     },
   );
+
+  testWidgets('F4.5: a ordem de foco segue a ordem VISUAL, não a da árvore', (
+    tester,
+  ) async {
+    // O botão de modo é o último filho do `Stack` (precisa desenhar POR CIMA),
+    // mas fica visualmente no alto, cavalgando a fronteira entre bloco e
+    // painel. Se o foco seguisse a árvore, o leitor de tela o anunciaria por
+    // último — depois de tudo o que está abaixo dele na tela. O que salva é a
+    // `ReadingOrderTraversalPolicy` padrão, que ordena por geometria; este
+    // teste trava isso, porque uma política customizada em algum ancestral
+    // futuro quebraria a ordem sem nenhum sintoma visível.
+    final api = _GateApi()..installed.addAll(Language.values);
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    await _pump(tester, vm, manager);
+
+    final modeRect = tester.getRect(find.byType(ModeButton));
+    final fieldRect = tester.getRect(find.byType(TextField).first);
+    expect(
+      modeRect.top,
+      lessThan(fieldRect.top),
+      reason: 'o botão de modo está acima do campo na TELA',
+    );
+
+    final policy = FocusTraversalGroup.of(
+      tester.element(find.byType(ModeButton)),
+    );
+    expect(
+      policy,
+      isA<ReadingOrderTraversalPolicy>(),
+      reason:
+          'com política de ordem-da-árvore o botão de modo seria anunciado '
+          'por último, apesar de estar no alto da tela',
+    );
+
+    vm.dispose();
+    manager.dispose();
+  });
 }

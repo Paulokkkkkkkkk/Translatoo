@@ -545,6 +545,7 @@ lib/
 - `Semantics` completo, contraste AA verificado nas duas paletas (ferramenta de auditoria), foco/ordem de tabulação coerentes.
 - Revisão final de permissões (mínimo necessário), política de privacidade na loja coerente com "zero coleta".
 - **Entregável**: checklist de acessibilidade 100%.
+- ✅ Código entregue: guardas automatizadas (tooltip, alvo 48 dp, ordem de leitura, contraste AA nas duas paletas, permissões e ausência de cliente HTTP). Checklist em [`docs/accessibility.md`](docs/accessibility.md) — **faltam TalkBack em aparelho e captura de tráfego por proxy**.
 
 ### F4.6 — QA final e compatibilidade
 - Bateria completa dos 16 ACs do PRD em Android físico, incluindo:
