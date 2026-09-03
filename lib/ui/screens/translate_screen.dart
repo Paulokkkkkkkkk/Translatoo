@@ -51,6 +51,11 @@ class _TranslateScreenState extends State<TranslateScreen> {
   /// RN-07: sair para segundo plano durante a escuta ENCERRA com o parcial.
   /// O listener vive aqui, e não no ViewModel, porque `AppLifecycleListener`
   /// é API de widget — a `state/` não conhece Flutter de UI.
+  ///
+  /// A LEITURA NÃO PARA. Parece inconsistente com o ditado, e é deliberado: a
+  /// RN-07 manda o TTS seguir até concluir ou o SO interromper. O usuário que
+  /// troca de app enquanto ouve uma frase quer terminar de ouvi-la; já o
+  /// microfone aberto fora de vista é outra história.
   late final AppLifecycleListener _lifecycle = AppLifecycleListener(
     onInactive: () => context.read<SpeechViewModel>().onAppBackgrounded(),
   );

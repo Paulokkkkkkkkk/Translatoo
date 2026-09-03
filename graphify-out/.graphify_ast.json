@@ -19393,6 +19393,14 @@
       "_origin": "ast"
     },
     {
+      "id": "test_widgets_translate_screen_test_stops",
+      "label": "stops",
+      "file_type": "code",
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "test_widgets_translate_screen_test_amplitude",
       "label": "amplitude",
       "file_type": "code",
@@ -60942,6 +60950,17 @@
       "source_location": null,
       "weight": 1.0,
       "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test",
+      "target": "test_widgets_translate_screen_test_stops",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
       "_origin": "ast"
     },
     {

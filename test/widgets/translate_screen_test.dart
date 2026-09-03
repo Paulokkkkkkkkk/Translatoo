@@ -124,8 +124,12 @@ class _RecordingTtsEngine implements TtsEngine {
   @override
   Future<void> speak(String text) async => spoken.add(text);
 
+  /// Contado, não ignorado: é assim que se prova que ir para segundo plano
+  /// CALA o sintetizador (F4.6).
+  int stops = 0;
+
   @override
-  Future<void> stop() async {}
+  Future<void> stop() async => stops++;
 
   @override
   Future<void> dispose() async {}
@@ -433,6 +437,40 @@ void main() {
       reason:
           'com política de ordem-da-árvore o botão de modo seria anunciado '
           'por último, apesar de estar no alto da tela',
+    );
+
+    vm.dispose();
+    manager.dispose();
+  });
+
+  testWidgets('RN-07: segundo plano encerra a escuta mas NÃO cala a leitura', (
+    tester,
+  ) async {
+    // Parece inconsistente e é deliberado: quem troca de app no meio de uma
+    // frase quer terminar de OUVI-LA; microfone aberto fora de vista é outra
+    // história. A RN-07 escolheu esse lado, e o teste impede que alguém
+    // "conserte" a inconsistência sem passar pelo PRD.
+    final api = _GateApi()..installed.addAll(Language.values);
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    final engine = _RecordingTtsEngine();
+    await _pump(tester, vm, manager, ttsEngine: engine);
+
+    await tester.enterText(find.byType(TextField), 'Olá');
+    await tester.pump(const Duration(milliseconds: 850));
+    await tester.pump();
+    await tester.tap(find.byTooltip('Listen to translation'));
+    await tester.pump();
+    expect(engine.spoken, ['[pten]Olá']);
+
+    final antes = engine.stops;
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    await tester.pump();
+
+    expect(
+      engine.stops,
+      antes,
+      reason: 'a RN-07 manda o TTS seguir até concluir ou o SO interromper',
     );
 
     vm.dispose();

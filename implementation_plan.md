@@ -558,6 +558,7 @@ lib/
   - Tamanhos: APK base < 40 MB · APK full ≤ 180 MB.
 - Correção de bugs priorizada por severidade; zero exceção crua na UI.
 - **Entregável**: planilha de execução de ACs assinada.
+- ✅ Planilha em branco pronta em [`docs/qa_final.md`](docs/qa_final.md) (20 ACs + 7 cenários de robustez + tamanho). RN-07 travada por teste. **A execução em aparelho físico é o que falta.**
 
 ### F4.7 — Identidade visual e conformidade de loja (PRD §4.10) 🆕 v1.1
 
