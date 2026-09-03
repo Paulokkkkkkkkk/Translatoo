@@ -1,4 +1,4 @@
-﻿name: translatoo
+name: translatoo
 description: "Translatoo - Tradutor offline PT <-> EN <-> ZH (Mandarim), 100% on-device."
 publish_to: 'none'
 
@@ -10,7 +10,8 @@ environment:
 # -------------------------------------------------------------------------
 # Lista FECHADA de dependencias (plano Secao 4 - nao substituir sem revisao).
 # Internet e usada APENAS para download de pacotes de idiomas (RN-02).
-# Reaberta e refechada na F2.0 para a entrada do motor de STT (whisper_ggml).
+# Reaberta e refechada na F2.0 para a entrada do motor de STT (whisper_ggml) e
+# de novo na F2.2b para a fonte de audio (record).
 # -------------------------------------------------------------------------
 dependencies:
   flutter:
@@ -52,6 +53,17 @@ dependencies:
   # M3 - saida por voz TTS nativa
   flutter_tts: ^4.0.0
 
+  # M2 - captura de microfone (F2.2b). Lacuna da spike F2.0, que escolheu o
+  # motor e nao a fonte. PCM16 16 kHz mono em stream + amplitude para a onda
+  # da §5.7. Nao colide com permission_handler ^11.3.1. Ver docs/audio_source.md.
+  record: ^7.1.1
+
+  # RF-M1-08 - romanizacao (pinyin) do resultado em chines (design system 5.13).
+  # Dart puro com dicionario embutido: nao e plugin, nao faz rede, e o mapa de
+  # EXPRESSOES resolve os polifonicos que um mapa por caractere erra
+  # (zhang da / yin hang / le, em vez de chang da / yin xing / liao).
+  pinyin: ^3.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -67,9 +79,16 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # Diretorios reservados aos modelos embutidos (preenchidos nas Fases 1-2).
+  # F2.1b - assets condicionais por flavor: cada variante embarca UM modelo
+  # ggml. Sem isto os dois entrariam nos dois APKs (88 MB) e o teto de 40 MB do
+  # `lite` seria inalcancavel. Ver docs/whisper_models.md.
   assets:
-    - assets/models/whisper/
+    - path: assets/models/whisper/ggml-base-q5_1.bin
+      flavors:
+        - full
+    - path: assets/models/whisper/ggml-tiny-q5_1.bin
+      flavors:
+        - lite
     - assets/models/tflite/
 
   # F1.9 - cobertura de Han para o mandarim (RF-CJK-01..04, risco R8).

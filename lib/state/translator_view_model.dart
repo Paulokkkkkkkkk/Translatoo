@@ -5,8 +5,12 @@ import 'package:flutter/foundation.dart';
 import '../core/constants/app_constants.dart';
 import '../core/services/app_exception.dart';
 import '../core/services/model_manager_service.dart';
+import '../core/services/pinyin_service.dart';
+import '../core/services/storage_service.dart';
 import '../core/services/translation_service.dart';
+import '../core/utils/perf_trace.dart';
 import '../models/language.dart';
+import '../models/language_pair.dart';
 import '../models/model_state.dart';
 
 /// Ciclo de vida observável da tela Traduzir (F1.5 / PRD §3.1).
@@ -23,17 +27,33 @@ enum TranslatorStatus { idle, typing, translating, done, error }
 ///   executa sozinha (AC-M1-2);
 /// - `acceptDictatedText` é o gancho estável para o STT da Fase 2;
 /// - nenhuma exceção crua escapa: tudo vira [AppException] em [error].
+/// - F3.6 (RF-M4-05): com [settings] injetado, o par de idiomas nasce do
+///   persistido e toda troca (⇄/seleção) é gravada na hora — o "último par"
+///   sobrevive ao restart (AC-M4-3).
 class TranslatorViewModel extends ChangeNotifier {
   TranslatorViewModel({
     required TranslationService translationService,
     required ModelManagerService modelManager,
+    StorageService? settings,
+    this.pinyin = const PinyinService(),
   }) : _translation = translationService,
-       _models = modelManager {
+       _models = modelManager,
+       _settings = settings {
+    if (settings != null) {
+      // `_readSettings` do StorageService já garante origem ≠ destino (o par
+      // inválido persistido cai no default pt→en) — sem revalidar aqui.
+      _sourceLang = settings.settings.srcLang;
+      _targetLang = settings.settings.tgtLang;
+    }
     _models.states.addListener(_onModelStatesChanged);
   }
 
   final TranslationService _translation;
   final ModelManagerService _models;
+
+  /// Persistência do último par (opcional: os testes de tradução não usam).
+  final StorageService? _settings;
+  final PinyinService pinyin;
 
   Language _sourceLang = Language.pt;
   Language _targetLang = Language.en;
@@ -44,6 +64,13 @@ class TranslatorViewModel extends ChangeNotifier {
   String? _blockedLanguageLabel;
   bool _isTruncated = false;
   bool _pendingAutoTranslate = false;
+
+  /// A próxima conclusão de tradução nasceu de um ditado (F2.7 / RF-M3-06)?
+  ///
+  /// Traduções vindas do microfone SEMPRE são lidas em voz alta, mesmo com o
+  /// autoplay desligado. O sinal é de consumo único: o `TtsViewModel` o lê
+  /// quando a tradução conclui e o limpa imediatamente.
+  bool _fromDictation = false;
   Timer? _debounce;
 
   // ── Estado observável ────────────────────────────────────────────────────
@@ -51,6 +78,14 @@ class TranslatorViewModel extends ChangeNotifier {
   Language get targetLang => _targetLang;
   String get sourceText => _sourceText;
   String get translatedText => _translatedText;
+
+  /// Linha de pinyin do resultado, ou `null` quando não cabe (§5.13).
+  ///
+  /// Calculada aqui, e não no widget, porque a `ui/` não conhece serviços — e
+  /// `null` em vez de string vazia para que o painel OMITA a linha: espaço
+  /// reservado para nada é ruído.
+  String? get translatedPinyin =>
+      pinyin.romanizeFor(_targetLang, _translatedText);
   TranslatorStatus get status => _status;
   AppException? get error => _error;
 
@@ -65,6 +100,18 @@ class TranslatorViewModel extends ChangeNotifier {
   /// Flag interna do Plano B (F1.4) — UI exibe apenas badge discreto.
   bool get usesAlternativeEngine => _translation.usesAlternativeEngine;
 
+  /// Modo híbrido (F4.3): a última tradução saiu do aparelho porque a nuvem
+  /// não respondeu. Só vira badge quando o modo está LIGADO — com ele
+  /// desligado, "local" é o normal e informar seria ruído.
+  bool get resultWasLocalFallback =>
+      _translation.cloudActive && _translation.lastResultWasLocal;
+
+  /// Este build tem ditado? (F2.1b) A `ui/` pergunta ao ViewModel, nunca ao
+  /// flavor. Quando `false`, o 🎤 é OMITIDO da árvore de widgets na F2.5 —
+  /// não renderizado desabilitado: um controle permanentemente inerte é pior
+  /// que sua ausência.
+  bool get canDictate => AppConstants.hasEmbeddedSttModels;
+
   ModelState stateFor(Language language) => _models.stateFor(language);
 
   bool isPairReady() =>
@@ -76,6 +123,9 @@ class TranslatorViewModel extends ChangeNotifier {
   /// Chamado a cada tecla. Aplica truncamento (RF-M1-04) e agenda tradução
   /// automática com debounce de 800 ms (RF-M1-03).
   void onTextChanged(String raw) {
+    // Digitação é gesto manual: apaga o sinal de ditado pendente (o
+    // `acceptDictatedText` o religa DEPOIS deste método, se for o caso).
+    _fromDictation = false;
     var value = raw;
     if (value.length > AppConstants.maxInputChars) {
       value = _truncateToLimit(value);
@@ -157,13 +207,24 @@ class TranslatorViewModel extends ChangeNotifier {
     _error = null;
     _status = TranslatorStatus.translating;
     notifyListeners();
+    final trace = PerfTrace.start(PerfBudget.translation);
     try {
       final result = await _translation.translate(
         source: _sourceLang,
         target: _targetLang,
         text: _sourceText,
       );
+      trace.stop(
+        detail:
+            '${_sourceLang.bcp47Code}->${_targetLang.bcp47Code} '
+            '${_sourceText.length} chars '
+            '${_translation.lastResultWasLocal ? 'local' : 'nuvem'}',
+      );
       _translatedText = result;
+      // O pacote que faltava chegou: o rótulo guardado para a mensagem de erro
+      // não vale mais. Deixá-lo aqui faria um erro FUTURO e sem relação nomear
+      // o idioma errado.
+      _blockedLanguageLabel = null;
       _status = TranslatorStatus.done;
     } on AppException catch (e) {
       _error = e;
@@ -181,15 +242,39 @@ class TranslatorViewModel extends ChangeNotifier {
   }
 
   Future<void> _startDownload(Language language, {bool force = false}) async {
+    // Sem este log, um download que não acontece é indistinguível de um que
+    // trava: o ML Kit não expõe progresso, e o card mostra 90% nos dois casos.
+    if (kDebugMode) {
+      debugPrint('[Translatoo] download ${language.mlKitCode} (force: $force)');
+    }
     try {
       await _models.downloadModel(language, force: force);
+      if (kDebugMode) {
+        debugPrint('[Translatoo] download ${language.mlKitCode} concluído');
+      }
     } on AppException catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '[Translatoo] download ${language.mlKitCode} falhou: ${e.code}',
+        );
+      }
       _error = e;
       _blockedLanguageLabel = language.displayName;
       _status = TranslatorStatus.error;
       notifyListeners();
     }
   }
+
+  /// Baixa o pacote de [language] a pedido explícito do usuário — o botão
+  /// "Baixar" do card.
+  ///
+  /// Existe separado do fluxo de tradução por um motivo concreto: o card
+  /// chamava `retryLastAction()`, que passa por `_translate()`, e `_translate()`
+  /// retorna na primeira linha quando o campo de origem está VAZIO. Ou seja,
+  /// abrir o app e tocar em "Baixar" antes de digitar qualquer coisa não fazia
+  /// absolutamente nada — nem download, nem erro, nem indicação. Baixar um
+  /// pacote é uma ação em si, não efeito colateral de tentar traduzir.
+  Future<void> downloadModelFor(Language language) => _startDownload(language);
 
   /// Ação "Baixar mesmo assim" (ERR_WIFI_ONLY): força SEM alterar preferência.
   Future<void> confirmDownloadAnyway() async {
@@ -215,21 +300,43 @@ class TranslatorViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Par já pré-aquecido — não repetir a cada notificação do gerenciador.
+  LanguagePair? _warmedPair;
+
   /// Retomada automática pós-download (AC-M1-2): notificação do gerenciador.
   void _onModelStatesChanged() {
     if (_pendingAutoTranslate && isPairReady()) {
       _pendingAutoTranslate = false;
       unawaited(_translate());
+    } else if (isPairReady()) {
+      // F4.4: assim que o par fica pronto, paga a carga do modelo fora do
+      // caminho crítico. Sem isto, o custo aparece na PRIMEIRA tradução —
+      // justamente quando o usuário está olhando o resultado.
+      _warmUpCurrentPair();
     }
     notifyListeners();
   }
 
+  void _warmUpCurrentPair() {
+    final pair = LanguagePair(source: _sourceLang, target: _targetLang);
+    if (_warmedPair == pair) return;
+    _warmedPair = pair;
+    unawaited(_translation.warmUp(pair));
+  }
+
   // ── Idiomas ──────────────────────────────────────────────────────────────
+
+  /// Pré-aquece o par corrente se ele já estiver pronto. Chamado na troca de
+  /// idioma: o par novo tem outro modelo, e a carga dele é outra espera.
+  void warmUpIfReady() {
+    if (isPairReady()) _warmUpCurrentPair();
+  }
 
   /// ⇄ troca idiomas E textos e retraduz (AC-M1-3); bloqueado durante tradução.
   void swapLanguages() {
     if (_status == TranslatorStatus.translating) return;
     _cancelDebounce();
+    _fromDictation = false;
     final language = _sourceLang;
     _sourceLang = _targetLang;
     _targetLang = language;
@@ -238,6 +345,7 @@ class TranslatorViewModel extends ChangeNotifier {
     _translatedText = text;
     _isTruncated = false;
     _error = null;
+    _persistPair();
     if (_sourceText.trim().isEmpty) {
       _status = TranslatorStatus.idle;
       notifyListeners();
@@ -256,8 +364,12 @@ class TranslatorViewModel extends ChangeNotifier {
     }
     _sourceLang = language;
     _error = null;
+    _fromDictation = false;
+    _clearStaleResult();
+    _persistPair();
     notifyListeners();
     if (_sourceText.trim().isNotEmpty) unawaited(_translate());
+    warmUpIfReady();
   }
 
   void selectTarget(Language language) {
@@ -270,8 +382,35 @@ class TranslatorViewModel extends ChangeNotifier {
     }
     _targetLang = language;
     _error = null;
+    _fromDictation = false;
+    _clearStaleResult();
+    _persistPair();
     notifyListeners();
     if (_sourceText.trim().isNotEmpty) unawaited(_translate());
+    warmUpIfReady();
+  }
+
+  /// Apaga o resultado ao trocar de idioma.
+  ///
+  /// O texto que está no painel foi traduzido para OUTRO idioma; mantê-lo sob
+  /// o rótulo novo afirma uma coisa falsa — o painel dizia "中文" exibindo
+  /// inglês. Normalmente a retradução cobre isso em milissegundos, mas quando
+  /// o pacote do idioma novo ainda não existe ela não acontece, e a mentira
+  /// fica na tela durante todo o download.
+  void _clearStaleResult() {
+    if (_translatedText.isEmpty) return;
+    _translatedText = '';
+    _isTruncated = false;
+  }
+
+  /// Grava o par corrente (F3.6) — o debounce de 500 ms do storage agrupa
+  /// trocas rápidas; sem [settings] injetado é no-op.
+  void _persistPair() {
+    final storage = _settings;
+    if (storage == null) return;
+    storage.updateSettings(
+      storage.settings.copyWith(srcLang: _sourceLang, tgtLang: _targetLang),
+    );
   }
 
   // ── Ações auxiliares / ciclo de vida ─────────────────────────────────────
@@ -283,6 +422,7 @@ class TranslatorViewModel extends ChangeNotifier {
     _translatedText = '';
     _isTruncated = false;
     _error = null;
+    _fromDictation = false;
     _status = TranslatorStatus.idle;
     notifyListeners();
   }
@@ -291,7 +431,31 @@ class TranslatorViewModel extends ChangeNotifier {
   /// imediata — nenhum ajuste na UI quando o STT entrar.
   void acceptDictatedText(String text) {
     onTextChanged(text);
+    // Sinal p/ o TTS (F2.7): o sinal é limpo por quem o consome (a conclusão
+    // da tradução), não aqui — um `onTextChanged` em seguida não pode apagá-lo.
+    _fromDictation = true;
     unawaited(translateNow());
+  }
+
+  /// Lê e LIMPA o sinal "esta tradução veio de um ditado" (consulta única).
+  ///
+  /// O consumo acontece na conclusão (`status == done`): se a tradução falhou,
+  /// o sinal morre no próximo gesto manual (digitar troca o texto e limpa em
+  /// [onTextChanged]), sem nunca virar fala fantasma de uma ação do usuário.
+  bool consumeDictatedFlag() {
+    final dictated = _fromDictation;
+    _fromDictation = false;
+    return dictated;
+  }
+
+  /// Devolve o campo de origem ao estado anterior a um ditado cancelado
+  /// (AC-M2-4, F2.4). Ao contrário de [onTextChanged], NÃO agenda tradução:
+  /// desistir de falar não pode disparar trabalho nenhum.
+  void restoreSourceText(String text) {
+    _cancelDebounce();
+    _sourceText = text;
+    _isTruncated = false;
+    notifyListeners();
   }
 
   @override

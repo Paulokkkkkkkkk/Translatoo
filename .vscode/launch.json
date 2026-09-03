@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // O flavor e o --dart-define vêm de settings.json e valem para todas as
+    // configurações daqui. NÃO repita `--flavor` em `toolArgs`: em `flutter
+    // run` o ÚLTIMO `--flavor` vence, e a ordem em que a extensão junta as
+    // duas fontes não é garantida — o resultado seria um flavor imprevisível.
+    // Para rodar o `lite`, use o terminal (comando no CONTRIBUTING.md).
+    {
+      "name": "Translatoo",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Translatoo (profile)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "program": "lib/main.dart"
+    }
+  ]
+}

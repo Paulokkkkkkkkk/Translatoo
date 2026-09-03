@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fundo da splash = colorBackground do tema claro (app_colors.dart).
+         Igualar os dois é o que elimina o flash entre a splash e o primeiro
+         frame do Flutter (RF-REL-02). -->
+    <color name="splash_background">#F5F6FF</color>
+</resources>

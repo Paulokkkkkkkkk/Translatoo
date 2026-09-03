@@ -22,6 +22,11 @@ migrate_working_dir/
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
 #.vscode/
+# ...menos o launch.json: sem --flavor o build não produz app-debug.apk e o
+# botão de Run falha. Ver docs/CONTRIBUTING / qa_final.md.
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -31,6 +36,11 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+# O `/build/` acima só cobre a raiz; o Gradle também escreve em android/build/
+# e android/app/build/ — foi de lá que um relatório de 132 KB entrou no
+# repositório por engano.
+**/android/build/
+**/android/app/build/
 /coverage/
 
 # Symbolication related
@@ -46,3 +56,4 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+devtools_options.yaml

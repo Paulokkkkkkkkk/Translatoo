@@ -46,16 +46,39 @@ abstract final class AppConstants {
   /// O valor real varia por idioma/plataforma (~30 MB segundo o PRD §3.1).
   static const int estimatedModelSizeMb = 30;
 
+  /// Diretório, dentro dos dados do app, onde o modelo ggml é materializado
+  /// como arquivo real (M2 — o whisper.cpp abre por caminho, não por asset).
+  static const String whisperModelsDirName = 'whisper';
+
+  /// Modelo ggml embutido no flavor `full` (56,9 MB) — spike F2.0.
+  static const String whisperFullModelAsset =
+      'assets/models/whisper/ggml-base-q5_1.bin';
+
+  /// Modelo ggml embutido no flavor `lite` (30,7 MB) — spike F2.0.
+  static const String whisperLiteModelAsset =
+      'assets/models/whisper/ggml-tiny-q5_1.bin';
+
+  /// Modelo ggml REALMENTE presente neste binário (F2.1b).
+  ///
+  /// Ponto ÚNICO em que o flavor entra no código Dart: os `flavors:` do
+  /// pubspec decidem qual `.bin` é empacotado, e este `--dart-define` diz ao
+  /// app qual deles procurar. Vazio = build sem modelo embutido, e então o
+  /// ditado inteiro é omitido da UI (ver [hasEmbeddedSttModels]).
+  ///
+  /// Os comandos de build que definem cada valor estão no README.
+  static const String sttModelAsset = String.fromEnvironment(
+    'STT_MODEL_ASSET',
+    defaultValue: whisperFullModelAsset,
+  );
+
+  /// Este binário tem modelo de ditado? Lido uma única vez, em tempo de
+  /// compilação — a `ui/` NUNCA consulta flavor, só o ViewModel que expõe
+  /// esta capacidade (regra de camadas §4).
+  static const bool hasEmbeddedSttModels = sttModelAsset != '';
+
   /// Plano B (F1.4): motor alternativo TFLite p/ devices sem GMS. Enquanto a
   /// spike não embutir um modelo viável (docs/tflite_spike.md), permanece OFF.
   static const bool enableAlternativeEngine = false;
-
-  /// Passo do progresso simulado durante o download de pacote (o plugin ML Kit
-  /// não expõe progresso nativo; sondamos o estado — ver ModelManagerService).
-  static const int modelDownloadProgressStep = 7;
-
-  /// Teto do progresso simulado antes da confirmação real de conclusão.
-  static const int modelDownloadProgressCap = 90;
 
   /// Intervalo de sondagem do estado do modelo durante o download.
   static const Duration modelDownloadPollInterval = Duration(milliseconds: 400);

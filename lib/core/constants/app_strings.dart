@@ -39,6 +39,9 @@ abstract final class AppStrings {
   String get online;
   String get offline;
 
+  /// Tooltip explicativo do badge (F3.5): o que a rede significa para o app.
+  String connectionBadgeInfo(bool online);
+
   // Placeholders da fundação (F0)
   String get translatePlaceholderBody;
   String get historyPlaceholderBody;
@@ -64,13 +67,38 @@ abstract final class AppStrings {
   String get buttonTranslate;
   String get actionDictate;
   String get actionListen;
+
+  // Permissão de microfone (F2.3 — diálogo explicativo antes de pedir ao SO)
+  String get micRationaleTitle;
+  String get micRationaleBody;
+  String get micBlockedBody;
+
+  // Modo de tradução (§5.3 · §9.2) e ditado (F2.5)
+  String get modeText;
+  String get modeVoice;
+  String get actionSpeakNow;
+  String get actionStopDictation;
+  String get actionFinishDictation;
+  String get dictationListening;
+  String get dictationHint;
+
+  // Leitura em voz alta (F2.8)
+  String get actionStopPlayback;
+
   String get comingSoon;
   String get feedbackCopied;
   String get modelSizeEstimate;
   String get engineAlternative;
 
+  /// Badge discreto do modo híbrido (F4.3): a nuvem não respondeu e o
+  /// aparelho assumiu.
+  String get engineLocal;
+
   // Tela de debug de pacotes (F1.3 — só visível em builds debug)
   String get debugModelsTitle;
+
+  // Painel de voz de debug (F2.8 — sliders; migram para Ajustes na F3)
+  String get debugVoiceTitle;
 
   // Estados de pacote de idioma
   String get modelStateReady;
@@ -94,6 +122,15 @@ abstract final class AppStrings {
   // Estados vazios
   String get historyEmpty;
 
+  // Tela Histórico (F3.2)
+  String get historySearchHint;
+  String get filterAll;
+  String get actionClearAll;
+  String get actionUndo;
+  String get confirmClearHistoryTitle;
+  String get confirmClearHistoryBody;
+  String relativeTime(int minutes);
+
   // Ajustes (textos reservados para a F3)
   String get settingsLanguagePair;
   String get settingsAutoplay;
@@ -101,8 +138,23 @@ abstract final class AppStrings {
   String get settingsVoicePitch;
   String get settingsWifiOnly;
   String get settingsManageModels;
+
+  // Gerenciador de Modelos (F3.4)
+  String get modelManagerHint;
+  String modelManagerDeleteTitle(String language);
+  String get modelManagerDeleteBody;
+
   String get settingsClearHistory;
   String get settingsPrivacy;
+
+  // Tela Ajustes (F3.3)
+  String get settingsTheme;
+  String get settingsThemeSystem;
+  String get settingsThemeLight;
+  String get settingsThemeDark;
+  String get settingsAppVersion;
+  String get settingsSourceLanguage;
+  String get settingsTargetLanguage;
 }
 
 /// pt-BR — fonte da verdade (PRD).
@@ -123,7 +175,11 @@ final class _PtStrings extends AppStrings {
   String get online => 'Online';
   @override
   String get offline => 'Offline';
-
+  @override
+  String connectionBadgeInfo(bool online) => online
+      ? 'Você está conectado. Downloads de pacotes de idiomas usam a rede.'
+      : 'Você está offline. Tudo que já está baixado continua funcionando — '
+            'só downloads de pacotes precisam de internet.';
   @override
   String get translatePlaceholderBody => 'A tradução offline aparece aqui.';
   @override
@@ -168,7 +224,33 @@ final class _PtStrings extends AppStrings {
   @override
   String get actionDictate => 'Ditar';
   @override
+  String get micRationaleTitle => 'Usar o microfone?';
+  @override
+  String get modeText => 'Modo texto';
+  @override
+  String get modeVoice => 'Modo voz';
+  @override
+  String get actionSpeakNow => 'Falar agora';
+  @override
+  String get actionStopDictation => 'Parar de ouvir';
+  @override
+  String get actionFinishDictation => 'Concluir';
+  @override
+  String get dictationListening => 'Ouvindo…';
+  @override
+  String get dictationHint => 'Fale — a frase encerra sozinha após uma pausa';
+  @override
+  String get micRationaleBody =>
+      'Sua fala é transcrita no próprio aparelho. Nenhum áudio é gravado nem '
+      'enviado para lugar nenhum.';
+  @override
+  String get micBlockedBody =>
+      'O acesso ao microfone está bloqueado nas configurações do sistema. '
+      'Você pode liberá-lo por lá e voltar — o resto do app segue funcionando.';
+  @override
   String get actionListen => 'Ouvir tradução';
+  @override
+  String get actionStopPlayback => 'Parar reprodução';
   @override
   String get comingSoon => 'chega na próxima fase';
   @override
@@ -177,9 +259,13 @@ final class _PtStrings extends AppStrings {
   String get modelSizeEstimate => '~30 MB por pacote · via Wi-Fi';
   @override
   String get engineAlternative => 'Motor alternativo';
+  @override
+  String get engineLocal => 'local';
 
   @override
   String get debugModelsTitle => 'Pacotes de idiomas (debug)';
+  @override
+  String get debugVoiceTitle => 'Voz (debug)';
 
   @override
   String get modelStateReady => 'Pronto';
@@ -214,6 +300,26 @@ final class _PtStrings extends AppStrings {
 
   @override
   String get historyEmpty => 'Nenhuma tradução ainda.';
+  @override
+  String get historySearchHint => 'Buscar nas traduções';
+  @override
+  String get filterAll => 'Todos';
+  @override
+  String get actionClearAll => 'Limpar tudo';
+  @override
+  String get actionUndo => 'Desfazer';
+  @override
+  String get confirmClearHistoryTitle => 'Limpar o histórico?';
+  @override
+  String get confirmClearHistoryBody =>
+      'As traduções favoritas continuam guardadas.';
+  @override
+  String relativeTime(int minutes) {
+    if (minutes < 1) return 'agora';
+    if (minutes < 60) return 'há $minutes min';
+    if (minutes < 1440) return 'há ${minutes ~/ 60} h';
+    return 'há ${minutes ~/ 1440} d';
+  }
 
   @override
   String get settingsLanguagePair => 'Par de idiomas padrão';
@@ -228,9 +334,33 @@ final class _PtStrings extends AppStrings {
   @override
   String get settingsManageModels => 'Gerenciar modelos';
   @override
+  String get modelManagerHint =>
+      'Baixe os pacotes de idiomas para traduzir 100% offline. Cada pacote tem '
+      '~30 MB e a tradução fica disponível em modo avião.';
+  @override
+  String modelManagerDeleteTitle(String language) =>
+      'Excluir o pacote de $language?';
+  @override
+  String get modelManagerDeleteBody =>
+      'Você precisará baixá-lo de novo para traduzir neste idioma offline.';
+  @override
   String get settingsClearHistory => 'Limpar histórico';
   @override
   String get settingsPrivacy => 'Nenhum dado sai do seu aparelho.';
+  @override
+  String get settingsTheme => 'Tema';
+  @override
+  String get settingsThemeSystem => 'Sistema';
+  @override
+  String get settingsThemeLight => 'Claro';
+  @override
+  String get settingsThemeDark => 'Escuro';
+  @override
+  String get settingsAppVersion => 'Versão';
+  @override
+  String get settingsSourceLanguage => 'Idioma de origem';
+  @override
+  String get settingsTargetLanguage => 'Idioma de destino';
 }
 
 /// en-US
@@ -251,6 +381,11 @@ final class _EnStrings extends AppStrings {
   String get online => 'Online';
   @override
   String get offline => 'Offline';
+  @override
+  String connectionBadgeInfo(bool online) => online
+      ? 'You are online. Language package downloads use the network.'
+      : 'You are offline. Everything already downloaded keeps working — only '
+            'package downloads need internet.';
 
   @override
   String get translatePlaceholderBody => 'Offline translations appear here.';
@@ -295,7 +430,34 @@ final class _EnStrings extends AppStrings {
   @override
   String get actionDictate => 'Dictate';
   @override
+  String get micRationaleTitle => 'Use the microphone?';
+  @override
+  String get modeText => 'Text mode';
+  @override
+  String get modeVoice => 'Voice mode';
+  @override
+  String get actionSpeakNow => 'Speak now';
+  @override
+  String get actionStopDictation => 'Stop listening';
+  @override
+  String get actionFinishDictation => 'Done';
+  @override
+  String get dictationListening => 'Listening…';
+  @override
+  String get dictationHint =>
+      'Speak — the sentence ends on its own after a pause';
+  @override
+  String get micRationaleBody =>
+      'Your speech is transcribed on this device. No audio is recorded or '
+      'sent anywhere.';
+  @override
+  String get micBlockedBody =>
+      'Microphone access is blocked in system settings. You can allow it there '
+      'and come back — the rest of the app keeps working.';
+  @override
   String get actionListen => 'Listen to translation';
+  @override
+  String get actionStopPlayback => 'Stop playback';
   @override
   String get comingSoon => 'coming in the next phase';
   @override
@@ -304,9 +466,13 @@ final class _EnStrings extends AppStrings {
   String get modelSizeEstimate => '~30 MB per package · over Wi-Fi';
   @override
   String get engineAlternative => 'Alternative engine';
+  @override
+  String get engineLocal => 'local';
 
   @override
   String get debugModelsTitle => 'Language packages (debug)';
+  @override
+  String get debugVoiceTitle => 'Voice (debug)';
 
   @override
   String get modelStateReady => 'Ready';
@@ -341,6 +507,25 @@ final class _EnStrings extends AppStrings {
 
   @override
   String get historyEmpty => 'No translations yet.';
+  @override
+  String get historySearchHint => 'Search translations';
+  @override
+  String get filterAll => 'All';
+  @override
+  String get actionClearAll => 'Clear all';
+  @override
+  String get actionUndo => 'Undo';
+  @override
+  String get confirmClearHistoryTitle => 'Clear history?';
+  @override
+  String get confirmClearHistoryBody => 'Favourite translations are kept.';
+  @override
+  String relativeTime(int minutes) {
+    if (minutes < 1) return 'now';
+    if (minutes < 60) return '$minutes min ago';
+    if (minutes < 1440) return '${minutes ~/ 60} h ago';
+    return '${minutes ~/ 1440} d ago';
+  }
 
   @override
   String get settingsLanguagePair => 'Default language pair';
@@ -355,9 +540,34 @@ final class _EnStrings extends AppStrings {
   @override
   String get settingsManageModels => 'Manage models';
   @override
+  String get modelManagerHint =>
+      'Download language packages to translate 100% offline. Each package is '
+      '~30 MB and translation then works in airplane mode.';
+  @override
+  String modelManagerDeleteTitle(String language) =>
+      'Delete the $language package?';
+  @override
+  String get modelManagerDeleteBody =>
+      'You will need to download it again to translate in this language '
+      'offline.';
+  @override
   String get settingsClearHistory => 'Clear history';
   @override
   String get settingsPrivacy => 'No data ever leaves your device.';
+  @override
+  String get settingsTheme => 'Theme';
+  @override
+  String get settingsThemeSystem => 'System';
+  @override
+  String get settingsThemeLight => 'Light';
+  @override
+  String get settingsThemeDark => 'Dark';
+  @override
+  String get settingsAppVersion => 'Version';
+  @override
+  String get settingsSourceLanguage => 'Source language';
+  @override
+  String get settingsTargetLanguage => 'Target language';
 }
 
 /// zh-CN (Mandarim)
@@ -375,9 +585,13 @@ final class _ZhStrings extends AppStrings {
   String get tabSettings => '设置';
 
   @override
+  @override
   String get online => '在线';
   @override
   String get offline => '离线';
+  @override
+  String connectionBadgeInfo(bool online) =>
+      online ? '已联网。语言包下载将使用网络。' : '当前离线。已下载的内容仍可正常使用，只有语言包下载需要网络。';
 
   @override
   String get translatePlaceholderBody => '离线翻译将显示在这里。';
@@ -420,7 +634,29 @@ final class _ZhStrings extends AppStrings {
   @override
   String get actionDictate => '语音输入';
   @override
+  String get micRationaleTitle => '使用麦克风？';
+  @override
+  String get modeText => '文字模式';
+  @override
+  String get modeVoice => '语音模式';
+  @override
+  String get actionSpeakNow => '开始说话';
+  @override
+  String get actionStopDictation => '停止聆听';
+  @override
+  String get actionFinishDictation => '完成';
+  @override
+  String get dictationListening => '正在聆听…';
+  @override
+  String get dictationHint => '请讲话——停顿后会自动结束这句话';
+  @override
+  String get micRationaleBody => '语音在本机转写，不录音，也不会上传到任何地方。';
+  @override
+  String get micBlockedBody => '系统设置中已禁止访问麦克风。您可以在设置中开启后返回，应用的其余功能不受影响。';
+  @override
   String get actionListen => '朗读译文';
+  @override
+  String get actionStopPlayback => '停止播放';
   @override
   String get comingSoon => '下一阶段推出';
   @override
@@ -429,9 +665,13 @@ final class _ZhStrings extends AppStrings {
   String get modelSizeEstimate => '每个语言包约 30 MB · 通过 Wi-Fi 下载';
   @override
   String get engineAlternative => '备用引擎';
+  @override
+  String get engineLocal => '本机';
 
   @override
   String get debugModelsTitle => '语言包（调试）';
+  @override
+  String get debugVoiceTitle => '语音（调试）';
 
   @override
   String get modelStateReady => '就绪';
@@ -464,6 +704,25 @@ final class _ZhStrings extends AppStrings {
 
   @override
   String get historyEmpty => '暂无翻译记录。';
+  @override
+  String get historySearchHint => '搜索翻译记录';
+  @override
+  String get filterAll => '全部';
+  @override
+  String get actionClearAll => '全部清除';
+  @override
+  String get actionUndo => '撤销';
+  @override
+  String get confirmClearHistoryTitle => '清除历史记录？';
+  @override
+  String get confirmClearHistoryBody => '收藏的翻译会被保留。';
+  @override
+  String relativeTime(int minutes) {
+    if (minutes < 1) return '刚刚';
+    if (minutes < 60) return '$minutes 分钟前';
+    if (minutes < 1440) return '${minutes ~/ 60} 小时前';
+    return '${minutes ~/ 1440} 天前';
+  }
 
   @override
   String get settingsLanguagePair => '默认语言对';
@@ -478,9 +737,29 @@ final class _ZhStrings extends AppStrings {
   @override
   String get settingsManageModels => '管理模型';
   @override
+  String get modelManagerHint => '下载语言包即可 100% 离线翻译。每个语言包约 30 MB，下载后可离线使用。';
+  @override
+  String modelManagerDeleteTitle(String language) => '删除$language语言包？';
+  @override
+  String get modelManagerDeleteBody => '删除后如需离线翻译该语言，需要重新下载。';
+  @override
   String get settingsClearHistory => '清除历史记录';
   @override
   String get settingsPrivacy => '任何数据都不会离开您的设备。';
+  @override
+  String get settingsTheme => '主题';
+  @override
+  String get settingsThemeSystem => '跟随系统';
+  @override
+  String get settingsThemeLight => '浅色';
+  @override
+  String get settingsThemeDark => '深色';
+  @override
+  String get settingsAppVersion => '版本';
+  @override
+  String get settingsSourceLanguage => '源语言';
+  @override
+  String get settingsTargetLanguage => '目标语言';
 }
 
 /// Mapeamento ÚNICO `ErrorCode` → mensagem i18n da tabela §4.8 (RN-03/RN-04).

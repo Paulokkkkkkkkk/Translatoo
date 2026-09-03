@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translatoo/core/constants/app_constants.dart';
@@ -49,27 +48,30 @@ void main() {
       reborn.dispose();
     });
 
-    test('histórico só grava após o debounce de 500 ms', () {
-      fakeAsync((async) async {
-        final prefs = await _mockPrefs();
-        final storage = StorageService(prefs: prefs);
-        await storage.initialize();
+    test('histórico só grava após o debounce de 500 ms', () async {
+      // Sem fakeAsync de propósito: a gravação passa por canal de plataforma,
+      // que o relógio falso não consegue acionar — dentro dele o teste ou
+      // falha por engano, ou (com corpo `async`) passa sem rodar asserção
+      // nenhuma. 500 ms de espera real é o preço de medir a coisa certa.
+      final prefs = await _mockPrefs();
+      final storage = StorageService(prefs: prefs);
+      await storage.initialize();
 
-        storage.saveHistory([_rec('a'), _rec('b')]);
-        expect(
-          prefs.getString(StorageKeys.history),
-          isNull,
-          reason: 'antes do debounce nada deve ser gravado',
-        );
+      storage.saveHistory([_rec('a'), _rec('b')]);
+      expect(
+        prefs.getString(StorageKeys.history),
+        isNull,
+        reason: 'antes do debounce nada deve ser gravado',
+      );
 
-        async.elapse(AppConstants.prefsWriteDebounce);
-        expect(prefs.getString(StorageKeys.history), isNotNull);
+      await Future<void>.delayed(
+        AppConstants.prefsWriteDebounce + const Duration(milliseconds: 200),
+      );
+      expect(prefs.getString(StorageKeys.history), isNotNull);
 
-        final decoded =
-            jsonDecode(prefs.getString(StorageKeys.history)!) as List;
-        expect(decoded, hasLength(2));
-        storage.dispose();
-      });
+      final decoded = jsonDecode(prefs.getString(StorageKeys.history)!) as List;
+      expect(decoded, hasLength(2));
+      storage.dispose();
     });
 
     test('JSON corrompido reinicia a coleção sem lançar', () async {
@@ -121,13 +123,21 @@ void main() {
       storage.dispose();
     });
 
-    test('migração não regride schema mais novo', () async {
-      final prefs = await _mockPrefs({StorageKeys.schemaVersion: 99});
-      final storage = StorageService(prefs: prefs);
+    // Política F3.6 (RF-M4-05): app mais novo que o gravado = downgrade —
+    // nunca interpreta formato desconhecido. O detalhamento das 4 rotas vive
+    // em storage_migration_test.dart.
+    test(
+      'migração em downgrade volta ao schema atual e reseta dados',
+      () async {
+        final prefs = await _mockPrefs({StorageKeys.schemaVersion: 99});
+        final storage = StorageService(prefs: prefs);
 
-      await storage.initialize();
-      expect(prefs.getInt(StorageKeys.schemaVersion), 99);
-      storage.dispose();
-    });
+        await storage.initialize();
+        expect(prefs.getInt(StorageKeys.schemaVersion), kSchemaVersion);
+        expect(storage.settings, AppSettings.defaults());
+        expect(storage.history, isEmpty);
+        storage.dispose();
+      },
+    );
   });
 }

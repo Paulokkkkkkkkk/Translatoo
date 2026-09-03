@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Adaptive icon (RF-REL-01). Foreground e background SEPARADOS: o Android
+     anima as duas camadas de forma independente e cada fabricante aplica a
+     própria máscara. O background é a mesma cor do quadrado do foreground,
+     então a emenda entre as camadas é invisível sob qualquer recorte. -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background" />
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+</adaptive-icon>

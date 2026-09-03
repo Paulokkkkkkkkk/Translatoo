@@ -33,6 +33,77 @@ precisa entender uma parte específica do app.
 
 ---
 
+## ⚠️ `--flavor` é obrigatório para rodar
+
+Desde a F2.1b o projeto tem dois flavors (`lite` e `full`). **Nunca rode
+`flutter run` sem `--flavor`.**
+
+O motivo não é cosmético: sem flavor, o Gradle monta a tarefa agregada
+`assembleDebug` e o instalador pode pegar um APK obsoleto em
+`build/app/outputs/apk/debug/` — um caminho que nenhum build atual sobrescreve.
+O sintoma é traiçoeiro: **o app abre com a versão ANTIGA**, com o design e até o
+`applicationId` de antes, enquanto o build acusa sucesso.
+
+```bash
+# Android
+flutter run --flavor full \
+  --dart-define=STT_MODEL_ASSET=assets/models/whisper/ggml-base-q5_1.bin
+
+# se algo parecer "velho", limpe os artefatos antes de investigar
+flutter clean
+```
+
+O outro sintoma, quando não há APK obsoleto para pegar, é o build "falhar" com
+uma mensagem que não menciona flavor nenhum:
+
+```
+Error: Gradle build failed to produce an .apk file. It's likely that this file
+was generated under .../build, but the tool couldn't find it.
+```
+
+O Gradle **construiu** — `app-full-debug.apk` e `app-lite-debug.apk` estão lá.
+O que não existe é o `app-debug.apk` sem flavor que a ferramenta procura.
+
+No VS Code isso está resolvido pelo `.vscode/settings.json` versionado:
+
+```json
+"dart.flutterRunAdditionalArgs": ["--flavor", "full", "--dart-define=..."]
+```
+
+Esse ajuste vale para **todo** `flutter run` da extensão, venha do botão de
+play, do F5 ou do seletor de Run — que é justamente o que um `launch.json`
+sozinho não garante, porque o botão de play não usa configuração nenhuma.
+
+⚠️ Duas armadilhas ao mexer nisso:
+
+1. Em `launch.json`, argumentos do `flutter run` vão em **`toolArgs`**, nunca
+   em `args` — e a extensão não reclama do campo errado:
+   `flutter run (toolArgs) -t lib/main.dart (args)`. `args` chega ao `main()`
+   do Dart. Pôr `--flavor` ali produz exatamente o erro desta seção, com a
+   agravante de parecer configurado.
+2. **Não repita `--flavor` nos dois lugares.** O `flutter run` aceita o
+   argumento repetido e o ÚLTIMO vence (verificado: `--flavor lite --flavor
+   full` monta `assembleFullDebug`); como a ordem em que a extensão junta as
+   duas fontes não é garantida, o flavor sairia imprevisível.
+
+Para rodar o `lite`, use o terminal:
+
+```bash
+flutter run --flavor lite \
+  --dart-define=STT_MODEL_ASSET=assets/models/whisper/ggml-tiny-q5_1.bin
+```
+
+O aviso de KGP (`ffmpeg_kit_flutter_new_min`, `flutter_tts`, `share_plus`) que
+aparece junto é **só aviso** — o build passa. Ele vira erro numa versão futura
+do Flutter, e aí depende dos plugins publicarem versões migradas.
+
+**iOS só roda em iPhone físico.** O ML Kit publica fatia `arm64` apenas para
+device, e o simulador do Apple Silicon recusa `x86_64` desde que o Xcode
+removeu a rota Rosetta. Não há contorno; o erro aparece como
+`Unable to find a destination matching`.
+
+---
+
 ## Fluxo de trabalho
 
 1. **Escolha uma issue** que não esteja atribuída e cujas dependências já
@@ -55,7 +126,8 @@ precisa entender uma parte específica do app.
 flutter analyze                          # zero warnings
 dart format --set-exit-if-changed .      # formatação
 flutter test                             # todos verdes
-flutter run --release                    # validação manual no device
+flutter run --release --flavor full \
+  --dart-define=STT_MODEL_ASSET=assets/models/whisper/ggml-base-q5_1.bin
 ```
 
 Um PR com qualquer um destes vermelho não entra em revisão.

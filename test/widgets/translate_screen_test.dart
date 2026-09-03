@@ -1,16 +1,29 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:translatoo/core/constants/app_constants.dart';
+import 'package:translatoo/core/services/mic_permission_service.dart';
 import 'package:translatoo/core/services/model_manager_service.dart';
+import 'package:translatoo/core/services/stt_service.dart';
 import 'package:translatoo/core/services/translation_backend.dart';
 import 'package:translatoo/core/services/translation_service.dart';
+import 'package:translatoo/core/services/tts_service.dart';
+import 'package:translatoo/core/services/whisper_model_installer.dart';
+import 'package:translatoo/core/services/whisper_stt_engine.dart';
 import 'package:translatoo/models/language.dart';
 import 'package:translatoo/models/language_pair.dart';
+import 'package:translatoo/models/model_state.dart';
+import 'package:translatoo/state/speech_view_model.dart';
 import 'package:translatoo/state/translator_view_model.dart';
+import 'package:translatoo/state/tts_view_model.dart';
 import 'package:translatoo/ui/screens/translate_screen.dart';
 import 'package:translatoo/ui/widgets/download_progress_card.dart';
+import 'package:translatoo/ui/widgets/mode_button.dart';
+import 'package:translatoo/ui/widgets/translation_panel.dart';
+import 'package:translatoo/ui/widgets/voice_block.dart';
 
 /// Backend de eco determinístico (nunca toca plugin).
 class _EchoBackend implements TranslationBackend {
@@ -28,7 +41,13 @@ class _EchoBackend implements TranslationBackend {
     required Language source,
     required Language target,
     required String text,
-  }) async => '[${source.mlKitCode}${target.mlKitCode}]$text';
+  }) async {
+    // Destino zh devolve HANZI de verdade: a linha de pinyin da §5.13 só
+    // existe se houver caractere Han no resultado, e um eco em ASCII faria o
+    // teste de pinyin verificar o vazio.
+    if (target == Language.zh) return '谢谢';
+    return '[${source.mlKitCode}${target.mlKitCode}]$text';
+  }
 
   @override
   void dispose() {}
@@ -66,11 +85,70 @@ class _GateApi implements ModelManagerApi {
       installed.remove(language);
 }
 
+/// Motor de TTS mudo: a tela lê o ViewModel desde a F2.8 (botão 🔊, erros),
+/// mas estes testes nunca acionam a voz — o 🔊 em si é coberto pelos testes de
+/// unidade do TtsViewModel.
+class _SilentTtsEngine implements TtsEngine {
+  @override
+  Stream<TtsEvent> get events => const Stream<TtsEvent>.empty();
+
+  @override
+  Future<bool> isLanguageAvailable(String ttsCode) async => true;
+
+  @override
+  Future<void> configure({
+    required String languageCode,
+    required double rate,
+    required double pitch,
+  }) async {}
+
+  @override
+  Future<void> speak(String text) async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
+}
+
+/// Motor que grava o que falou — para o widget test do 🔊 (F2.8).
+class _RecordingTtsEngine implements TtsEngine {
+  final List<String> spoken = <String>[];
+
+  @override
+  Stream<TtsEvent> get events => const Stream<TtsEvent>.empty();
+
+  @override
+  Future<bool> isLanguageAvailable(String ttsCode) async => true;
+
+  @override
+  Future<void> configure({
+    required String languageCode,
+    required double rate,
+    required double pitch,
+  }) async {}
+
+  @override
+  Future<void> speak(String text) async => spoken.add(text);
+
+  /// Contado, não ignorado: é assim que se prova que ir para segundo plano
+  /// CALA o sintetizador (F4.6).
+  int stops = 0;
+
+  @override
+  Future<void> stop() async => stops++;
+
+  @override
+  Future<void> dispose() async {}
+}
+
 Future<void> _pump(
   WidgetTester tester,
   TranslatorViewModel vm,
-  ModelManagerService manager,
-) async {
+  ModelManagerService manager, {
+  TtsEngine? ttsEngine,
+}) async {
   // Superfície alta: garante snackbar/botões dentro dos limites do hit-test.
   tester.view.physicalSize = const Size(1080, 2400);
   tester.view.devicePixelRatio = 1.0;
@@ -89,6 +167,30 @@ Future<void> _pump(
         ),
         Provider<ModelManagerService>.value(value: manager),
         ChangeNotifierProvider<TranslatorViewModel>.value(value: vm),
+        // A tela lê o TtsViewModel desde a F2.8 (botão 🔊 e snackbar de voz
+        // ausente). Autoplay OFF e voz muda: nenhuma fala real nos testes.
+        ChangeNotifierProvider<TtsViewModel>(
+          create: (_) => TtsViewModel(
+            ttsService: TtsService(engine: ttsEngine ?? _SilentTtsEngine()),
+            translatorViewModel: vm,
+          ),
+        ),
+        // A tela lê o SpeechViewModel desde a F2.5 (botão 🎤 e RN-07). Estes
+        // testes são da F1.6 e nunca ditam: a fonte de áudio indisponível
+        // basta, e o ditado em si é coberto por mic_button_test.dart.
+        ChangeNotifierProvider<SpeechViewModel>(
+          create: (_) => SpeechViewModel(
+            sttService: SttService(
+              sttEngine: WhisperSttEngine(),
+              audioSource: const _SilentAudio(),
+              modelInstaller: WhisperModelInstaller(
+                assetKey: AppConstants.whisperFullModelAsset,
+              ),
+            ),
+            permissionService: MicPermissionService(),
+            translatorViewModel: vm,
+          ),
+        ),
       ],
       child: const MaterialApp(
         // Nota (mesma da F0): neste Flutter o MaterialApp ignora `locale` em
@@ -106,6 +208,21 @@ TranslatorViewModel _vm(ModelManagerService manager) => TranslatorViewModel(
   translationService: TranslationService(primary: _EchoBackend()),
   modelManager: manager,
 );
+
+/// Microfone que nunca abre: estes testes não ditam, e uma captura real
+/// exigiria canal de plataforma.
+class _SilentAudio implements SttAudioSource {
+  const _SilentAudio();
+
+  @override
+  Future<Stream<Uint8List>> start() async => const Stream<Uint8List>.empty();
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Stream<double> get amplitude => const Stream<double>.empty();
+}
 
 void main() {
   testWidgets('digita → debounce → tradução; contador, ⇄ e limpar', (
@@ -154,7 +271,11 @@ void main() {
     // Card sobreposto: nome nativo + progresso inicial.
     expect(find.byType(DownloadProgressCard), findsOneWidget);
     expect(find.text('Português'), findsWidgets);
-    expect(find.text('0%'), findsOneWidget);
+    // O aviso ficou compacto (uma linha) e NÃO mostra percentual: o ML Kit
+    // não informa quanto já baixou, e o número simulado dizia "90%" enquanto
+    // o download real estava em 34%.
+    expect(find.textContaining('%'), findsNothing);
+    expect(find.textContaining('Downloading'), findsOneWidget);
 
     api.complete(Language.pt);
     api.complete(Language.en);
@@ -210,6 +331,35 @@ void main() {
     manager.dispose();
   });
 
+  testWidgets('botão de modo alterna Texto ↔ Voz sem overlay (§5.3 · §9.2)', (
+    tester,
+  ) async {
+    final api = _GateApi()..installed.addAll(Language.values);
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    await _pump(tester, vm, manager);
+
+    // Modo texto: o bloco de voz não existe.
+    expect(find.byType(VoiceBlock), findsNothing);
+    expect(find.byType(ModeButton), findsOneWidget);
+
+    await tester.tap(find.byType(ModeButton));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    // Um toque bastou — nenhum overlay de escolha entre dois modos (§9.2).
+    expect(find.byType(VoiceBlock), findsOneWidget);
+
+    await tester.tap(find.byType(ModeButton));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.byType(VoiceBlock), findsNothing);
+
+    vm.dispose();
+    manager.dispose();
+  });
+
   testWidgets('botão TRADUZIR executa imediatamente (ignora debounce)', (
     tester,
   ) async {
@@ -228,6 +378,302 @@ void main() {
     await tester.pump(const Duration(milliseconds: 30));
 
     expect(find.text('[pten]Olá'), findsOneWidget);
+
+    vm.dispose();
+    manager.dispose();
+  });
+
+  testWidgets(
+    '🔊 desabilitado sem resultado; fala a tradução ao tocar (F2.8)',
+    (tester) async {
+      final api = _GateApi()..installed.addAll(Language.values);
+      final manager = ModelManagerService(api: api);
+      final vm = _vm(manager);
+      final engine = _RecordingTtsEngine();
+      await _pump(tester, vm, manager, ttsEngine: engine);
+
+      // Sem resultado: o botão existe, mas está inerte (nenhuma ação).
+      IconButton speaker() => tester.widget<IconButton>(
+        find.ancestor(
+          of: find.byIcon(Icons.volume_up_outlined),
+          matching: find.byType(IconButton),
+        ),
+      );
+      expect(speaker().onPressed, isNull);
+
+      await tester.enterText(find.byType(TextField), 'Olá');
+      await tester.pump(const Duration(milliseconds: 850));
+      await tester.pump();
+      expect(find.text('[pten]Olá'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Listen to translation'));
+      await tester.pump();
+      expect(engine.spoken, ['[pten]Olá']);
+
+      vm.dispose();
+      manager.dispose();
+    },
+  );
+
+  testWidgets('F4.5: a ordem de foco segue a ordem VISUAL, não a da árvore', (
+    tester,
+  ) async {
+    // O botão de modo é o último filho do `Stack` (precisa desenhar POR CIMA),
+    // mas fica visualmente no alto, cavalgando a fronteira entre bloco e
+    // painel. Se o foco seguisse a árvore, o leitor de tela o anunciaria por
+    // último — depois de tudo o que está abaixo dele na tela. O que salva é a
+    // `ReadingOrderTraversalPolicy` padrão, que ordena por geometria; este
+    // teste trava isso, porque uma política customizada em algum ancestral
+    // futuro quebraria a ordem sem nenhum sintoma visível.
+    final api = _GateApi()..installed.addAll(Language.values);
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    await _pump(tester, vm, manager);
+
+    final modeRect = tester.getRect(find.byType(ModeButton));
+    final fieldRect = tester.getRect(find.byType(TextField).first);
+    expect(
+      modeRect.top,
+      lessThan(fieldRect.top),
+      reason: 'o botão de modo está acima do campo na TELA',
+    );
+
+    final policy = FocusTraversalGroup.of(
+      tester.element(find.byType(ModeButton)),
+    );
+    expect(
+      policy,
+      isA<ReadingOrderTraversalPolicy>(),
+      reason:
+          'com política de ordem-da-árvore o botão de modo seria anunciado '
+          'por último, apesar de estar no alto da tela',
+    );
+
+    vm.dispose();
+    manager.dispose();
+  });
+
+  testWidgets('RN-07: segundo plano encerra a escuta mas NÃO cala a leitura', (
+    tester,
+  ) async {
+    // Parece inconsistente e é deliberado: quem troca de app no meio de uma
+    // frase quer terminar de OUVI-LA; microfone aberto fora de vista é outra
+    // história. A RN-07 escolheu esse lado, e o teste impede que alguém
+    // "conserte" a inconsistência sem passar pelo PRD.
+    final api = _GateApi()..installed.addAll(Language.values);
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    final engine = _RecordingTtsEngine();
+    await _pump(tester, vm, manager, ttsEngine: engine);
+
+    await tester.enterText(find.byType(TextField), 'Olá');
+    await tester.pump(const Duration(milliseconds: 850));
+    await tester.pump();
+    await tester.tap(find.byTooltip('Listen to translation'));
+    await tester.pump();
+    expect(engine.spoken, ['[pten]Olá']);
+
+    final antes = engine.stops;
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    await tester.pump();
+
+    expect(
+      engine.stops,
+      antes,
+      reason: 'a RN-07 manda o TTS seguir até concluir ou o SO interromper',
+    );
+
+    vm.dispose();
+    manager.dispose();
+  });
+
+  testWidgets('o botão de modo NÃO pode cobrir a ação do card de download', (
+    tester,
+  ) async {
+    // Este foi o bug que fazia "a tradução não funcionar": o card avisava que
+    // faltava o pacote, mas o botão de modo flutuava exatamente sobre o
+    // "Baixar". O usuário via o aviso e não conseguia agir sobre ele — e sem
+    // pacote, nada traduz. O sintoma não parecia de layout, parecia de motor.
+    final api = _GateApi(); // nenhum idioma instalado: o card aparece
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    await _pump(tester, vm, manager);
+    await tester.pump();
+
+    expect(find.byType(DownloadProgressCard), findsOneWidget);
+
+    final card = tester.getRect(find.byType(DownloadProgressCard));
+    final modeButton = tester.getRect(find.byType(ModeButton));
+
+    expect(
+      card.overlaps(modeButton),
+      isFalse,
+      reason:
+          'o card de download precisa ficar ACIMA da pilha, fora do alcance '
+          'do botão flutuante — senão sua ação fica inalcançável',
+    );
+
+    vm.dispose();
+    manager.dispose();
+  });
+
+  testWidgets('§5.13: pinyin ACIMA do hanzi, e só com destino zh', (
+    tester,
+  ) async {
+    final api = _GateApi()..installed.addAll(Language.values);
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    final engine = _RecordingTtsEngine();
+    await _pump(tester, vm, manager, ttsEngine: engine);
+
+    // Destino en: nenhuma linha de pinyin — nem vazia. Espaço reservado para
+    // nada é ruído.
+    await tester.enterText(find.byType(TextField), 'obrigado');
+    await tester.pump(const Duration(milliseconds: 850));
+    await tester.pump();
+    expect(vm.translatedPinyin, isNull);
+
+    // Destino zh: a linha existe e vem ANTES do hanzi na tela.
+    vm.selectTarget(Language.zh);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 850));
+    await tester.pump();
+
+    final pinyin = vm.translatedPinyin;
+    expect(pinyin, isNotNull);
+    expect(
+      tester.getTopLeft(find.text(pinyin!)).dy,
+      lessThan(tester.getTopLeft(find.text(vm.translatedText)).dy),
+      reason: 'quem precisa pronunciar acha a pronúncia primeiro (§5.13)',
+    );
+
+    // Copiar leva o hanzi SOZINHO: quem cola numa conversa quer mandar a
+    // tradução, não a romanização junto. Interceptamos o canal em vez de ler
+    // a área de transferência de volta — `Clipboard.getData` depende de uma
+    // resposta que o ambiente de teste não entrega.
+    String? copiado;
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        if (call.method == 'Clipboard.setData') {
+          copiado =
+              (call.arguments as Map<Object?, Object?>)['text'] as String?;
+        }
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Copy'));
+    await tester.pump();
+    expect(copiado, vm.translatedText);
+    expect(copiado, isNot(contains(pinyin)));
+
+    // E o TTS fala o hanzi — ler a romanização daria pronúncia de português.
+    await tester.tap(find.byTooltip('Listen to translation'));
+    await tester.pump();
+    expect(engine.spoken.single, vm.translatedText);
+
+    vm.dispose();
+    manager.dispose();
+  });
+
+  testWidgets('texto longo NÃO estoura o painel (§5.1: altura é conteúdo)', (
+    tester,
+  ) async {
+    // Altura FIXA no corpo do painel fazia todo resultado mais alto que a
+    // caixa estourar em "BOTTOM OVERFLOWED" — justamente no texto longo, que
+    // é o que mais precisa ser lido.
+    final api = _GateApi()..installed.addAll(Language.values);
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    await _pump(tester, vm, manager);
+
+    await tester.enterText(
+      find.byType(TextField),
+      'o tempo está muito bom hoje e eu gostaria de saber onde fica o '
+      'banheiro mais próximo porque estou viajando com minha família e não '
+      'conhecemos nada desta cidade nem sabemos a quem perguntar',
+    );
+    await tester.pump(const Duration(milliseconds: 850));
+    await tester.pump();
+
+    // `tester.takeException` devolve o RenderFlex overflow — que o Flutter
+    // reporta como exceção de layout, não como falha de teste.
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'nenhum overflow de layout com resultado longo',
+    );
+
+    vm.dispose();
+    manager.dispose();
+  });
+
+  testWidgets('"Baixar" funciona com o campo VAZIO (primeiro uso do app)', (
+    tester,
+  ) async {
+    // Era o bug relatado como "os pacotes não estão baixando". O botão do card
+    // chamava `retryLastAction()`, que passa por `_translate()` — e essa
+    // desiste na primeira linha quando não há texto. Abrir o app e tocar em
+    // "Baixar" antes de digitar não fazia nada: nem download, nem erro.
+    final api = _GateApi(); // nada instalado
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    await _pump(tester, vm, manager);
+    await tester.pump();
+
+    expect(find.byType(DownloadProgressCard), findsOneWidget);
+    expect(vm.sourceText, isEmpty, reason: 'o campo NÃO foi preenchido');
+
+    await tester.tap(find.text('Download'));
+    await tester.pump();
+
+    expect(
+      manager.stateFor(Language.pt),
+      isA<ModelDownloading>(),
+      reason: 'tocar em Baixar precisa iniciar o download por si só',
+    );
+
+    vm.dispose();
+    manager.dispose();
+  });
+
+  testWidgets('o nome do idioma NÃO trunca com espaço disponível', (
+    tester,
+  ) async {
+    // `Flexible` + `Spacer()` no mesmo Row competiam pelo espaço restante: o
+    // rótulo ficava com metade do que sobrava e "English" virava "Engl…" —
+    // com a fonte do sistema ampliada, "En…". Quem lê o painel precisa saber
+    // em que idioma está o resultado.
+    final api = _GateApi()..installed.addAll(Language.values);
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    await _pump(tester, vm, manager);
+
+    // Só o cabeçalho do painel — "English" também aparece na pílula do rodapé.
+    final rotulo = find.descendant(
+      of: find.byType(PanelHeader),
+      matching: find.text('English'),
+    );
+    expect(rotulo, findsOneWidget);
+
+    final widget = tester.widget<Text>(rotulo);
+    final painter = TextPainter(
+      text: TextSpan(text: widget.data, style: widget.style),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    expect(
+      tester.getSize(rotulo).width,
+      greaterThanOrEqualTo(painter.width),
+      reason: 'a caixa do rótulo precisa caber o texto inteiro',
+    );
 
     vm.dispose();
     manager.dispose();

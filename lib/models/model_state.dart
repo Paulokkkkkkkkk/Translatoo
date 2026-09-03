@@ -23,10 +23,17 @@ final class ModelNotDownloaded extends ModelState {
 /// uma estimativa determinística produzida pelo [ModelManagerService] enquanto
 /// sondagem confirma a conclusão real (ver nota técnica lá).
 final class ModelDownloading extends ModelState {
-  const ModelDownloading(this.progressPercent)
-    : assert(progressPercent >= 0 && progressPercent <= 100);
+  const ModelDownloading([this.progressPercent])
+    : assert(
+        progressPercent == null ||
+            (progressPercent >= 0 && progressPercent <= 100),
+      );
 
-  final int progressPercent;
+  /// `null` = progresso DESCONHECIDO, que é o caso real: o ML Kit não expõe
+  /// quanto já baixou. Inventar um número transforma "não sei" em "90%", e
+  /// numa rede lenta esse 90% fica na tela por horas enquanto o download de
+  /// verdade está em 34%.
+  final int? progressPercent;
 
   @override
   bool operator ==(Object other) =>

@@ -1,0 +1,16 @@
+{
+  // Vale para TODO `flutter run` da extensão, venha de qual botão vier — é o
+  // que o launch.json sozinho não garante, porque o botão de play do editor
+  // não usa nenhuma configuração.
+  //
+  // Sem `--flavor`, o Gradle monta `assembleDebug` e a ferramenta depois
+  // procura um `app-debug.apk` que build nenhum produz: o erro é
+  // "Gradle build failed to produce an .apk file", que não menciona flavor.
+  //
+  // Sem o `--dart-define`, o app compila mas o ditado some da UI.
+  "dart.flutterRunAdditionalArgs": [
+    "--flavor",
+    "full",
+    "--dart-define=STT_MODEL_ASSET=assets/models/whisper/ggml-base-q5_1.bin"
+  ]
+}

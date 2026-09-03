@@ -41,9 +41,22 @@ class ConnectivityService {
     );
   }
 
+  /// Transportes que de fato carregam dados.
+  ///
+  /// `vpn` está FORA de propósito. O Android reporta a VPN como mais um
+  /// resultado ao lado do transporte real, e um túnel continua listado depois
+  /// que a rede embaixo dele some. Medido em aparelho com WireGuard ativo: em
+  /// modo avião o badge continuava dizendo "Online", porque `vpn` é diferente
+  /// de `none`. VPN sem transporte embaixo não leva pacote a lugar nenhum.
+  static const Set<ConnectivityResult> _realTransports = <ConnectivityResult>{
+    ConnectivityResult.wifi,
+    ConnectivityResult.mobile,
+    ConnectivityResult.ethernet,
+    ConnectivityResult.other,
+  };
+
   void _apply(List<ConnectivityResult> results) {
-    isOnline.value =
-        results.isNotEmpty && results.any((r) => r != ConnectivityResult.none);
+    isOnline.value = results.any(_realTransports.contains);
     isOnMobileData.value = results.contains(ConnectivityResult.mobile);
   }
 

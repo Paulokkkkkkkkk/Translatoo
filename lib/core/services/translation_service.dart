@@ -26,8 +26,14 @@ class TranslationService {
     required TranslationBackend primary,
     TranslationBackend? fallback,
     bool fallbackEnabled = AppConstants.enableAlternativeEngine,
+    TranslationBackend? cloudBackend,
+    bool Function()? isCloudEnabled,
+    bool Function()? isOnline,
   }) : _fallback = fallback,
-       _fallbackEnabled = fallbackEnabled && fallback != null {
+       _fallbackEnabled = fallbackEnabled && fallback != null,
+       _cloud = cloudBackend,
+       _cloudEnabled = isCloudEnabled,
+       _online = isOnline {
     _primary = primary;
   }
 
@@ -35,7 +41,35 @@ class TranslationService {
   final TranslationBackend? _fallback;
   final bool _fallbackEnabled;
 
+  /// Motor de nuvem do modo híbrido (F4.3). `null` na v1 — o provedor de API
+  /// é decisão comercial ainda não tomada.
+  final TranslationBackend? _cloud;
+
+  /// Preferência `cloudEnabled`, resolvida NA CHAMADA: o usuário pode desligar
+  /// nos Ajustes entre uma tradução e a seguinte.
+  final bool Function()? _cloudEnabled;
+
+  final bool Function()? _online;
+
   bool _usingFallback = false;
+
+  /// A última tradução veio do motor ON-DEVICE? (F4.3)
+  ///
+  /// Serve ao badge discreto "local": com o modo híbrido ligado, o usuário tem
+  /// direito de saber quando a nuvem não respondeu e o aparelho assumiu. Com o
+  /// modo desligado é sempre `true` e a UI não mostra nada.
+  bool _lastWasLocal = true;
+  bool get lastResultWasLocal => _lastWasLocal;
+
+  /// O modo híbrido está configurado E ligado? A UI só mostra o badge "local"
+  /// quando isto é verdade.
+  bool get cloudActive => _cloud != null && (_cloudEnabled?.call() ?? false);
+
+  /// A nuvem deve ser tentada AGORA? Precisa das três coisas ao mesmo tempo.
+  bool get _shouldTryCloud =>
+      _cloud != null &&
+      (_cloudEnabled?.call() ?? false) &&
+      (_online?.call() ?? false);
 
   /// Motor efetivamente em uso (pós-fallback).
   TranslationBackend get activeBackend =>
@@ -48,12 +82,56 @@ class TranslationService {
   /// O par está pronto no motor ativo? Falha rápida antes de traduzir.
   Future<bool> isReady(LanguagePair pair) => activeBackend.isReady(pair);
 
+  /// Pré-aquece o motor para o [pair] (F4.4).
+  ///
+  /// O ML Kit carrega o modelo na PRIMEIRA tradução, e essa carga aparece como
+  /// atraso justamente quando o usuário está olhando o resultado. Traduzir um
+  /// caractere fora do caminho crítico paga esse custo antes.
+  ///
+  /// Falha em silêncio: pré-aquecer é otimização, e se não der certo a
+  /// tradução real segue funcionando (só mais lenta na primeira vez).
+  Future<void> warmUp(LanguagePair pair) async {
+    try {
+      if (!await _primary.isReady(pair)) return;
+      await _primary.translate(
+        source: pair.source,
+        target: pair.target,
+        text: 'a',
+      );
+    } on Object catch (_) {
+      // Silêncio proposital — ver doc acima.
+    }
+  }
+
   Future<String> translate({
     required Language source,
     required Language target,
     required String text,
   }) async {
     final pair = LanguagePair(source: source, target: target);
+
+    // MODO HÍBRIDO (F4.3). Tentado ANTES do caminho on-device e falhando em
+    // silêncio: qualquer erro ou o timeout de 2 s cai no motor local sem
+    // mensagem nenhuma ao usuário. Com `cloudEnabled = false` — o default da
+    // v1 — este bloco inteiro é pulado, e o comportamento é idêntico ao de
+    // antes da F4.3.
+    if (_shouldTryCloud) {
+      try {
+        final result = await _translateChunks(_cloud!, pair, text);
+        _lastWasLocal = false;
+        return result;
+      } on AppException catch (e) {
+        if (kDebugMode) {
+          debugPrint(
+            '[Translatoo] nuvem falhou (${e.code.wireCode}) → on-device',
+          );
+        }
+        // Segue para o caminho local. Nenhum erro sobe: para o usuário, a
+        // tradução simplesmente aconteceu.
+      }
+    }
+    _lastWasLocal = true;
+
     var backend = activeBackend;
 
     if (!await backend.isReady(pair)) {

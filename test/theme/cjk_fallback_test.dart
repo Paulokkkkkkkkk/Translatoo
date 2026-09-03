@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:translatoo/core/theme/app_theme.dart';
 
-/// F1.9 — AC-F1-6. O mandarim só renderiza sem tofu se TODO estilo de texto
+/// F1.9 — AC-F1-6. O mandarim só renderiza sem tofu se estilo de texto
 /// carregar o fallback CJK; um único estilo sem ele já produz □□□ na tela.
 void main() {
   List<TextStyle?> stylesOf(TextTheme t) => <TextStyle?>[

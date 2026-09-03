@@ -6,8 +6,13 @@ import '../../core/constants/app_strings.dart';
 import '../../models/language.dart';
 import '../../models/model_state.dart';
 
-/// Cartão sobreposto de download de pacote (F1.7 / AC-M1-2): nome do idioma,
-/// barra de progresso %, tamanho estimado (~30 MB) e ações Baixar/Cancelar.
+/// Aviso compacto de pacote ausente (F1.7 / AC-M1-2): idioma, estado, tamanho
+/// estimado e a ação — tudo numa linha de ~48 dp.
+///
+/// Era um bloco alto com barra de progresso própria e botão preenchido, que
+/// dominava o topo da tela e competia com o TRADUZIR. É AVISO, não ação
+/// primária: a barra só aparece durante o download e a ação virou botão de
+/// texto.
 ///
 /// Aparece quando o par corrente tem pacote ausente/em download. Após a
 /// conclusão o ViewModel retoma sozinho a tradução pendente.
@@ -40,75 +45,86 @@ class DownloadProgressCard extends StatelessWidget {
         margin: EdgeInsets.zero,
         color: scheme.primaryContainer,
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          child: Row(
             children: [
-              Row(
-                children: [
-                  Icon(
-                    isDownloading
-                        ? Icons.cloud_download_outlined
-                        : Icons.download_outlined,
-                    size: 20,
-                    color: scheme.onPrimaryContainer,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Text(
-                      language.displayName,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: scheme.onPrimaryContainer,
-                      ),
-                    ),
-                  ),
-                  if (percent != null)
+              Icon(
+                isDownloading
+                    ? Icons.cloud_download_outlined
+                    : Icons.download_outlined,
+                size: 20,
+                color: scheme.onPrimaryContainer,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              // Idioma, estado e tamanho numa coluna só; a barra vira uma
+              // linha fina embaixo, e não mais um bloco separado.
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Text(
-                      '$percent%',
+                      language.displayName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         color: scheme.onPrimaryContainer,
                       ),
-                    )
-                  else
+                    ),
                     Text(
-                      modelStateLabel(t, state),
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      percent != null
+                          ? '$percent% · ${AppConstants.estimatedModelSizeMb} MB'
+                          : '${modelStateLabel(t, state)} · '
+                                '${AppConstants.estimatedModelSizeMb} MB',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: scheme.onPrimaryContainer,
                       ),
                     ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(AppSpacing.radius),
-                child: LinearProgressIndicator(
-                  value: percent == null ? null : percent / 100,
-                  minHeight: 6,
-                  backgroundColor: scheme.outline,
-                  valueColor: AlwaysStoppedAnimation<Color>(scheme.primary),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                '${t.modelSizeEstimate} · ${AppConstants.estimatedModelSizeMb} MB',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: scheme.onPrimaryContainer,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Align(
-                alignment: Alignment.centerRight,
-                child: isDownloading
-                    ? OutlinedButton(
-                        onPressed: onCancel,
-                        child: Text(t.actionCancel),
-                      )
-                    : FilledButton.icon(
-                        onPressed: onDownload,
-                        icon: const Icon(Icons.download_outlined),
-                        label: Text(t.actionDownload),
+                    if (isDownloading) ...[
+                      const SizedBox(height: AppSpacing.xs),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm,
+                        ),
+                        child: LinearProgressIndicator(
+                          value: percent == null ? null : percent / 100,
+                          minHeight: 3,
+                          backgroundColor: scheme.outline,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            scheme.primary,
+                          ),
+                        ),
                       ),
+                    ],
+                  ],
+                ),
               ),
+              const SizedBox(width: AppSpacing.sm),
+              // Ação vira botão de texto compacto: o aviso não disputa mais
+              // atenção com o botão TRADUZIR, que é a ação primária da tela.
+              if (isDownloading)
+                TextButton(
+                  onPressed: onCancel,
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    foregroundColor: scheme.onPrimaryContainer,
+                  ),
+                  child: Text(t.actionCancel),
+                )
+              else
+                TextButton(
+                  onPressed: onDownload,
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    foregroundColor: scheme.primary,
+                  ),
+                  child: Text(t.actionDownload),
+                ),
             ],
           ),
         ),

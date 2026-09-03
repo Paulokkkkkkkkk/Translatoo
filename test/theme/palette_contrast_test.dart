@@ -98,6 +98,46 @@ void main() {
     ),
   };
 
+  // OBJETOS GRÁFICOS têm outro limiar: a WCAG 2.1 SC 1.4.11 pede 3:1 para
+  // elementos não-textuais, não os 4,5:1 de texto. Manter os dois no mesmo
+  // balde reprovaria desenho correto — ou, pior, empurraria alguém a baixar o
+  // limiar de TEXTO para caber um ponto de 8 dp.
+  const double aaNonText = 3.0;
+
+  final Map<String, List<(String, Color, Color)>> graphicalPalettes = {
+    'light': <(String, Color, Color)>[
+      // Ponto do ConnectionBadge, no chip sobre o bloco de marca (§5.6 · §8).
+      (
+        'ponto success sobre primaryContainer',
+        AppColorsLight.colorSuccess,
+        AppColorsLight.colorPrimaryContainer,
+      ),
+    ],
+    'dark': <(String, Color, Color)>[
+      (
+        'ponto success sobre primaryContainer',
+        AppColorsDark.colorSuccess,
+        AppColorsDark.colorPrimaryContainer,
+      ),
+    ],
+  };
+
+  graphicalPalettes.forEach((String name, List<(String, Color, Color)> pairs) {
+    group('paleta $name — objetos gráficos', () {
+      for (final (String label, Color fg, Color bg) in pairs) {
+        test('$label atinge AA para não-texto', () {
+          expect(
+            contrast(fg, bg),
+            greaterThanOrEqualTo(aaNonText),
+            reason:
+                '$label ficou em ${contrast(fg, bg).toStringAsFixed(2)}:1 '
+                '(mínimo $aaNonText:1 — WCAG 2.1 SC 1.4.11)',
+          );
+        });
+      }
+    });
+  });
+
   palettes.forEach((String name, List<(String, Color, Color)> pairs) {
     group('paleta $name', () {
       for (final (String label, Color fg, Color bg) in pairs) {

@@ -1,16 +1,22 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:connectivity_plus_platform_interface/connectivity_plus_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translatoo/core/constants/app_colors.dart';
+import 'package:translatoo/core/constants/app_constants.dart';
 import 'package:translatoo/core/constants/app_spacing.dart';
 import 'package:translatoo/core/services/connectivity_service.dart';
 import 'package:translatoo/core/services/model_manager_service.dart';
 import 'package:translatoo/core/services/storage_service.dart';
+import 'package:translatoo/core/services/stt_service.dart';
 import 'package:translatoo/core/services/translation_backend.dart';
 import 'package:translatoo/core/services/translation_service.dart';
+import 'package:translatoo/core/services/tts_service.dart';
+import 'package:translatoo/core/services/whisper_model_installer.dart';
+import 'package:translatoo/core/services/whisper_stt_engine.dart';
 import 'package:translatoo/core/theme/app_theme.dart';
 import 'package:translatoo/main.dart';
 import 'package:translatoo/models/language.dart';
@@ -28,6 +34,47 @@ class _FakePlatform extends ConnectivityPlatform {
 
   @override
   Stream<List<ConnectivityResult>> get onConnectivityChanged => events.stream;
+}
+
+/// Microfone que nunca abre: estes testes não ditam, e uma captura real
+/// exigiria canal de plataforma.
+class _SilentAudio implements SttAudioSource {
+  const _SilentAudio();
+
+  @override
+  Future<Stream<Uint8List>> start() async => const Stream<Uint8List>.empty();
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Stream<double> get amplitude => const Stream<double>.empty();
+}
+
+/// Voz que nunca fala: estes testes não acionam o 🔊, e o flutter_tts real
+/// exigiria canal de plataforma.
+class _SilentTtsEngine implements TtsEngine {
+  @override
+  Stream<TtsEvent> get events => const Stream<TtsEvent>.empty();
+
+  @override
+  Future<bool> isLanguageAvailable(String ttsCode) async => true;
+
+  @override
+  Future<void> configure({
+    required String languageCode,
+    required double rate,
+    required double pitch,
+  }) async {}
+
+  @override
+  Future<void> speak(String text) async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> dispose() async {}
 }
 
 void main() {
@@ -67,29 +114,50 @@ void main() {
         connectivity: connectivity,
         translationService: translationService,
         modelManager: manager,
+        // Composição do M2 (F2.5): a shell só precisa que exista; o ditado em
+        // si é coberto por mic_button_test.dart.
+        sttService: SttService(
+          sttEngine: WhisperSttEngine(),
+          audioSource: const _SilentAudio(),
+          modelInstaller: WhisperModelInstaller(
+            assetKey: AppConstants.whisperFullModelAsset,
+          ),
+        ),
+        // Composição do M3 (F2.6): idem — existe para a shell não quebrar; a
+        // reprodução em si é coberta por tts_view_model_test.dart.
+        ttsService: TtsService(engine: _SilentTtsEngine()),
       ),
     );
     await tester.pumpAndSettle();
 
-    // Aba inicial Translate: rótulo da NavigationBar + título do placeholder.
-    expect(find.text('Translate'), findsWidgets);
-    expect(find.byType(NavigationBar), findsOneWidget);
-
     // Badge informativo offline no AppBar (mock sem conectividade):
     expect(find.text('Offline'), findsOneWidget);
 
-    // Navegação → History (antes da troca há um único 'History'):
+    // A navegação vive na GAVETA desde a decisão da §10 (opção A): os destinos
+    // só existem depois de abrir o ☰. Enquanto ela está fechada, o rodapé fica
+    // livre para a LanguageBar de largura total (§5.2).
+    expect(find.byType(NavigationBar), findsNothing);
+    expect(find.text('History'), findsNothing);
+
+    final scaffold = tester.firstState<ScaffoldState>(find.byType(Scaffold));
+    scaffold.openDrawer();
+    await tester.pumpAndSettle();
+    expect(find.byType(NavigationDrawer), findsOneWidget);
+
+    // Navegação → History:
     await tester.tap(find.text('History'));
     await tester.pumpAndSettle();
-    expect(
-      find.text('Your translations are stored only on this device.'),
-      findsOneWidget,
-    );
+    // Desde a F3.2 a aba mostra a tela real; sem histórico, o estado vazio.
+    expect(find.text('No translations yet.'), findsOneWidget);
 
     // Navegação → Settings:
+    scaffold.openDrawer();
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Settings'));
     await tester.pumpAndSettle();
-    expect(find.text('App preferences will appear here.'), findsOneWidget);
+    // Desde a F3.3 a aba mostra os Ajustes reais, não o placeholder.
+    expect(find.text('Theme'), findsOneWidget);
+    expect(find.text('Default language pair'), findsOneWidget);
   });
 
   testWidgets('tema dark nasce exclusivamente dos tokens', (tester) async {
@@ -112,14 +180,14 @@ void main() {
     expect(scheme!.primary, AppColorsDark.colorPrimary);
     expect(theme!.scaffoldBackgroundColor, AppColorsDark.colorBackground);
     expect(scheme!.error, AppColorsDark.colorError);
-    // Raio padrão aplicado aos cartões (§3.3).
+    // Card é PAINEL, e painel usa radiusLg (design_system §2, issue #53).
     final card = theme!.cardTheme;
     expect(
       card.shape,
       isA<RoundedRectangleBorder>().having(
         (shape) => shape.borderRadius,
         'borderRadius',
-        BorderRadius.circular(AppSpacing.radius),
+        BorderRadius.circular(AppSpacing.radiusLg),
       ),
     );
   });

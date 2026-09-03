@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.flutter_application_1"
+    namespace = "com.translatoo.app"
     compileSdk = flutter.compileSdkVersion
     // whisper_ggml exige NDK 29.0.13113456, acima do padrao do Flutter.
     // NDKs sao retrocompativeis: fixamos o maior exigido pelos plugins.
@@ -17,8 +17,7 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.flutter_application_1"
+        applicationId = "com.translatoo.app"
         // PRD §4: Android 6.0+ (requisito dos plugins ML Kit / Vosk / TFLite).
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
@@ -30,11 +29,30 @@ android {
         versionName = flutter.versionName
     }
 
+    // F2.1b - PRD 4.7: duas variantes de tamanho. O modelo ggml embarcado em
+    // cada uma e selecionado pelos `flavors:` do pubspec; aqui fica so a
+    // dimensao de build e o sufixo que permite as duas lado a lado no device.
+    flavorDimensions += "models"
+    productFlavors {
+        create("lite") {
+            dimension = "models"
+            applicationIdSuffix = ".lite"
+            versionNameSuffix = "-lite"
+        }
+        create("full") {
+            dimension = "models"
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }

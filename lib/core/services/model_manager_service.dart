@@ -5,7 +5,6 @@ import 'package:google_mlkit_translation/google_mlkit_translation.dart';
 
 import '../../models/language.dart';
 import '../../models/model_state.dart';
-import '../constants/app_constants.dart';
 import 'app_exception.dart';
 
 /// Ponte MÍNIMA sobre o gerenciador remoto de modelos do plugin ML Kit
@@ -82,27 +81,42 @@ AppException? evaluateDownloadGate({
 /// cancelamento, exclusão e consulta de estado por idioma
 /// (`notDownloaded | downloading(n%) | ready`) via [states].
 ///
-/// NOTA TÉCNICA — progresso estimado: o plugin ML Kit não expõe progresso
-/// nativo de download. Enquanto aguardamos a conclusão real
-/// ([ModelManagerApi.downloadModel]), emitimos incrementos determinísticos
-/// (+[AppConstants.modelDownloadProgressStep]/tick, teto 90%) a cada
-/// [AppConstants.modelDownloadPollInterval]; a confirmação real salta para
-/// `ready`. Cancelar desacopla o app do processo nativo (o plugin não oferece
-/// abort; se o SO concluir depois, `refresh()` refletirá `ready` — inofensivo).
+/// NOTA TÉCNICA — progresso DESCONHECIDO: o plugin ML Kit não expõe progresso
+/// nativo de download, e o download acontece dentro do processo do GMS, fora
+/// do nosso alcance. O estado é binário: baixando ou pronto.
+///
+/// Houve aqui um progresso SIMULADO (+7%/tick, teto 90%) e ele foi removido
+/// depois de medido em aparelho numa rede lenta: a barra chegava a 90% em
+/// cinco segundos e ficava lá por horas, enquanto o download real estava em
+/// 12,7 MB de 37,6 MB a 3,6 KB/s. Um número inventado que diz "quase pronto"
+/// é pior que nenhum número — leva o usuário a concluir que travou e cancelar
+/// um download que estava progredindo. A UI mostra indicador indeterminado.
+///
+/// Cancelar desacopla o app do processo nativo (o plugin não oferece abort; se
+/// o SO concluir depois, `refresh()` refletirá `ready` — inofensivo).
 class ModelManagerService {
   ModelManagerService({
     required ModelManagerApi api,
     ValueListenable<bool>? online,
     ValueListenable<bool>? onMobileData,
+    bool Function()? wifiOnlyPreference,
   }) {
     _api = api;
     _online = online;
     _onMobileData = onMobileData;
+    _wifiOnly = wifiOnlyPreference;
   }
 
   late final ModelManagerApi _api;
   late final ValueListenable<bool>? _online;
   late final ValueListenable<bool>? _onMobileData;
+
+  /// Preferência `wifiOnly` do usuário (F3.6). Resolvida NA CHAMADA — lê o
+  /// `StorageService` no momento do download, então uma troca em Ajustes vale
+  /// já no próximo toque, sem reconstruir o serviço.
+  bool Function()? _wifiOnly;
+
+  bool _wifiOnlyValue() => _wifiOnly?.call() ?? true;
 
   final Map<Language, ModelState> _internalStates = <Language, ModelState>{
     for (final language in Language.values)
@@ -124,6 +138,8 @@ class ModelManagerService {
     for (final language in Language.values) language: 0,
   };
 
+  /// Mantido para o cancelamento e o `dispose` — hoje nenhum timer é
+  /// agendado, mas cancelar precisa continuar sendo idempotente.
   final Map<Language, Timer> _pollTimers = <Language, Timer>{};
 
   int _nextToken(Language language) =>
@@ -157,7 +173,7 @@ class ModelManagerService {
     if (current is ModelDownloading || current is ModelReady) return;
 
     final gate = evaluateDownloadGate(
-      wifiOnlyPreference: true,
+      wifiOnlyPreference: _wifiOnlyValue(),
       online: _online?.value ?? true,
       onMobileData: _onMobileData?.value ?? false,
       force: force,
@@ -165,8 +181,7 @@ class ModelManagerService {
     if (gate != null) throw gate;
 
     final token = _nextToken(language);
-    _set(language, const ModelDownloading(0));
-    _startPolling(language, token);
+    _set(language, const ModelDownloading());
     try {
       // A restrição Wi-Fi também é aplicada no lado nativo do plugin.
       await _api.downloadModel(language, isWifiRequired: !force);
@@ -198,31 +213,6 @@ class ModelManagerService {
     if (_internalStates[language] is! ModelDownloading) {
       _set(language, const ModelNotDownloaded());
     }
-  }
-
-  void _startPolling(Language language, int token) {
-    _stopPolling(language);
-    _pollTimers[language] = Timer.periodic(
-      AppConstants.modelDownloadPollInterval,
-      (_) {
-        if (!_isCurrent(language, token)) {
-          _stopPolling(language);
-          return;
-        }
-        final state = _internalStates[language];
-        if (state is ModelDownloading &&
-            state.progressPercent < AppConstants.modelDownloadProgressCap) {
-          final next =
-              state.progressPercent + AppConstants.modelDownloadProgressStep;
-          _set(
-            language,
-            ModelDownloading(
-              next.clamp(0, AppConstants.modelDownloadProgressCap),
-            ),
-          );
-        }
-      },
-    );
   }
 
   void _stopPolling(Language language) {

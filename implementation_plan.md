@@ -7,7 +7,7 @@
 | **Versão do plano** | 1.1 |
 | **Data** | 2026-08-28 |
 | **Documento-fonte** | `prd.md` **v1.1** (requisitos, módulos, critérios de aceite) |
-| **Estado real** | **F0, F1 (com F1.9) e a spike F2.0 concluídas** · F2.1 é o próximo passo |
+| **Estado real** | **F0–F1 concluídas · F2 concluída (F2.0–F2.9) · F3.1–F3.6 concluídas** · F3.7 (qualidade da Fase 3) é o próximo passo |
 | **Stack** | Dart + Flutter (exclusivamente) |
 | **Plataformas** | Android (prioridade máxima) · iOS (secundária) · Desktop/Web (terciária) |
 | **Idiomas** | Português `pt-BR` · Inglês `en-US` · Chinês Mandarim `zh-CN` |
@@ -65,7 +65,7 @@
 | Cold start | < 2 s |
 | Início da escuta (modelo de STT carregado) | ≤ 500 ms |
 | Animações | 60 fps sem jank |
-| APK base (sem modelos embutidos) | < 40 MB |
+| APK do flavor `lite` | ~95 MB *(revisto na v1.2 — ver PRD §4.7)* |
 | APK completo (modelos embutidos) | ≤ 180 MB |
 | Sucesso de traduções em modo avião | ≥ 95% (QA manual — PRD MS-01) |
 | Estabilidade | Zero crash na bateria de QA (PRD MS-04) |
@@ -318,7 +318,7 @@ lib/
 
 > **Por que está aqui.** Esta subfase deveria ter nascido na F0 (é design system), mas a lacuna só foi identificada na revisão v1.1, com a F0 já fechada. Como a tela Traduzir **já renderiza mandarim** desde a F1.6, o defeito é visível hoje: em Androids sem cobertura de Han, todo `zh` aparece como tofu (□□□). **É bloqueante para a F2** — não faz sentido validar ditado e leitura em chinês numa tela que não exibe chinês.
 
-- Obter **Noto Sans SC** (licença SIL OFL 1.1, compatível com uso comercial) e gerar **subset** dos glifos necessários — o arquivo completo (~16 MB) inviabiliza o flavor `lite` (< 40 MB). Meta: **≤ 5 MB**.
+- Obter **Noto Sans SC** (licença SIL OFL 1.1, compatível com uso comercial) e gerar **subset** dos glifos necessários — o arquivo completo (~16 MB) pesaria demais no flavor `lite`. Meta: **≤ 5 MB**.
 - Declarar a família em `pubspec.yaml` e aplicá-la **exclusivamente** via `fontFamilyFallback` no `TextTheme` de `app_theme.dart`. PT/EN permanecem na tipografia nativa da plataforma (RF-CJK-02). **Proibido** aplicar fonte widget a widget — mesma regra dos tokens de cor (RN-04).
 - Registrar em `docs/` a origem do arquivo, a licença e o comando de geração do subset, para que a fonte seja reproduzível.
 - **Entregável**: 中文 renderizado corretamente em emulador **sem locale chinês instalado**; peso do subset medido e registrado.
@@ -359,15 +359,18 @@ lib/
 - **Plano de contingência** (se nenhum candidato passar nos eliminatórios): aplicar a mesma "limitação honesta" da F1.4 — `SttService` permanece como interface com implementação `Unavailable` atrás de feature-flag desligada, o botão 🎤 fica **oculto** (não desabilitado), **M2 é rebaixado para v1.1** e a v1 sai com M1+M3+M4. Esta decisão exige aprovação explícita do product owner.
 - **Entregável**: decisão registrada, dependência instalada (ou contingência aprovada), F2.1 destravada.
 
-### F2.1 — Aquisição e embutimento dos modelos de STT
+### F2.1 — Aquisição e embutimento dos modelos de STT ✅ concluída ([#20](../../issues/20) · `docs/whisper_models.md`)
 > **Atualizado pela F2.0.** A spike decidiu por `whisper_ggml`: **um único** modelo ggml multilíngue substitui os três modelos por idioma que a v1.0 assumia. A estrutura da subfase não muda.
+>
+> **Pendência aberta:** a medição em Android físico exigida abaixo **não foi feita** — não havia device físico no ambiente. Risco R4 segue aberto para o M2; ver `docs/whisper_models.md`.
 
 - Baixar de `huggingface.co/ggerganov/whisper.cpp`: `ggml-base-q5_1.bin` (56,9 MB, flavor `full`) e `ggml-tiny-q5_1.bin` (30,7 MB, flavor `lite`) para `assets/models/whisper/`.
 - **Medir em Android físico de gama média** (obrigação herdada da F2.0): tempo de carga do modelo, latência do primeiro parcial e latência do final após a pausa de 1,5 s. Se `base-q5_1` não couber no orçamento, recuar para `tiny-q5_1` e, em último caso, para o plano B `sherpa_onnx`.
 - Colocar em `assets/models/`; no primeiro uso, copiar para diretório de dados (`path_provider`) — os motores de STT exigem caminho real de arquivo, não asset bundle.
 - **Entregável**: assets versionados + script/README de atualização dos modelos.
 
-### F2.1b — Flavors `lite` e `full` (PRD §4.7) 🆕 v1.1
+### F2.1b — Flavors `lite` e `full` (PRD §4.7) 🆕 v1.1 ✅ concluída ([#21](../../issues/21))
+> **Mecanismo entregue; a meta do `lite` foi REVISTA.** Os flavors existem e os assets são condicionais (`flavors:` do pubspec). O `lite` mede **92,4 MB**, e o modelo é só um terço disso: ffmpeg (dependência dura do `whisper_ggml`), ML Kit e TF Lite somam ~55 MB de código nativo antes de qualquer modelo. A meta original de 40 MB foi escrita antes de a lista de dependências existir e era inalcançável; o product owner a revisou para ~95 MB na v1.2 do PRD (§4.7), com a composição medida.
 
 > **Por que virou subfase própria.** A v1.0 citava os flavors numa linha solta dentro da F2.1, sem nenhuma especificação de build — os limites de 40 MB e 180 MB não tinham mecanismo que os produzisse. Hoje o projeto **não tem flavor algum** configurado.
 
@@ -378,7 +381,9 @@ lib/
 - Documentar os comandos de build de cada flavor no README.
 - **Entregável**: `flutter build apk --flavor lite` < 40 MB e `--flavor full` ≤ 180 MB, ambos medidos e registrados.
 
-### F2.2 — `SttService` (wrapper do motor escolhido na F2.0: `whisper_ggml`)
+### F2.2 — `SttService` (wrapper do motor escolhido na F2.0: `whisper_ggml`) ✅ concluída ([#22](../../issues/22))
+> **Lacuna descoberta aqui:** a F2.0 fechou a lista de dependências com o motor, mas **sem fonte de áudio** — o `whisper_ggml` transcreve um `Stream<Uint8List>` de PCM16 e não abre o microfone. O serviço foi entregue contra a interface `SttAudioSource` (mesmo movimento da F1.1); a implementação real exige reabrir a lista fechada e precisa de issue própria. Até lá o entregável "transcrição real no app de debug" segue aberto.
+>
 > **Depende de F2.0 — concluída.** A interface abaixo é **independente do motor** — é justamente ela que permitiu adiar a decisão sem travar o resto da F2. Toda a F2.4–F2.5 programa contra ela.
 
 - Carregar modelo on-demand pelo idioma de ORIGEM; expor estado `initializing` na primeira carga.
@@ -387,45 +392,61 @@ lib/
 - Erros → `ERR_STT_ENGINE`; nenhum stacktrace à UI.
 - **Entregável**: transcrição real PT/EN/ZH no console do app de debug.
 
-### F2.3 — Permissão de microfone e ciclo de vida
+### F2.3 — Permissão de microfone e ciclo de vida ✅ concluída ([#23](../../issues/23))
+> **Escopo dividido por camada.** O serviço de permissão, as chaves de uso do iOS e as strings dos diálogos entram aqui; a regra **RN-07** (background encerra com o parcial) e a restauração do texto no cancelamento (AC-M2-4) são comportamento de máquina de estados e foram implementadas na **F2.4**, onde o `SpeechViewModel` existe. Os diálogos em si são da **F2.5**.
 - `permission_handler`: solicitar `RECORD_AUDIO` ao tocar no 🎤 com diálogo explicativo prévio; negação permanente → diálogo com "Abrir configurações" (`openAppSettings()`); mapear para `ERR_MIC_PERMISSION`.
 - RN-07: `AppLifecycleListener` — app em background durante escuta → finalizar com último resultado parcial; cancelar descarta e restaura texto anterior.
 - iOS: `NSMicrophoneUsageDescription` + `NSSpeechRecognitionUsageDescription` no Info.plist.
 - **Entregável**: fluxo completo de permissão testado (conceder/negar/negar permanente).
 
-### F2.4 — `SpeechViewModel`
+### F2.4 — `SpeechViewModel` ✅ concluída ([#24](../../issues/24))
+> Absorveu da **F2.3** a RN-07 e a restauração do texto no cancelamento (AC-M2-4): ambas são comportamento de máquina de estados. O silenciamento do TTS fica exposto como `isDictating` — quem obedece é a F2.8, que ainda não existe.
 - Máquina de estados `SpeechState { idle, initializing, listening, processing, error }` com transições inválidas ignoradas.
 - Campos: `partialText`, `finalText`, `elapsedSeconds`, `errorMessage`.
 - Ao emitir final → chama `TranslatorViewModel.acceptDictatedText(text)` (tradução imediata, ignora debounce).
 - Durante escuta: TTS silenciado + campo de digitação desabilitado (RF-M2-07).
 - **Entregável**: VM testada com fake do `SttService` (parciais, timeout 60 s, cancelamento) — **executável mesmo com a F2.0 ainda em curso**, pois depende só da interface.
 
-### F2.5 — UI de ditado
+### F2.5 — UI de ditado ✅ concluída ([#25](../../issues/25) · `docs/design_system.md` §5.8–5.9)
+> **Dois desvios registrados no design system**, ambos por conflito com regra vigente: (a) a issue pede 🎤 ocioso "outline verde" e a paleta Azul & Branco não tem verde de ação — usa `colorPrimary`; (b) a issue pede waveform animada e a §5.7 proíbe onda sem amplitude real, que não existe sem captura de áudio — usa o indicador de escuta neutro.
+
 - `mic_button.dart`: 3 estados — idle (outline verde) · listening (preenchido `colorError` vermelho + anel pulsante + waveform) · error (badge ! + tooltip).
 - Overlay bottom-sheet de escuta: scrim `colorOverlay`, texto parcial grande rolável (estilo itálico/cor secundária enquanto parcial), timer mm:ss, waveform animada, botões **Cancelar** e **Concluir**.
 - Feedback háptico curto ao iniciar/encerrar; `AnimationController` único p/ pulso+waveform (meta 60 fps).
 - **Entregável**: experiência de ditado fluida conforme PRD §3.2.
 
-### F2.6 — `TtsService` (wrapper flutter_tts)
+### F2.6 — `TtsService` (wrapper flutter_tts) ✅ concluída ([#26](../../issues/26))
+
+> **Pendências registradas (decisão de produto, mesmo padrão do `lite` > 40 MB):**
+> (a) o atalho **deep-link** para as configurações de TTS do SO **não** foi
+> implementado — nenhum plugin da lista fechada expõe o intent, e um botão que
+> não leva a lugar nenhum é pior que sua ausência; a mensagem da snackbar
+> instrui o caminho de instalação (AC-M3-2 preservado). (b) Validação manual
+> dos AC-M3-1..3 em Android físico **pendente** (sem device no ambiente — mesma
+> pendência de medição da F2.1).
 - Fala exclusivamente com motor nativo do SO; idioma = idioma de DESTINO.
 - Checagem prévia: `isLanguageAvailable`/`getVoices` → cache `voiceAvailable[lang]`; ausente → `ERR_TTS_VOICE_MISSING` com instrução explícita de instalação da voz no sistema + atalho p/ configurações do aparelho (SnackBar persistente; app não trava).
 - Fila única: novo `speak()` sempre executa `stop()` antes; handlers `onComplete/onError` devolvem ao estado idle.
 - Parâmetros `rate ∈ [0.5–2.0]` (default 1.0) e `pitch ∈ [0.5–1.5]` (default 1.0).
 - **Entregável**: reprodução audível PT/EN/ZH no device com voz instalada; aviso correto sem voz.
 
-### F2.7 — `TtsViewModel`
+### F2.7 — `TtsViewModel` ✅ concluída ([#27](../../issues/27))
 - Estados `{idle, speaking}`; debounce anti duplo-toque (mesmo texto ≤ 300 ms é idempotente).
 - Autoplay (default OFF): tradução concluída é falada se ativado; traduções originadas de ditado SEMPRE reproduzem automaticamente (fluxo conversacional), independentemente do autoplay (RF-M3-06).
 - Cache `voiceAvailable` atualizado na abertura do app e ao voltar de segundo plano.
 - **Entregável**: VM testada (fila única, autoplay condicional, erro de voz).
 
-### F2.8 — UI de reprodução
+### F2.8 — UI de reprodução ✅ concluída ([#28](../../issues/28))
+
+> Painel de voz com sliders (velocidade/tom) entregue **funcional** na tela de
+> debug (longo-press no título); migra para Ajustes na F3 com a persistência
+> (AC-M3-4). Componentes documentados no design system §5.10–5.11.
 - Botão 🔊 no cartão destino alternando ▶/⏹ conforme estado; desabilitado com resultado vazio.
 - `mini_player_tts.dart`: barra inferior durante reprodução — ícone animado, trecho falado com scroll horizontal, stop.
 - Painel de voz (sliders rotulados velocidade/tom com valor numérico) já funcional em tela de debug; migra para Ajustes na F3.
 - **Entregável**: UX de áudio completa conforme PRD §3.3.
 
-### F2.9 — Integração M2×M3×M1 e qualidade da fase
+### F2.9 — Integração M2×M3×M1 e qualidade da fase ✅ concluída ([#29](../../issues/29))
 - Orquestração conversacional completa: 🎤 → texto → tradução automática → 🔊 automático (ditado).
 - Testes de integração dos três ViewModels com services fakeados.
 - **Critérios de aceite da fase** (= US-2 e US-3 do PRD):
@@ -444,7 +465,7 @@ lib/
 
 ## Subfases
 
-### F3.1 — `LibraryViewModel` + regras de dados
+### F3.1 — `LibraryViewModel` + regras de dados ✅ concluída ([#30](../../issues/30))
 - `addRecord()`: salva toda tradução concluída com dedupe (mesma origem + mesmo par na última entrada → atualiza timestamp/resultado).
 - Capacidade: histórico FIFO de **200** entradas; favoritos ilimitados e nunca descartados automaticamente.
 - `delete(id)` + `undoDelete()` (restaura posição original); `clearHistory()` NÃO apaga favoritos.
@@ -452,28 +473,28 @@ lib/
 - Erros de persistência → `ERR_STORAGE` ("Não foi possível salvar" → Repetir ação).
 - **Entregável**: VM 100% coberta por testes unitários (dedupe, FIFO, undo, filtros).
 
-### F3.2 — Tela Histórico
+### F3.2 — Tela Histórico ✅ concluída ([#31](../../issues/31))
 - Cards: texto origem (cor secundária), tradução em destaque, pills dos idiomas, horário relativo ("há 5 min"), ⭐ quando favorito; toque reabre no Tradutor (preenche cartões + par).
 - Barra de busca fixa no topo + chips de filtro horizontais scrolláveis.
 - Swipe-to-delete individual + SnackBar "Desfazer" por 5 s; "Limpar tudo" com diálogo de confirmação.
 - Estado vazio ilustrado ("Suas traduções aparecerão aqui").
 - **Entregável**: tela completa conforme PRD §3.4.
 
-### F3.3 — Tela Ajustes
+### F3.3 — Tela Ajustes ✅ concluída ([#32](../../issues/32))
 - Itens RF-M4-09: par de idiomas padrão · autoplay TTS (switch) · sliders velocidade/tom ligados à `TtsViewModel` da F2 · somente Wi-Fi (switch) · link Gerenciar Modelos · limpar histórico (confirmado) · versão do app · declaração "Nenhum dado sai do seu aparelho".
 - **Seletor de tema**: Sistema / Claro / Escuro (persistido) — ativa o override manual sobre o `ThemeMode.system` default da F0.
 - **Entregável**: ajustes funcionais persistindo via `StorageService`.
 
-### F3.4 — Gerenciador de Modelos (`model_manager_screen.dart`)
+### F3.4 — Gerenciador de Modelos (`model_manager_screen.dart`) ✅ concluída ([#33](../../issues/33))
 - Lista dos 3 idiomas com estado real (`Não baixado · Baixando n% · Pronto`), tamanho ~30 MB, ações Baixar/Excluir (usa `ModelManagerService` da F1.3).
 - Bloqueio Wi-Fi-only em dados móveis: aviso explicativo + "Baixar mesmo assim" sem alterar a preferência (RF-M4-06 / AC-M4-4).
 - **Entregável**: gestão completa de pacotes pela UI.
 
-### F3.5 — Conectividade visível
+### F3.5 — Conectividade visível ✅ concluída ([#34](../../issues/34))
 - `ConnectionBadge` real no AppBar (🟢 online / ⚪ offline) alimentado pelo `ConnectivityService` (`ValueListenable`, sem rebuild das telas); tooltip explicativo.
 - Regra crítica verificada em todos os fluxos: **nada é bloqueado offline** (traduzir/ditar/ouvir/histórico funcionam em modo avião).
 
-### F3.6 — Persistência integral
+### F3.6 — Persistência integral ✅ concluída ([#35](../../issues/35))
 - Chaves finais `translatoo.*`: history, favorites, settings.srcLang/tgtLang, ttsRate/ttsPitch/autoPlay, wifiOnly, themeMode, schemaVersion.
 - Restauração no boot: último par de idiomas, preferências de voz, histórico e favoritos exatamente como deixados (AC-M4-3).
 - **Migração de `schemaVersion` (PRD RF-M4-05, 🆕 v1.1)**: implementar as quatro rotas — versão igual (leitura normal), **menor** (migrações encadeadas, com descarte apenas da coleção que falhar), **maior** (downgrade ⇒ descarta coleções e reseta preferências, nunca interpreta formato desconhecido) e **ausente** (tratada como versão 1). Preferências migram campo a campo com default, de modo que **acrescentar uma preferência não exige nova versão**. Cada rota coberta por teste unitário.
@@ -518,11 +539,13 @@ lib/
 - Perfis com DevTools: cold start < 2 s; tradução ≤ 300 ms (≤ 500 chars); início de escuta ≤ 500 ms (modelo carregado); animações 60 fps.
 - Otimizações típicas: lazy-load do modelo de STT (só no primeiro uso, com `keepModelLoaded`), pré-aquecimento do translator, evitar rebuilds globais (já garantido por `Selector`), const widgets.
 - **Entregável**: relatório curto de medições vs metas.
+- ✅ Código entregue: `PerfTrace` (sondas debug-only das três métricas), pré-aquecimento do tradutor por par, lazy-load de STT confirmado. Roteiro e orçamentos em [`docs/performance.md`](docs/performance.md); primeiras medições em aparelho físico em [`docs/performance_results.md`](docs/performance_results.md) (cold start 1008 ms e escuta 320 ms, dentro do orçamento). **A tradução em aparelho depende do pacote de idioma, hoje travado pela rede (cenário China).**
 
 ### F4.5 — Acessibilidade e privacidade (RN-05/06, §4.5)
 - `Semantics` completo, contraste AA verificado nas duas paletas (ferramenta de auditoria), foco/ordem de tabulação coerentes.
 - Revisão final de permissões (mínimo necessário), política de privacidade na loja coerente com "zero coleta".
 - **Entregável**: checklist de acessibilidade 100%.
+- ✅ Código entregue: guardas automatizadas (tooltip, alvo 48 dp, ordem de leitura, contraste AA nas duas paletas, permissões e ausência de cliente HTTP). Checklist em [`docs/accessibility.md`](docs/accessibility.md) — **faltam TalkBack em aparelho e captura de tráfego por proxy**.
 
 ### F4.6 — QA final e compatibilidade
 - Bateria completa dos 16 ACs do PRD em Android físico, incluindo:
@@ -535,6 +558,7 @@ lib/
   - Tamanhos: APK base < 40 MB · APK full ≤ 180 MB.
 - Correção de bugs priorizada por severidade; zero exceção crua na UI.
 - **Entregável**: planilha de execução de ACs assinada.
+- ✅ Planilha em branco pronta em [`docs/qa_final.md`](docs/qa_final.md) (20 ACs + 7 cenários de robustez + tamanho). RN-07 travada por teste. **A execução em aparelho físico é o que falta.**
 
 ### F4.7 — Identidade visual e conformidade de loja (PRD §4.10) 🆕 v1.1
 
@@ -593,7 +617,7 @@ lib/
 | # | Risco | Prob. | Impacto | Mitigação |
 |---|---|---|---|---|
 | R1 | Plano B TFLite: não existir modelo NMT compacto viável p/ os 3 pares | ~~Média~~ **Confirmado** | Alto | **Materializou-se** (spike F1.4 inconclusiva, `docs/tflite_spike.md`). Mitigação aplicada: interface `TranslationBackend` isola o motor, flag desligada, fluxo testável por mock. **Impacto residual**: sem acesso à CDN do Google, o app não traduz — ver R9 |
-| R2 | Modelos de STT estouram o limite de loja (180 MB full) | ~~Baixa~~ **Muito baixa** | Médio | *Atenuado na F2.0*: o modelo escolhido ocupa 56,9 MB no `full` e 30,7 MB no `lite`, contra os ~113–176 MB dos concorrentes. Flavors lite/full mantidos |
+| R2 | Modelos de STT estouram o limite de loja (180 MB full) | ~~Baixa~~ **FECHADO** | Médio | *Atenuado na F2.0* e **medido na F2.1b**: `full` = 119,3 MB contra o teto de 180 MB, com folga de 60 MB. O que reprovou foi a meta do `lite`, e por código NATIVO, não por modelo — revista para ~95 MB no PRD §4.7 v1.2 |
 | R3 | Voz chinesa TTS ausente em muitos aparelhos | Alta | Médio | Fluxo AC-M3-2 já previsto: SnackBar persistente + atalho às configurações do SO |
 | R4 | Latência > 300 ms em devices fracos | Média | Médio | Pré-aquecimento, medição desde F1.2, chunking eficiente |
 | R5 | Incompatibilidade entre versões dos plugins ML Kit/TTS | Média | Alto | Versões travadas no pubspec; upgrade só com regressão completa |

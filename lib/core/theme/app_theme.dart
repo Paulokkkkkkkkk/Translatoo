@@ -23,6 +23,43 @@ typedef _Tokens = ({
   Color overlay,
 });
 
+/// Cores semânticas que o `ColorScheme` do Material não tem slot próprio para
+/// guardar.
+///
+/// A §6 do design system nomeia TRÊS exceções cromáticas: favorito
+/// (`colorWarning`), gravação (`colorError`) e sucesso (`colorSuccess`). Só o
+/// erro existe no `ColorScheme`; as outras duas ficavam presas dentro do
+/// builder do tema, inalcançáveis pelos widgets — e a saída fácil seria um
+/// widget importar `app_colors.dart`, que a RN-04 proíbe.
+class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
+  const AppSemanticColors({required this.success, required this.warning});
+
+  final Color success;
+  final Color warning;
+
+  static Color success_(BuildContext context) =>
+      Theme.of(context).extension<AppSemanticColors>()!.success;
+
+  static Color warning_(BuildContext context) =>
+      Theme.of(context).extension<AppSemanticColors>()!.warning;
+
+  @override
+  AppSemanticColors copyWith({Color? success, Color? warning}) =>
+      AppSemanticColors(
+        success: success ?? this.success,
+        warning: warning ?? this.warning,
+      );
+
+  @override
+  AppSemanticColors lerp(AppSemanticColors? other, double t) {
+    if (other == null) return this;
+    return AppSemanticColors(
+      success: Color.lerp(success, other.success, t)!,
+      warning: Color.lerp(warning, other.warning, t)!,
+    );
+  }
+}
+
 /// Dois `ThemeData` Material 3 construídos EXCLUSIVAMENTE a partir dos
 /// tokens de `app_colors.dart` (plano §3.3 / RN-04).
 ///
@@ -96,6 +133,9 @@ abstract final class AppTheme {
       surface: c.surface,
       onSurface: c.textPrimary,
       surfaceContainerHighest: c.border,
+      // Expõe `colorBackground` pelo ColorScheme: é a superfície do painel de
+      // ORIGEM (§3), e widget nenhum pode alcançar app_colors.dart direto.
+      surfaceContainerLow: c.background,
       onSurfaceVariant: c.textSecondary,
       outline: c.border,
       outlineVariant: c.border,
@@ -107,23 +147,46 @@ abstract final class AppTheme {
       useMaterial3: true,
       brightness: brightness,
       colorScheme: scheme,
+      extensions: <ThemeExtension<dynamic>>[
+        AppSemanticColors(success: c.success, warning: c.warning),
+      ],
       scaffoldBackgroundColor: c.background,
       textTheme: text,
+      // BLOCO DE MARCA (§3 plano 1 · §4 primeira faixa): a barra superior é a
+      // superfície de marca do app, não um cabeçalho neutro. O painel de
+      // conteúdo sobe por cima dela (§P1).
       appBarTheme: AppBarTheme(
-        backgroundColor: c.background,
-        foregroundColor: c.textPrimary,
+        backgroundColor: c.primary,
+        foregroundColor: c.onPrimary,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: text.titleLarge!.copyWith(color: c.textPrimary),
+        // §8 regra 1: NADA de texto de superfície sobre o bloco de marca. O
+        // título herdava `textPrimary` de quando a barra era neutra, o que
+        // virou texto quase invisível assim que o fundo ficou azul.
+        titleTextStyle: text.titleLarge!.copyWith(color: c.onPrimary),
+        iconTheme: IconThemeData(color: c.onPrimary),
+        actionsIconTheme: IconThemeData(color: c.onPrimary),
+        // A OUTRA METADE DA CURVA. Traçando a silhueta de `home.webp`, o bloco
+        // de marca recua da borda direita ~28 px ANTES de a faixa do painel
+        // começar: o canto inferior DIREITO do bloco é arredondado, e o canto
+        // superior ESQUERDO do painel também. As duas curvas se encaixam em
+        // diagonal — é esse encaixe que faz o painel parecer deslizar por
+        // baixo da marca. Só uma das duas não produz o efeito.
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(AppSpacing.radiusLg),
+          ),
+        ),
       ),
       cardTheme: CardThemeData(
         color: c.surface,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
-          side: BorderSide(color: c.border),
+          // Card é painel (§2 · §3, plano 2). SEM borda: hierarquia vem da
+          // superfície e da sombra, nunca de contorno (§P3).
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -133,7 +196,7 @@ abstract final class AppTheme {
           minimumSize: const Size(64, AppSpacing.minTouchTarget),
           textStyle: text.labelLarge,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.radius),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           ),
         ),
       ),
@@ -144,7 +207,7 @@ abstract final class AppTheme {
           minimumSize: const Size(64, AppSpacing.minTouchTarget),
           textStyle: text.labelLarge,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.radius),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           ),
         ),
       ),
@@ -158,15 +221,15 @@ abstract final class AppTheme {
           vertical: AppSpacing.md,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: BorderSide(color: c.border),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: BorderSide(color: c.border),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: BorderSide(color: c.primary, width: 2),
         ),
       ),
@@ -176,7 +239,7 @@ abstract final class AppTheme {
         contentTextStyle: text.bodyMedium!.copyWith(color: c.background),
         actionTextColor: c.primary,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
@@ -195,10 +258,22 @@ abstract final class AppTheme {
         ),
       ),
       dividerTheme: DividerThemeData(color: c.border),
+      // Sheet é painel (§2): o topo arredondado grande é o que faz a folha
+      // "subir por cima" do conteúdo (§P1).
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: c.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSpacing.radiusLg),
+          ),
+        ),
+      ),
       dialogTheme: DialogThemeData(
         backgroundColor: c.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         ),
       ),
     );
