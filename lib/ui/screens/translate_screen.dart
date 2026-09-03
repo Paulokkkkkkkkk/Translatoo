@@ -694,6 +694,10 @@ class _OriginFooter extends StatelessWidget {
 /// §5.1 põe as ações no CABEÇALHO, não num rodapé. Ouvir (M3) ganhou botão
 /// próprio 🔊 (F2.8); favoritar e copiar ficam à direita; compartilhar (F4)
 /// vive no `⋮` enquanto não existe.
+/// Altura mínima do corpo dos painéis (§5.1). Mínimo, não altura: o painel
+/// cresce com o texto e o corpo da tela rola.
+const double _panelBodyMinHeight = 140;
+
 class _DestinationPanel extends StatelessWidget {
   const _DestinationPanel({required this.onCopy});
 
@@ -783,8 +787,12 @@ class _DestinationPanel extends StatelessWidget {
               ),
             ],
           ),
-          child: SizedBox(
-            height: 140,
+          // §5.1: a altura é o CONTEÚDO, com mínimo — nunca fixa. Com
+          // `height` fixo, todo resultado mais alto que a caixa estourava em
+          // "BOTTOM OVERFLOWED", e é o resultado longo que mais precisa ser
+          // lido. Quem rola é o corpo da tela, que já é um scroll.
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: _panelBodyMinHeight),
             child: translating
                 ? const ShimmerBox(lines: 3)
                 : Column(

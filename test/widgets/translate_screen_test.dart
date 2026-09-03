@@ -578,4 +578,36 @@ void main() {
     vm.dispose();
     manager.dispose();
   });
+
+  testWidgets('texto longo NÃO estoura o painel (§5.1: altura é conteúdo)', (
+    tester,
+  ) async {
+    // Altura FIXA no corpo do painel fazia todo resultado mais alto que a
+    // caixa estourar em "BOTTOM OVERFLOWED" — justamente no texto longo, que
+    // é o que mais precisa ser lido.
+    final api = _GateApi()..installed.addAll(Language.values);
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    await _pump(tester, vm, manager);
+
+    await tester.enterText(
+      find.byType(TextField),
+      'o tempo está muito bom hoje e eu gostaria de saber onde fica o '
+      'banheiro mais próximo porque estou viajando com minha família e não '
+      'conhecemos nada desta cidade nem sabemos a quem perguntar',
+    );
+    await tester.pump(const Duration(milliseconds: 850));
+    await tester.pump();
+
+    // `tester.takeException` devolve o RenderFlex overflow — que o Flutter
+    // reporta como exceção de layout, não como falha de teste.
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'nenhum overflow de layout com resultado longo',
+    );
+
+    vm.dispose();
+    manager.dispose();
+  });
 }

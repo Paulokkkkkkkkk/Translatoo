@@ -200,7 +200,13 @@ direita. As ações diferem por papel:
 | Texto | `bodyLarge`, `textPrimary` | placeholder em `textSecondary` | shimmer no lugar do texto | mensagem `§4.8` |
 | Ações | visíveis | **ocultas** | desabilitadas | só "tentar de novo" |
 | Contador | `n` atual | oculto | congelado | oculto |
-| Altura | conteúdo | mínima 120 dp | mínima 120 dp | conteúdo |
+| Altura | conteúdo | mínima 140 dp | mínima 140 dp | conteúdo |
+
+**Altura é MÍNIMO, nunca fixo.** Escrito porque a implementação usou altura
+fixa por um tempo e todo resultado mais alto que a caixa estourava em
+"BOTTOM OVERFLOWED" — no texto longo, que é justamente o que mais precisa ser
+lido. Quem rola é o corpo da tela. (O valor era 120 dp nesta tabela e 140 dp no
+código; ficou 140, que é o que está em uso.)
 
 **Regra do parcial de ditado** (F2.5, decorre de `docs/stt_spike.md`): texto
 parcial usa `textSecondary` em itálico e é **substituído inteiro** a cada

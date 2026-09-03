@@ -9361,6 +9361,14 @@
       "_origin": "ast"
     },
     {
+      "id": "lib_ui_screens_translate_screen_panelbodyminheight",
+      "label": "_panelBodyMinHeight",
+      "file_type": "code",
+      "source_file": "lib/ui/screens/translate_screen.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "lib_ui_screens_translate_screen_oncopy",
       "label": "onCopy",
       "file_type": "code",
@@ -44264,6 +44272,17 @@
       "source_location": null,
       "weight": 1.0,
       "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_ui_screens_translate_screen",
+      "target": "lib_ui_screens_translate_screen_panelbodyminheight",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/ui/screens/translate_screen.dart",
+      "source_location": null,
+      "weight": 1.0,
       "_origin": "ast"
     },
     {
