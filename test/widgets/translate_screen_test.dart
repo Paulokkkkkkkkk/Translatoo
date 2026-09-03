@@ -22,6 +22,7 @@ import 'package:translatoo/state/tts_view_model.dart';
 import 'package:translatoo/ui/screens/translate_screen.dart';
 import 'package:translatoo/ui/widgets/download_progress_card.dart';
 import 'package:translatoo/ui/widgets/mode_button.dart';
+import 'package:translatoo/ui/widgets/translation_panel.dart';
 import 'package:translatoo/ui/widgets/voice_block.dart';
 
 /// Backend de eco determinístico (nunca toca plugin).
@@ -637,6 +638,41 @@ void main() {
       manager.stateFor(Language.pt),
       isA<ModelDownloading>(),
       reason: 'tocar em Baixar precisa iniciar o download por si só',
+    );
+
+    vm.dispose();
+    manager.dispose();
+  });
+
+  testWidgets('o nome do idioma NÃO trunca com espaço disponível', (
+    tester,
+  ) async {
+    // `Flexible` + `Spacer()` no mesmo Row competiam pelo espaço restante: o
+    // rótulo ficava com metade do que sobrava e "English" virava "Engl…" —
+    // com a fonte do sistema ampliada, "En…". Quem lê o painel precisa saber
+    // em que idioma está o resultado.
+    final api = _GateApi()..installed.addAll(Language.values);
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    await _pump(tester, vm, manager);
+
+    // Só o cabeçalho do painel — "English" também aparece na pílula do rodapé.
+    final rotulo = find.descendant(
+      of: find.byType(PanelHeader),
+      matching: find.text('English'),
+    );
+    expect(rotulo, findsOneWidget);
+
+    final widget = tester.widget<Text>(rotulo);
+    final painter = TextPainter(
+      text: TextSpan(text: widget.data, style: widget.style),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    expect(
+      tester.getSize(rotulo).width,
+      greaterThanOrEqualTo(painter.width),
+      reason: 'a caixa do rótulo precisa caber o texto inteiro',
     );
 
     vm.dispose();

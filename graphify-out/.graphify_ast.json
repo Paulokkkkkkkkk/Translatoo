@@ -1769,6 +1769,22 @@
       "_origin": "ast"
     },
     {
+      "id": "lib_core_services_connectivity_service_realtransports",
+      "label": "_realTransports",
+      "file_type": "code",
+      "source_file": "lib/core/services/connectivity_service.dart",
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "static_const_set",
+      "label": "static const Set",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "lib_core_services_connectivity_service_start",
       "label": "start",
       "file_type": "code",
@@ -19937,6 +19953,14 @@
       "_origin": "ast"
     },
     {
+      "id": "package_translatoo_ui_widgets_translation_panel_dart",
+      "label": "package:translatoo/ui/widgets/translation_panel.dart",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
       "id": "package_translatoo_ui_widgets_voice_block_dart",
       "label": "package:translatoo/ui/widgets/voice_block.dart",
       "file_type": "code",
@@ -19955,6 +19979,14 @@
     {
       "id": "readingordertraversalpolicy",
       "label": "ReadingOrderTraversalPolicy",
+      "file_type": "code",
+      "source_file": null,
+      "source_location": null,
+      "_origin": "ast"
+    },
+    {
+      "id": "text",
+      "label": "Text",
       "file_type": "code",
       "source_file": null,
       "source_location": null,
@@ -30005,6 +30037,29 @@
     {
       "source": "lib_core_services_connectivity_service",
       "target": "valuenotifier",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/connectivity_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "variable_type",
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_connectivity_service",
+      "target": "lib_core_services_connectivity_service_realtransports",
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/core/services/connectivity_service.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "lib_core_services_connectivity_service",
+      "target": "static_const_set",
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -62157,6 +62212,17 @@
     },
     {
       "source": "test_widgets_translate_screen_test",
+      "target": "package_translatoo_ui_widgets_translation_panel_dart",
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test",
       "target": "package_translatoo_ui_widgets_voice_block_dart",
       "relation": "imports",
       "confidence": "EXTRACTED",
@@ -62217,6 +62283,18 @@
     {
       "source": "test_widgets_translate_screen_test",
       "target": "lib_models_model_state_modeldownloading",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/widgets/translate_screen_test.dart",
+      "source_location": null,
+      "weight": 1.0,
+      "context": "type_lookup",
+      "_origin": "ast"
+    },
+    {
+      "source": "test_widgets_translate_screen_test",
+      "target": "text",
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,

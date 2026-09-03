@@ -56,8 +56,37 @@ void main() {
       await service.dispose();
     });
 
-    test('qualquer resultado != none conta como online', () async {
+    test('transporte real conta como online', () async {
       final platform = _FakePlatform([ConnectivityResult.ethernet]);
+      ConnectivityPlatform.instance = platform;
+
+      final service = ConnectivityService();
+      await service.start();
+
+      expect(service.isOnline.value, isTrue);
+      await service.dispose();
+    });
+
+    test('VPN SOZINHA não é estar online', () async {
+      // Medido em aparelho com WireGuard: em modo avião o Android continuava
+      // listando `vpn`, e como `vpn != none` o badge dizia "Online" com o
+      // rádio desligado. Túnel sem rede embaixo não leva pacote a lugar nenhum.
+      final platform = _FakePlatform([ConnectivityResult.vpn]);
+      ConnectivityPlatform.instance = platform;
+
+      final service = ConnectivityService();
+      await service.start();
+
+      expect(service.isOnline.value, isFalse);
+      await service.dispose();
+    });
+
+    test('VPN SOBRE uma rede real continua sendo online', () async {
+      // O caso normal: o Android lista os dois, e aí há rede de verdade.
+      final platform = _FakePlatform([
+        ConnectivityResult.wifi,
+        ConnectivityResult.vpn,
+      ]);
       ConnectivityPlatform.instance = platform;
 
       final service = ConnectivityService();

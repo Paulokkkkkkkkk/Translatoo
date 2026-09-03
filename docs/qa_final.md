@@ -52,6 +52,46 @@ rodada antes de fechar a issue.
 | R6 | TalkBack ligado, percorrer as três telas | Tudo anunciado, ordem de leitura coerente (item pendente da F4.5) | |
 | R7 | Proxy de captura durante sessão completa | Só o download de pacotes sai; zero conteúdo do usuário (MS-03, pendente da F4.5) | |
 
+## 2.1 Rodada executada em 2026-09-03 (aparelho físico)
+
+Aparelho `2412DPC0AG` (Xiaomi/Redmi, MIUI, pt-BR), build `--flavor full` debug,
+Wi-Fi com DNS chinês e VPN WireGuard ativa. Rodada **parcial**: tudo que depende
+de pacote de idioma ficou de fora, porque nesta rede o download do ML Kit anda a
+3–15 KB/s (ver `performance_results.md`).
+
+| # | Cenário | Resultado |
+|---|---|---|
+| AC-M2-1 | Ditado inicia e ouve | ✅ onda com nível real, cronômetro, "Ouvindo" |
+| AC-M2-4 | Cancelar restaura o texto anterior | ✅ comportamento correto — ⚠️ ver achado 1 |
+| R1 | Modo avião | ⚠️→✅ badge dizia "Online" com o rádio desligado; corrigido |
+| R4 | Rotação para paisagem | ❌ **reprova** — ver achado 2 |
+| R5 | Fonte do sistema ampliada (1,3×) | ⚠️→✅ idioma truncava para "En…"; corrigido |
+| AC-M1-2 | Card de download → "Baixar" | ⚠️→✅ botão era inerte; corrigido |
+
+### Achado 1 — não existe "Cancelar" durante o ditado
+
+A AC-M2-4 diz "toco em **Cancelar** no overlay". O overlay foi substituído pelo
+bloco de voz (§5.9, marcada como histórica) e **nenhum botão "Cancelar" foi
+levado junto**. O único caminho hoje é tocar no botão de MODO, que cancela como
+efeito colateral (`_toggleMode` → `speech.cancel()`).
+
+O comportamento está certo e testado — o texto anterior volta e nada é
+traduzido. O que falta é a **affordance**: nada na tela diz que aquilo cancela.
+Precisa de decisão de produto e entrada no design system antes de virar código.
+
+### Achado 2 — paisagem no celular é inutilizável
+
+Em 834×375 dp, a largura passa do breakpoint de 600 dp e os painéis viram
+colunas lado a lado (§4.1), mas a ALTURA restante não comporta nem o cabeçalho
+deles: sobra uma faixa de ~60 px com os nomes dos idiomas cortados ao meio, e o
+campo de texto não aparece. Nenhuma exceção de overflow — o conteúdo
+simplesmente não cabe.
+
+O breakpoint decide por largura sozinha. Num tablet isso está certo; num celular
+deitado, não. **Decisão de produto em aberto:** travar retrato no celular
+(liberando paisagem em `sw600dp`) ou desenhar um layout próprio para telas
+baixas. Não resolver por conta própria.
+
 ## 3. Performance
 
 Rode o roteiro de [`docs/performance.md`](performance.md) e cole as medianas.

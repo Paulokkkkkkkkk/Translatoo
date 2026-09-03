@@ -135,7 +135,12 @@ class PanelHeader extends StatelessWidget {
           color: theme.colorScheme.onSurfaceVariant,
         ),
         const SizedBox(width: AppSpacing.sm),
-        Flexible(
+        // `Expanded`, não `Flexible` + `Spacer`: os dois competiam pelo espaço
+        // restante, e o rótulo ficava com METADE do que sobrava — "English"
+        // virava "Engl…" mesmo havendo lugar, e "En…" com a fonte do sistema
+        // ampliada. Quem lê o painel precisa saber em que idioma está o
+        // resultado.
+        Expanded(
           child: Semantics(
             button: true,
             label: semanticLabel,
@@ -156,7 +161,6 @@ class PanelHeader extends StatelessWidget {
             ),
           ),
         ),
-        const Spacer(),
         ...actions,
       ],
     );
