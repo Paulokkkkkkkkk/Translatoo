@@ -6,6 +6,7 @@ import '../core/constants/app_constants.dart';
 import '../core/services/app_exception.dart';
 import '../core/services/mic_permission_service.dart';
 import '../core/services/stt_service.dart';
+import '../core/utils/perf_trace.dart';
 import 'translator_view_model.dart';
 
 /// Máquina de estados do microfone (F2.4 / PRD §3.2).
@@ -151,8 +152,12 @@ class SpeechViewModel extends ChangeNotifier {
     try {
       if (!await _ensurePermission(onPermissionNeeded)) return;
 
+      // F4.4: o cronômetro parte DEPOIS da permissão — o diálogo do sistema é
+      // tempo do usuário decidindo, não do app carregando.
+      final trace = PerfTrace.start(PerfBudget.listenStart);
       await _stt.start(_translator.sourceLang);
       if (_state != SpeechState.initializing) return; // cancelado na carga
+      trace.stop(detail: _translator.sourceLang.bcp47Code);
 
       _setState(SpeechState.listening);
       _startElapsedTimer();

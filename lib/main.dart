@@ -22,6 +22,7 @@ import 'core/services/tts_service.dart';
 import 'core/services/whisper_model_installer.dart';
 import 'core/services/whisper_stt_engine.dart';
 import 'core/theme/app_theme.dart';
+import 'core/utils/perf_trace.dart';
 import 'models/app_settings.dart';
 import 'state/connection_view_model.dart';
 import 'state/library_view_model.dart';
@@ -32,7 +33,12 @@ import 'state/tts_view_model.dart';
 import 'ui/screens/home_screen.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final binding = WidgetsFlutterBinding.ensureInitialized();
+
+  // F4.4: cold start medido até o PRIMEIRO frame de verdade — é o instante em
+  // que o usuário vê o app, não o instante em que runApp retorna.
+  final coldStart = PerfTrace.start(PerfBudget.coldStart);
+  binding.addPostFrameCallback((_) => coldStart.stop());
 
   // Bootstrap mínimo da fundação (F0): storage carregado antes do primeiro
   // frame; conectividade resolve async sem bloquear o cold start (< 2 s).

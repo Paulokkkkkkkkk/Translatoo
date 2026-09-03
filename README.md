@@ -244,6 +244,7 @@ gentileza.
 | F3.4 | [#33](../../issues/33) | Gerenciador de Modelos — estado real, Wi-Fi gate e confirmação de exclusão | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F3.5 | [#34](../../issues/34) | `ConnectionBadge` real — tooltip explicativo e live region | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 | F3.6 | [#35](../../issues/35) | Persistência integral — migração de schema, downgrade e último par no boot | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
+| F4.4 | [#40](../../issues/40) | Performance auditada — `PerfTrace`, pré-aquecimento do tradutor e roteiro de medição | [@narcisojunior-dev](https://github.com/narcisojunior-dev) |
 
 _As demais linhas são preenchidas conforme as issues forem concluídas._
 

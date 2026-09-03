@@ -7,7 +7,9 @@ import '../core/services/app_exception.dart';
 import '../core/services/model_manager_service.dart';
 import '../core/services/storage_service.dart';
 import '../core/services/translation_service.dart';
+import '../core/utils/perf_trace.dart';
 import '../models/language.dart';
+import '../models/language_pair.dart';
 import '../models/model_state.dart';
 
 /// Ciclo de vida observável da tela Traduzir (F1.5 / PRD §3.1).
@@ -194,11 +196,18 @@ class TranslatorViewModel extends ChangeNotifier {
     _error = null;
     _status = TranslatorStatus.translating;
     notifyListeners();
+    final trace = PerfTrace.start(PerfBudget.translation);
     try {
       final result = await _translation.translate(
         source: _sourceLang,
         target: _targetLang,
         text: _sourceText,
+      );
+      trace.stop(
+        detail:
+            '${_sourceLang.bcp47Code}->${_targetLang.bcp47Code} '
+            '${_sourceText.length} chars '
+            '${_translation.lastResultWasLocal ? 'local' : 'nuvem'}',
       );
       _translatedText = result;
       _status = TranslatorStatus.done;
@@ -252,16 +261,37 @@ class TranslatorViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Par já pré-aquecido — não repetir a cada notificação do gerenciador.
+  LanguagePair? _warmedPair;
+
   /// Retomada automática pós-download (AC-M1-2): notificação do gerenciador.
   void _onModelStatesChanged() {
     if (_pendingAutoTranslate && isPairReady()) {
       _pendingAutoTranslate = false;
       unawaited(_translate());
+    } else if (isPairReady()) {
+      // F4.4: assim que o par fica pronto, paga a carga do modelo fora do
+      // caminho crítico. Sem isto, o custo aparece na PRIMEIRA tradução —
+      // justamente quando o usuário está olhando o resultado.
+      _warmUpCurrentPair();
     }
     notifyListeners();
   }
 
+  void _warmUpCurrentPair() {
+    final pair = LanguagePair(source: _sourceLang, target: _targetLang);
+    if (_warmedPair == pair) return;
+    _warmedPair = pair;
+    unawaited(_translation.warmUp(pair));
+  }
+
   // ── Idiomas ──────────────────────────────────────────────────────────────
+
+  /// Pré-aquece o par corrente se ele já estiver pronto. Chamado na troca de
+  /// idioma: o par novo tem outro modelo, e a carga dele é outra espera.
+  void warmUpIfReady() {
+    if (isPairReady()) _warmUpCurrentPair();
+  }
 
   /// ⇄ troca idiomas E textos e retraduz (AC-M1-3); bloqueado durante tradução.
   void swapLanguages() {
@@ -299,6 +329,7 @@ class TranslatorViewModel extends ChangeNotifier {
     _persistPair();
     notifyListeners();
     if (_sourceText.trim().isNotEmpty) unawaited(_translate());
+    warmUpIfReady();
   }
 
   void selectTarget(Language language) {
@@ -315,6 +346,7 @@ class TranslatorViewModel extends ChangeNotifier {
     _persistPair();
     notifyListeners();
     if (_sourceText.trim().isNotEmpty) unawaited(_translate());
+    warmUpIfReady();
   }
 
   /// Grava o par corrente (F3.6) — o debounce de 500 ms do storage agrupa

@@ -82,6 +82,27 @@ class TranslationService {
   /// O par está pronto no motor ativo? Falha rápida antes de traduzir.
   Future<bool> isReady(LanguagePair pair) => activeBackend.isReady(pair);
 
+  /// Pré-aquece o motor para o [pair] (F4.4).
+  ///
+  /// O ML Kit carrega o modelo na PRIMEIRA tradução, e essa carga aparece como
+  /// atraso justamente quando o usuário está olhando o resultado. Traduzir um
+  /// caractere fora do caminho crítico paga esse custo antes.
+  ///
+  /// Falha em silêncio: pré-aquecer é otimização, e se não der certo a
+  /// tradução real segue funcionando (só mais lenta na primeira vez).
+  Future<void> warmUp(LanguagePair pair) async {
+    try {
+      if (!await _primary.isReady(pair)) return;
+      await _primary.translate(
+        source: pair.source,
+        target: pair.target,
+        text: 'a',
+      );
+    } on Object catch (_) {
+      // Silêncio proposital — ver doc acima.
+    }
+  }
+
   Future<String> translate({
     required Language source,
     required Language target,
