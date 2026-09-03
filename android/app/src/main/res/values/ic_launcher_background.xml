@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Azul do próprio logo (docs/design/logo.png), amostrado do arquivo — NÃO
+         é o colorPrimary do app (#3954FD). São cores diferentes de propósito:
+         o ícone tem identidade própria e não muda com o tema. -->
+    <color name="ic_launcher_background">#0177F6</color>
+</resources>
