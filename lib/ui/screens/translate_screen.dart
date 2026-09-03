@@ -223,153 +223,172 @@ class _TranslateScreenState extends State<TranslateScreen> {
     // §4: bloco de marca a ~40% da altura útil no modo voz (medido no case).
     final voiceHeight = MediaQuery.sizeOf(context).height * 0.34;
 
-    return Stack(
-      // §P4: o botão de modo TRANSBORDA o limite entre bloco e painel. Sem
-      // isto ele seria recortado — e é justamente o transbordo que faz dele o
-      // único elemento que quebra a grade.
-      clipBehavior: Clip.none,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // ── Faixa 1 da §4: bloco de marca (só cresce no modo voz) ───────────
-            AnimatedSize(
-              duration: const Duration(milliseconds: 280),
-              curve: Curves.easeOutCubic, // §7: painel subindo
-              alignment: Alignment.topCenter,
-              child: voice
-                  ? VoiceBlock(height: voiceHeight)
-                  : const SizedBox(width: double.infinity, height: 0),
-            ),
-
-            // ── Faixas 2 e 3 da §4: pilha de painéis ────────────────────────────
-            // Painéis SANGRAM até a borda (§4) e são empilhados sem gap: o topo
-            // arredondado do painel seguinte cobre a borda reta do anterior, que é
-            // o que produz a "pilha" da §P1 sem nenhum offset negativo.
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Card de download só aparece com o par incompleto; é o único
-                    // bloco com margem lateral, porque é aviso, não painel.
-                    Selector<TranslatorViewModel, (Language, ModelState)?>(
-                      selector: (_, vm) => _missingModelFor(vm),
-                      builder: (context, missing, _) {
-                        final entry = missing;
-                        if (entry == null) return const SizedBox.shrink();
-                        return Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            AppSpacing.md,
-                            AppSpacing.md,
-                            AppSpacing.md,
-                            AppSpacing.sm,
-                          ),
-                          child: DownloadProgressCard(
-                            language: entry.$1,
-                            state: entry.$2,
-                            onDownload: () => _observed?.retryLastAction(),
-                            onCancel: () => manager.cancelDownload(entry.$1),
-                          ),
-                        );
-                      },
-                    ),
-                    // 600–1024 dp: os painéis viram colunas lado a lado (PRD
-                    // §4.1). Empilhados numa tela larga, cada um ficaria com
-                    // uma linha de texto e metade da tela vazia.
-                    if (wide)
-                      IntrinsicHeight(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: _OriginPanel(
-                                controller: _controller,
-                                onPaste: _pasteFromClipboard,
-                                onEnterVoiceMode: _enterVoiceMode,
-                              ),
-                            ),
-                            Expanded(
-                              child: _DestinationPanel(
-                                onCopy: _copyTranslation,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    else ...[
-                      _OriginPanel(
-                        controller: _controller,
-                        onPaste: _pasteFromClipboard,
-                        onEnterVoiceMode: _enterVoiceMode,
-                      ),
-                      _DestinationPanel(onCopy: _copyTranslation),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-
-            // ── Faixa 4 da §4: ação ancorada no polegar (§P5) ───────────────────
-            Padding(
+        // O aviso de download fica FORA da pilha, e acima dela, por um motivo
+        // concreto: o botão de modo flutua no canto superior direito do que
+        // vem depois, e ali cobria exatamente o "Baixar" do card — o usuário
+        // via o aviso e não conseguia agir sobre ele, então nada traduzia.
+        // É o único bloco com margem lateral, porque é aviso, não painel.
+        Selector<TranslatorViewModel, (Language, ModelState)?>(
+          selector: (_, vm) => _missingModelFor(vm),
+          builder: (context, missing, _) {
+            final entry = missing;
+            if (entry == null) return const SizedBox.shrink();
+            return Padding(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.md,
                 AppSpacing.md,
                 AppSpacing.md,
                 AppSpacing.sm,
               ),
-              child: Selector<TranslatorViewModel, bool>(
-                selector: (_, vm) =>
-                    !vm.isTranslating && vm.sourceText.trim().isNotEmpty,
-                builder: (context, enabled, _) => FilledButton(
-                  onPressed: enabled ? () => _observed!.translateNow() : null,
-                  child: Text(t.buttonTranslate),
-                ),
+              child: DownloadProgressCard(
+                language: entry.$1,
+                state: entry.$2,
+                onDownload: () => _observed?.retryLastAction(),
+                onCancel: () => manager.cancelDownload(entry.$1),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.md,
-                0,
-                AppSpacing.md,
-                AppSpacing.md,
-              ),
-              child: Selector<TranslatorViewModel, (Language, Language, bool)>(
-                selector: (_, vm) =>
-                    (vm.sourceLang, vm.targetLang, vm.isTranslating),
-                builder: (context, data, _) {
-                  final (source, target, translating) = data;
-                  return LanguageBar(
-                    source: source,
-                    target: target,
-                    enabled: !translating,
-                    onSelectSource: (language) => context
-                        .read<TranslatorViewModel>()
-                        .selectSource(language),
-                    onSelectTarget: (language) => context
-                        .read<TranslatorViewModel>()
-                        .selectTarget(language),
-                    onSwap: () => _observed!.swapLanguages(),
-                    sourceSemanticLabel: t.originLabel,
-                    targetSemanticLabel: t.destinationLabel,
-                    swapSemanticLabel: t.actionSwapLanguages,
-                  );
-                },
-              ),
-            ),
-          ],
+            );
+          },
         ),
-        // Botão de modo (§5.3): metade sobre o bloco de marca, metade sobre o
-        // painel. Em modo voz o limite desce junto com o bloco.
-        Positioned(
-          // O transbordo da §P4 só é possível quando o limite está DENTRO do
-          // corpo da tela — no modo voz ele está, e o botão cavalga a fronteira
-          // como o case desenha. No modo texto o limite é a própria borda do
-          // `body`, que recorta: `Clip.none` no Stack não vence o recorte do
-          // ancestral. Aí o botão encosta no topo em vez de ser cortado ao meio.
-          top: math.max(0.0, (voice ? voiceHeight : 0) - ModeButton.size / 2),
-          right: AppSpacing.md,
-          child: ModeButton(mode: _mode, onToggle: _toggleMode),
+        Expanded(
+          child: Stack(
+            // §P4: o botão de modo TRANSBORDA o limite entre bloco e painel.
+            // Sem isto ele seria recortado — e é justamente o transbordo que
+            // faz dele o único elemento que quebra a grade.
+            clipBehavior: Clip.none,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // ── Faixa 1 da §4: bloco de marca (só cresce no modo voz) ───────────
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 280),
+                    curve: Curves.easeOutCubic, // §7: painel subindo
+                    alignment: Alignment.topCenter,
+                    child: voice
+                        ? VoiceBlock(height: voiceHeight)
+                        : const SizedBox(width: double.infinity, height: 0),
+                  ),
+
+                  // ── Faixas 2 e 3 da §4: pilha de painéis ────────────────────────────
+                  // Painéis SANGRAM até a borda (§4) e são empilhados sem gap: o topo
+                  // arredondado do painel seguinte cobre a borda reta do anterior, que é
+                  // o que produz a "pilha" da §P1 sem nenhum offset negativo.
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // 600–1024 dp: os painéis viram colunas lado a lado (PRD
+                          // §4.1). Empilhados numa tela larga, cada um ficaria com
+                          // uma linha de texto e metade da tela vazia.
+                          if (wide)
+                            IntrinsicHeight(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Expanded(
+                                    child: _OriginPanel(
+                                      controller: _controller,
+                                      onPaste: _pasteFromClipboard,
+                                      onEnterVoiceMode: _enterVoiceMode,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: _DestinationPanel(
+                                      onCopy: _copyTranslation,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          else ...[
+                            _OriginPanel(
+                              controller: _controller,
+                              onPaste: _pasteFromClipboard,
+                              onEnterVoiceMode: _enterVoiceMode,
+                            ),
+                            _DestinationPanel(onCopy: _copyTranslation),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // ── Faixa 4 da §4: ação ancorada no polegar (§P5) ───────────────────
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.md,
+                      AppSpacing.md,
+                      AppSpacing.md,
+                      AppSpacing.sm,
+                    ),
+                    child: Selector<TranslatorViewModel, bool>(
+                      selector: (_, vm) =>
+                          !vm.isTranslating && vm.sourceText.trim().isNotEmpty,
+                      builder: (context, enabled, _) => FilledButton(
+                        onPressed: enabled
+                            ? () => _observed!.translateNow()
+                            : null,
+                        child: Text(t.buttonTranslate),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.md,
+                      0,
+                      AppSpacing.md,
+                      AppSpacing.md,
+                    ),
+                    child:
+                        Selector<
+                          TranslatorViewModel,
+                          (Language, Language, bool)
+                        >(
+                          selector: (_, vm) =>
+                              (vm.sourceLang, vm.targetLang, vm.isTranslating),
+                          builder: (context, data, _) {
+                            final (source, target, translating) = data;
+                            return LanguageBar(
+                              source: source,
+                              target: target,
+                              enabled: !translating,
+                              onSelectSource: (language) => context
+                                  .read<TranslatorViewModel>()
+                                  .selectSource(language),
+                              onSelectTarget: (language) => context
+                                  .read<TranslatorViewModel>()
+                                  .selectTarget(language),
+                              onSwap: () => _observed!.swapLanguages(),
+                              sourceSemanticLabel: t.originLabel,
+                              targetSemanticLabel: t.destinationLabel,
+                              swapSemanticLabel: t.actionSwapLanguages,
+                            );
+                          },
+                        ),
+                  ),
+                ],
+              ),
+              // Botão de modo (§5.3): metade sobre o bloco de marca, metade sobre o
+              // painel. Em modo voz o limite desce junto com o bloco.
+              Positioned(
+                // O transbordo da §P4 só é possível quando o limite está DENTRO do
+                // corpo da tela — no modo voz ele está, e o botão cavalga a fronteira
+                // como o case desenha. No modo texto o limite é a própria borda do
+                // `body`, que recorta: `Clip.none` no Stack não vence o recorte do
+                // ancestral. Aí o botão encosta no topo em vez de ser cortado ao meio.
+                top: math.max(
+                  0.0,
+                  (voice ? voiceHeight : 0) - ModeButton.size / 2,
+                ),
+                right: AppSpacing.md,
+                child: ModeButton(mode: _mode, onToggle: _toggleMode),
+              ),
+            ],
+          ),
         ),
       ],
     );

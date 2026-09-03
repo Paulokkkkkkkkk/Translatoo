@@ -476,4 +476,34 @@ void main() {
     vm.dispose();
     manager.dispose();
   });
+
+  testWidgets('o botão de modo NÃO pode cobrir a ação do card de download', (
+    tester,
+  ) async {
+    // Este foi o bug que fazia "a tradução não funcionar": o card avisava que
+    // faltava o pacote, mas o botão de modo flutuava exatamente sobre o
+    // "Baixar". O usuário via o aviso e não conseguia agir sobre ele — e sem
+    // pacote, nada traduz. O sintoma não parecia de layout, parecia de motor.
+    final api = _GateApi(); // nenhum idioma instalado: o card aparece
+    final manager = ModelManagerService(api: api);
+    final vm = _vm(manager);
+    await _pump(tester, vm, manager);
+    await tester.pump();
+
+    expect(find.byType(DownloadProgressCard), findsOneWidget);
+
+    final card = tester.getRect(find.byType(DownloadProgressCard));
+    final modeButton = tester.getRect(find.byType(ModeButton));
+
+    expect(
+      card.overlaps(modeButton),
+      isFalse,
+      reason:
+          'o card de download precisa ficar ACIMA da pilha, fora do alcance '
+          'do botão flutuante — senão sua ação fica inalcançável',
+    );
+
+    vm.dispose();
+    manager.dispose();
+  });
 }

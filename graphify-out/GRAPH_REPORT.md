@@ -1,7 +1,7 @@
 # Graph Report - .  (2026-09-02)
 
 ## Corpus Check
-- 98 files · ~52,296 words
+- 98 files · ~52,496 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -59,13 +59,13 @@
 - lib_core_constants_app_typography Community
 - lib_ui_widgets_translation_panel Community
 - package_translatoo_core_constants_app_constants_dart Community
-- package_translatoo_core_services_translation_backend_dart Community
+- package_translatoo_state_translator_view_model_dart Community
 - test_state_library_view_model_test Community
 - changenotifier Community
 - constants_app_constants_dart Community
 - lib_core_services_translation_backend_translationbackend Community
+- package_translatoo_core_services_translation_backend_dart Community
 - package_translatoo_core_services_translation_service_dart Community
-- package_translatoo_models_language_pair_dart Community
 - test_integration_library_flow_test Community
 - dart_async Community
 - dart_convert Community
@@ -323,9 +323,9 @@ Nodes (14): actions, build, child, expandChild, footer, header, languageLabel, o
 Cohesion: 0.13
 Nodes (13): package:translatoo/core/constants/app_constants.dart, package:translatoo/core/services/model_manager_service.dart, package:translatoo/core/services/text_chunker.dart, package:translatoo/models/model_state.dart, completeDownload, deleteModel, downloadModel, failDownload (+5 more)
 
-### Community 49 - "package_translatoo_core_services_translation_backend_dart Community"
+### Community 49 - "package_translatoo_state_translator_view_model_dart Community"
 Cohesion: 0.13
-Nodes (14): package:translatoo/core/services/translation_backend.dart, backend, deleteModel, dispose, downloadModel, error, id, installed (+6 more)
+Nodes (14): package:translatoo/state/translator_view_model.dart, backend, deleteModel, dispose, downloadModel, error, id, installed (+6 more)
 
 ### Community 50 - "test_state_library_view_model_test Community"
 Cohesion: 0.13
@@ -343,13 +343,13 @@ Nodes (13): ../constants/app_constants.dart, _breakUnits, chunks, chunkText, _fi
 Cohesion: 0.14
 Nodes (14): TranslationBackend, _EchoBackend, _EchoBackend, _LocalBackend, FakeEchoBackend, _EchoBackend, _EchoBackend, _EchoBackend (+6 more)
 
-### Community 54 - "package_translatoo_core_services_translation_service_dart Community"
+### Community 54 - "package_translatoo_core_services_translation_backend_dart Community"
+Cohesion: 0.14
+Nodes (12): package:translatoo/core/services/translation_backend.dart, package:translatoo/models/language_pair.dart, main, deleteModel, dispose, downloadModel, _EchoBackend, id (+4 more)
+
+### Community 55 - "package_translatoo_core_services_translation_service_dart Community"
 Cohesion: 0.14
 Nodes (13): package:translatoo/core/services/translation_service.dart, beginCapture, dispose, id, isModelDownloaded, isReady, main, primary (+5 more)
-
-### Community 55 - "package_translatoo_models_language_pair_dart Community"
-Cohesion: 0.14
-Nodes (12): package:translatoo/models/language_pair.dart, package:translatoo/state/translator_view_model.dart, main, deleteModel, dispose, downloadModel, _EchoBackend, id (+4 more)
 
 ### Community 56 - "test_integration_library_flow_test Community"
 Cohesion: 0.14
