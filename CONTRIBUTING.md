@@ -68,6 +68,17 @@ Por isso o repositório versiona `.vscode/launch.json` com as três configuraç�
 já com `--flavor`: no VS Code, use o seletor de Run em vez do botão padrão, e o
 problema não acontece.
 
+⚠️ Ao editar esse arquivo, o flavor vai em **`toolArgs`**, nunca em `args`. São
+coisas diferentes e a extensão não reclama da errada:
+
+```
+flutter run (toolArgs) -t lib/main.dart (args)
+```
+
+`args` chega ao `main()` do Dart; só `toolArgs` chega ao `flutter run`. Pôr
+`--flavor` em `args` produz exatamente o erro desta seção, com a agravante de
+parecer configurado.
+
 O aviso de KGP (`ffmpeg_kit_flutter_new_min`, `flutter_tts`, `share_plus`) que
 aparece junto é **só aviso** — o build passa. Ele vira erro numa versão futura
 do Flutter, e aí depende dos plugins publicarem versões migradas.
